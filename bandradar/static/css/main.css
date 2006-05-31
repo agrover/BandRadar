@@ -1,0 +1,31 @@
+body
+{
+    background-color: white;
+    color: black;
+}
+
+p
+{
+    margin: 0 0 0 0;
+}
+
+h2
+{
+    margin: 0 0 0 0;
+}
+
+#header
+{
+    text-align: center;
+}
+
+#content
+{
+    margin-left: 200px;
+}
+
+#footer
+{
+    text-align: center;
+    color: gray;
+}

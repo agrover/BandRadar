@@ -1,0 +1,2 @@
+db_module=bandradar.model
+history_dir=$base/bandradar/sqlobject-history
