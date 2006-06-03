@@ -62,7 +62,6 @@ class Venues(controllers.Controller, util.RestAdapter):
 
     @expose()
     def save(self, submit, id, name, addr="", url=""):
-        hub.begin()
         try:
             v = Venue.get(id)
             v.name = name
@@ -72,16 +71,13 @@ class Venues(controllers.Controller, util.RestAdapter):
         except SQLObjectNotFound:
             v = Venue(name=name, address=addr, url=url)
             turbogears.flash("Added to DB")
-        hub.commit()
         redirect(turbogears.url("/venues/%s" % v.id))
 
     @expose()
     def delete(self, id):
-        hub.begin()
         if Event.select(Event.q.venueID == id).count():
             turbogears.flash("Delete failed")
         else:
             Venue.delete(id)
             turbogears.flash("Deleted")
-        hub.commit()
         redirect(turbogears.url("/venues/list"))

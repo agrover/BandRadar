@@ -133,10 +133,8 @@ class Users(controllers.Controller, util.RestAdapter, identity.SecureResource):
     @turbogears.error_handler(login)
     def usercreate(self, user_name, email, zip, pass1, pass2,
              forward_url=None, previous_url=None):
-        hub.begin()
         u = UserAcct(user_name=user_name, email_address=email, display_name="",
             password=pass1)
-        hub.commit()
         turbogears.flash("Account created!")
         identity.current_provider.validate_identity(user_name, pass1,
             identity.current.visit_key)
@@ -218,7 +216,7 @@ class Users(controllers.Controller, util.RestAdapter, identity.SecureResource):
                 and identity.current.user.user_name == user_name)
                 or "admin" in identity.current.groups):
             raise identity.IdentityFailure("Not authorized")
-        hub.begin()
+
         try:
             u = UserAcct.by_user_name(user_name)
             u.display_name = display_name
@@ -234,7 +232,6 @@ class Users(controllers.Controller, util.RestAdapter, identity.SecureResource):
             turbogears.flash("Saved")
         except SQLObjectNotFound:
             turbogears.flash("Error saving changes")
-        hub.commit()
         redirect(turbogears.url("/users/%s" % u.user_name))
 
     #delete. display confirmation

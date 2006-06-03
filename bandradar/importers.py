@@ -55,8 +55,7 @@ class Importers(controllers.Controller, identity.SecureResource):
 
     def import_to_db(self, venues):
         e_counter = 0
-        
-        hub.begin()
+
         for venue in venues:
 
             try:
@@ -84,7 +83,6 @@ class Importers(controllers.Controller, identity.SecureResource):
                         a = Artist(name=artist)
                     if not e.id in [existing.id for existing in a.events]:
                         a.addEvent(e)
-        hub.commit()
 
     @expose(template="bandradar.templates.importreview")
     def review(self):
@@ -107,7 +105,6 @@ class Importers(controllers.Controller, identity.SecureResource):
 
     def review_import(self, **kw):
         e_counter = 0
-        hub.begin()
         while True:
             try:
                 e_id = kw["eid"+str(e_counter)]
@@ -122,7 +119,6 @@ class Importers(controllers.Controller, identity.SecureResource):
             v.verified = True
             for artist in e.artists:
                 artist.verified = True
-        hub.commit()
 
     def delete_event(self, event):
         for a in event.artists:
@@ -136,7 +132,6 @@ class Importers(controllers.Controller, identity.SecureResource):
 
     def review_delete(self, **kw):
         e_counter = 0
-        hub.begin()
         while True:
             try:
                 e_id = kw["eid"+str(e_counter)]
@@ -147,13 +142,10 @@ class Importers(controllers.Controller, identity.SecureResource):
                 continue
             e = Event.get(e_id)
             self.delete_event(e)
-        hub.commit()
 
     @expose()
     def reviewpurge(self):
-        hub.begin()
         new_events = Event.select(Event.q.verified == False)
         for event in new_events:
             self.delete_event(event)
-        hub.commit()
         redirect(turbogears.url("/importers/review"))

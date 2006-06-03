@@ -137,7 +137,6 @@ class Artists(controllers.Controller, util.RestAdapter):
     @turbogears.validate(form=artist_form)
     @turbogears.error_handler(edit)
     def save(self, name, id=0, desc="", url=""):
-        hub.begin()
         if id:
             try:
                 a = Artist.get(id)
@@ -152,13 +151,11 @@ class Artists(controllers.Controller, util.RestAdapter):
             if not "admin" in identity.current.groups:
                 identity.current.user.addArtist(a)
             turbogears.flash("Added")
-        hub.commit()
         redirect(turbogears.url("/artists/%s" % a.id))
 
     @expose()
     @identity.require(identity.not_anonymous())
     def track(self, id, viewing="no"):
-        hub.begin()
         u = identity.current.user
         try:
             a = Artist.get(id)
@@ -167,7 +164,6 @@ class Artists(controllers.Controller, util.RestAdapter):
         except SQLObjectNotFound:
             turbogears.flash("Artist not found")
             redirect("/")
-        hub.commit()
         if viewing == "no":
             util.redirect_previous()
         else:
@@ -176,7 +172,6 @@ class Artists(controllers.Controller, util.RestAdapter):
     @expose()
     @identity.require(identity.not_anonymous())
     def untrack(self, id, viewing="no"):
-        hub.begin()
         u = identity.current.user
         try:
             a = Artist.get(id)
@@ -185,7 +180,6 @@ class Artists(controllers.Controller, util.RestAdapter):
         except SQLObjectNotFound:
             turbogears.flash("Artist not found")
             redirect("/")
-        hub.commit()
         if viewing == "no":
             util.redirect_previous()
         else:
@@ -194,7 +188,6 @@ class Artists(controllers.Controller, util.RestAdapter):
     @expose()
     @identity.require(identity.in_group("admin"))
     def delete(self, id):
-        hub.begin()
         try:
             a = Artist.get(id)
             for e in a.events:
@@ -203,5 +196,4 @@ class Artists(controllers.Controller, util.RestAdapter):
             turbogears.flash("Deleted")
         except SQLObjectNotFound:
             turbogears.flash("Delete failed")
-        hub.commit()
         redirect(turbogears.url("/artists/list"))

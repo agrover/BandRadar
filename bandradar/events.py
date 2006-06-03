@@ -91,7 +91,6 @@ class Events(controllers.Controller, util.RestAdapter):
     @turbogears.error_handler(edit)
     @identity.require(identity.not_anonymous())
     def save(self, id=0, name="", description="", **kw):
-        hub.begin()
         if id:
             try:
                 e = Event.get(id)
@@ -106,18 +105,16 @@ class Events(controllers.Controller, util.RestAdapter):
                 turbogears.flash("Updated")
             except SQLObjectNotFound:
                 e = Event(name=name, description=description)
-                
+
                 turbogears.flash("Added to DB")
         else:
             e = Event(name=name, description=description)
             turbogears.flash("Added to DB")
-        hub.commit()
         redirect(turbogears.url("/events/%s" % e.id))
 
     @expose()
     @identity.require(identity.in_group("admin"))
     def delete(self, id):
-        hub.begin()
         try:
             e = Event.get(id)
             for a in e.artists:
@@ -126,5 +123,4 @@ class Events(controllers.Controller, util.RestAdapter):
             turbogears.flash("Deleted")
         except SQLObjectNotFound:
             turbogears.flash("Delete failed")
-        hub.commit()
         redirect(turbogears.url("/events/list"))
