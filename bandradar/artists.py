@@ -19,13 +19,7 @@ class ArtistForm(w.WidgetsList):
 artist_form = w.TableForm(fields=ArtistForm(), name="artist", submit_text="Save")
 
 class SearchBox(w.WidgetsList):
-    search = w.AutoCompleteField(label="",
-        search_controller="/artists/dynsearch",
-        search_param="name",
-        result_name="results",
-        only_suggest=True,
-        validator=v.Schema(text=v.NotEmpty(strip=True)),
-        attrs={'size':20})
+    search = util.BRAutoCompleteField("/artists/dynsearch")
 
 artist_search_form = w.ListForm(fields=SearchBox(), name="search",
     submit_text="Search")
@@ -35,19 +29,7 @@ class Artists(controllers.Controller, util.RestAdapter):
 
     @expose(allow_json=True)
     def dynsearch(self, name):
-        def my_search(like_str):
-            result_cnt = 6
-            return Artist.select(LIKE(func.LOWER(Artist.q.name), like_str),
-                orderBy=Artist.q.name)[:result_cnt]
-
-        # check startswith first
-        like_str = "%s%%" % str(name).lower()
-        names = [a.name for a in my_search(like_str)]
-        if not len(names):
-            # then go all out
-            like_str = "%%%s%%" % str(name).lower()
-            names = [a.name for a in my_search(like_str)]
-        return dict(results=names)
+        return util.dynsearch(Artist, name)
 
     @expose()
     @turbogears.validate(form=artist_search_form)

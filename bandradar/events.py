@@ -25,18 +25,22 @@ class EventForm(w.WidgetsList):
     description = w.TextArea(rows=3)
     url = w.TextField(label="Website", attrs=dict(size=50),
         validator=v.Any(v.URL, v.Empty))
-    venue = w.AutoCompleteField(label="Venue",
-        search_controller="/venues/dynsearch",
-        search_param="name",
-        result_name="results",
-        only_suggest=True,
-        validator=AutoCompleteValidator(),
-        attrs={'size':20})
+    venue = util.BRAutoCompleteField("/venues/dynsearch")
 
 event_form = w.TableForm(fields=EventForm(), name="event", submit_text="Save")
 
+class SearchBox(w.WidgetsList):
+    search = util.BRAutoCompleteField("/events/dynsearch")
+
+event_search_form = w.ListForm(fields=SearchBox(), name="search",
+    submit_text="Search")
+
 
 class Events(controllers.Controller, util.RestAdapter):
+
+    @expose(allow_json=True)
+    def dynsearch(self, name):
+        return util.dynsearch(Event, name)
 
     @expose(template=".templates.event.list")
     def list(self, listby="all"):

@@ -1,36 +1,34 @@
 import turbogears
 from turbogears import controllers, expose, redirect
 from turbogears import identity
+from turbogears import widgets as w
+from turbogears import validators as v
+
 from model import Venue, Event, hub
 from sqlobject import SQLObjectNotFound, LIKE, func, AND
 from datetime import date
 import util
 
+class SearchBox(w.WidgetsList):
+    search = util.BRAutoCompleteField("/venues/dynsearch")
+
+venue_search_form = w.ListForm(fields=SearchBox(), name="search",
+    submit_text="Search")
+
+
 class Venues(controllers.Controller, util.RestAdapter):
 
     @expose(allow_json=True)
     def dynsearch(self, name):
-        def my_search(like_str):
-            result_cnt = 6
-            return Venue.select(AND(LIKE(func.LOWER(Venue.q.name), like_str),
-                Venue.q.verified == True),
-                orderBy=Venue.q.name)[:result_cnt]
-
-        # check startswith first
-        like_str = "%s%%" % str(name).lower()
-        names = [a.name for a in my_search(like_str)]
-        if not len(names):
-            # then go all out
-            like_str = "%%%s%%" % str(name).lower()
-            names = [a.name for a in my_search(like_str)]
-        return dict(results=names)
+        return util.dynsearch(Venue, name)
 
     @expose(template=".templates.venue.list")
     def list(self):
         venues = Venue.select(AND(Venue.q.verified == True, Venue.q.active == True),
             orderBy=Venue.q.name)
         for v in venues:
-            v.eventcount = Event.select(AND(Event.q.venueID == v.id, Event.q.date >= date.today())).count()
+            v.eventcount = Event.select(AND(Event.q.venueID == v.id,
+                Event.q.date >= date.today())).count()
         return dict(venues=venues)
 
     @expose(template=".templates.venue.show")
