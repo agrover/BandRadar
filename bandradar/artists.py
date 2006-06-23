@@ -60,7 +60,7 @@ class Artists(controllers.Controller, util.RestAdapter):
         except SQLObjectNotFound:
             redirect("/artists/new?name=%s" % search['text'])
 
-    @expose(template=".templates.artistlist")
+    @expose(template=".templates.artist.list")
     def list(self, listby="today", orderby="alpha"):
 
         def listday(day_delta):
@@ -100,7 +100,7 @@ class Artists(controllers.Controller, util.RestAdapter):
 
         return dict(artists=result)
 
-    @expose(template=".templates.artistshow")
+    @expose(template=".templates.artist.show")
     def show(self, id):
         try:
             a = Artist.get(id)
@@ -113,13 +113,13 @@ class Artists(controllers.Controller, util.RestAdapter):
             redirect(turbogears.url("/artists/list"))
         return dict(artist=a, events=a.events, is_tracked=is_tracked)
 
-    @expose(template=".templates.artistedit")
+    @expose(template=".templates.artist.edit")
     @identity.require(identity.not_anonymous())
     def new(self, name=""):
         form_vals = dict(name=name)
         return dict(artist_form=artist_form, form_vals=form_vals)
 
-    @expose(template=".templates.artistedit")
+    @expose(template=".templates.artist.edit")
     @identity.require(identity.not_anonymous())
     def edit(self, id=0, **kw):
         form_vals = {}

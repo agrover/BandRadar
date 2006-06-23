@@ -38,13 +38,13 @@ event_form = w.TableForm(fields=EventForm(), name="event", submit_text="Save")
 
 class Events(controllers.Controller, util.RestAdapter):
 
-    @expose(template=".templates.eventlist")
+    @expose(template=".templates.event.list")
     def list(self, listby="all"):
         e = Event.select(AND(Event.q.verified == True, Event.q.active == True),
             orderBy=Event.q.name)
         return dict(events=e)
 
-    @expose(template=".templates.eventshow")
+    @expose(template=".templates.event.show")
     def show(self, id):
         try:
             e = Event.get(id)
@@ -61,9 +61,9 @@ class Events(controllers.Controller, util.RestAdapter):
 
     @expose()
     @identity.require(identity.not_anonymous())
-    def edit(self, id=0, tg_errors=None, **kw):
+    def edit(self, id=0, **kw):
         form_vals = {}
-        template = ".templates.eventadd"
+        template = ".templates.event.add"
         if id:
             try:
                 e = Event.get(id)
@@ -73,7 +73,7 @@ class Events(controllers.Controller, util.RestAdapter):
                     time=e.time, venue=dict(text=e.venue.name),
                     artists=artists_str)
                     # use different template since we're editing existing
-                template = ".templates.eventedit"
+                template = ".templates.event.edit"
             except SQLObjectNotFound:
                 pass
         else:
@@ -83,33 +83,52 @@ class Events(controllers.Controller, util.RestAdapter):
             form_vals['artists'] = a.name
         except (SQLObjectNotFound, KeyError):
             pass
-        form_vals.update(kw)
         return dict(tg_template=template, event_form=event_form, form_vals=form_vals)
 
     @expose()
     @turbogears.validate(form=event_form)
     @turbogears.error_handler(edit)
     @identity.require(identity.not_anonymous())
-    def save(self, id=0, name="", description="", **kw):
+    def save(self, id, **kw):
+        try:
+            v = Venue.byName(kw['venue']['text'])
+        except SQLObjectNotFound:
+            v = Venue(name=kw['venue']['text'], added_by=identity.current.user)
+
+        artists = kw.get('artists')
+        artist_list = [artist.strip() for artist in artists.split(",")]
+        name = kw.get('name')
+        if not name:
+            name = artists
+
+        # updating
         if id:
             try:
                 e = Event.get(id)
-                e.set(**kw)
-                try:
-                    v = Venue.byName(venue['text'])
-                except SQLObjectNotFound:
-                    v = Venue(name=venue['text'], verified=True)
-                e.venue = v
-                #split/add artists
-                #addedby
-                turbogears.flash("Updated")
+                flash_msg = "updated"
             except SQLObjectNotFound:
-                e = Event(name=name, description=description)
-
-                turbogears.flash("Added to DB")
+                turbogears.flash("Database error, please try again")
+                redirect(turbogears.url("/"))
+        # inserting
         else:
-            e = Event(name=name, description=description)
-            turbogears.flash("Added to DB")
+            e = Event(name=name, date=kw['date'], time=kw['time'], venue=v,
+                added_by = identity.current.user)
+            flash_msg = "added"
+
+        del kw['artists']
+        del kw['venue']
+        e.set(**kw)
+        e.name = name
+        e.venue = v
+        for artist in artist_list:
+            try:
+                a = Artist.byName(artist)
+                if not a in e.artists:
+                    e.addArtist(a)
+            except SQLObjectNotFound:
+                a = Artist(name=artist, added_by=identity.current.user)
+                e.addArtist(a)
+        turbogears.flash("Event %s" % flash_msg)
         redirect(turbogears.url("/events/%s" % e.id))
 
     @expose()

@@ -105,7 +105,7 @@ user_search_form = w.ListForm(fields=SearchBox(), name="search",
 
 class Users(controllers.Controller, util.RestAdapter, identity.SecureResource):
 
-    @expose(template=".templates.login")
+    @expose(template=".templates.user.login")
     def login(self, *args, **kw):
 
         if not identity.current.anonymous and identity.was_login_attempted():
@@ -161,12 +161,12 @@ class Users(controllers.Controller, util.RestAdapter, identity.SecureResource):
             names = [a.user_name for a in my_search(like_str)]
         return dict(results=names)
 
-    @expose(template=".templates.userlist")
+    @expose(template=".templates.user.list")
     def list(self):
         u = UserAcct.select(orderBy=UserAcct.q.user_name)
         return dict(users=u)
 
-    @expose(template=".templates.usershow")
+    @expose(template=".templates.user.show")
     def show(self, user_name):
         try:
             u = UserAcct.by_user_name(user_name)
@@ -189,7 +189,7 @@ class Users(controllers.Controller, util.RestAdapter, identity.SecureResource):
             redirect(turbogears.url("/"))
         return dict(user=u, art_list=art_list, viewing_self=viewing_self)
 
-    @expose(template=".templates.useredit")
+    @expose(template=".templates.user.edit")
     def edit(self, user_name, **kw):
         if not ((identity.current.user
                 and identity.current.user.user_name == user_name)

@@ -25,7 +25,7 @@ class Venues(controllers.Controller, util.RestAdapter):
             names = [a.name for a in my_search(like_str)]
         return dict(results=names)
 
-    @expose(template=".templates.venuelist")
+    @expose(template=".templates.venue.list")
     def list(self):
         venues = Venue.select(AND(Venue.q.verified == True, Venue.q.active == True),
             orderBy=Venue.q.name)
@@ -33,7 +33,7 @@ class Venues(controllers.Controller, util.RestAdapter):
             v.eventcount = Event.select(AND(Event.q.venueID == v.id, Event.q.date >= date.today())).count()
         return dict(venues=venues)
 
-    @expose(template=".templates.venueshow")
+    @expose(template=".templates.venue.show")
     def show(self, id):
         try:
             v = Venue.get(id)
@@ -47,7 +47,7 @@ class Venues(controllers.Controller, util.RestAdapter):
             Event.q.date >= date.today()),orderBy=Event.q.date)
         return dict(v=v, past_events=past_events, future_events=future_events)
 
-    @expose(template=".templates.venueedit")
+    @expose(template=".templates.venue.edit")
     def edit(self, id=0, name="", addr="", url=""):
         if id:
             try:
