@@ -93,7 +93,7 @@ class Events(controllers.Controller, util.RestAdapter):
         try:
             v = Venue.byName(kw['venue']['text'])
         except SQLObjectNotFound:
-            v = Venue(name=kw['venue']['text'], added_by=identity.current.user)
+            v = Venue(name=kw['venue']['text'], added_by=util.who_added())
 
         artists = kw.get('artists')
         artist_list = [artist.strip() for artist in artists.split(",")]
@@ -112,7 +112,7 @@ class Events(controllers.Controller, util.RestAdapter):
         # inserting
         else:
             e = Event(name=name, date=kw['date'], time=kw['time'], venue=v,
-                added_by = identity.current.user)
+                added_by=util.who_added())
             flash_msg = "added"
 
         del kw['artists']
@@ -126,7 +126,7 @@ class Events(controllers.Controller, util.RestAdapter):
                 if not a in e.artists:
                     e.addArtist(a)
             except SQLObjectNotFound:
-                a = Artist(name=artist, added_by=identity.current.user)
+                a = Artist(name=artist, added_by=util.who_added())
                 e.addArtist(a)
         turbogears.flash("Event %s" % flash_msg)
         redirect(turbogears.url("/events/%s" % e.id))
