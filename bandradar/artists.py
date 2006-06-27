@@ -31,16 +31,11 @@ class Artists(controllers.Controller, util.RestAdapter):
     def dynsearch(self, name):
         return util.dynsearch(Artist, name)
 
-    @expose()
+    @expose(template=".templates.artist.search_results")
     @turbogears.validate(form=artist_search_form)
     def search(self, search, tg_errors=None):
-        if tg_errors:
-            util.redirect_previous()
-        try:
-            a = Artist.byName(search['text'])
-            redirect("/artists/%s" % str(a.id))
-        except SQLObjectNotFound:
-            redirect("/artists/edit?name=%s" % search['text'])
+        results = util.search(Artist, search['text'], tg_errors)
+        return dict(artists=results, artist_search_form=artist_search_form)
 
     @expose(template=".templates.artist.list")
     def list(self, listby="today", orderby="alpha"):

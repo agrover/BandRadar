@@ -22,16 +22,11 @@ class Venues(controllers.Controller, util.RestAdapter):
     def dynsearch(self, name):
         return util.dynsearch(Venue, name)
 
-    @expose()
+    @expose(template=".templates.venue.search_results")
     @turbogears.validate(form=venue_search_form)
     def search(self, search, tg_errors=None):
-        if tg_errors:
-            util.redirect_previous()
-        try:
-            v = Venue.byName(search['text'])
-            redirect("/venues/%s" % str(v.id))
-        except SQLObjectNotFound:
-            redirect("/venues/new?name=%s" % search['text'])
+        results = util.search(Venue, search['text'], tg_errors)
+        return dict(venues=results, venue_search_form=venue_search_form)
 
     @expose(template=".templates.venue.list")
     def list(self):
