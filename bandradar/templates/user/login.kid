@@ -2,7 +2,7 @@
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
     xmlns:py="http://purl.org/kid/ns#"
-    py:extends="'master.kid'">
+    py:extends="'../master.kid'">
 
 <head>
     <title>Login</title>
