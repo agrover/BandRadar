@@ -25,7 +25,7 @@ class EventForm(w.WidgetsList):
     description = w.TextArea(rows=3)
     url = w.TextField(label="Website", attrs=dict(size=50),
         validator=v.Any(v.URL, v.Empty))
-    venue = util.BRAutoCompleteField("/venues/dynsearch")
+    venue = util.BRAutoCompleteField("/venues/dynsearch", label="Venue")
 
 event_form = w.TableForm(fields=EventForm(), name="event", submit_text="Save")
 
@@ -46,7 +46,7 @@ class Events(controllers.Controller, util.RestAdapter):
     def list(self, listby="all"):
         e = Event.select(AND(Event.q.verified == True, Event.q.active == True),
             orderBy=Event.q.name)
-        return dict(events=e)
+        return dict(events=e, event_search_form=event_search_form)
 
     @expose(template=".templates.event.show")
     def show(self, id):

@@ -35,12 +35,12 @@ class Artists(controllers.Controller, util.RestAdapter):
     @turbogears.validate(form=artist_search_form)
     def search(self, search, tg_errors=None):
         if tg_errors:
-            redirect("/")
+            util.redirect_previous()
         try:
             a = Artist.byName(search['text'])
             redirect("/artists/%s" % str(a.id))
         except SQLObjectNotFound:
-            redirect("/artists/new?name=%s" % search['text'])
+            redirect("/artists/edit?name=%s" % search['text'])
 
     @expose(template=".templates.artist.list")
     def list(self, listby="today", orderby="alpha"):
@@ -80,7 +80,7 @@ class Artists(controllers.Controller, util.RestAdapter):
 
         # order by alpha, pop, date
 
-        return dict(artists=result)
+        return dict(artists=result, artist_search_form=artist_search_form)
 
     @expose(template=".templates.artist.show")
     def show(self, id):
@@ -94,12 +94,6 @@ class Artists(controllers.Controller, util.RestAdapter):
             turbogears.flash("Artist ID not found")
             redirect(turbogears.url("/artists/list"))
         return dict(artist=a, events=a.events, is_tracked=is_tracked)
-
-    @expose(template=".templates.artist.edit")
-    @identity.require(identity.not_anonymous())
-    def new(self, name=""):
-        form_vals = dict(name=name)
-        return dict(artist_form=artist_form, form_vals=form_vals)
 
     @expose(template=".templates.artist.edit")
     @identity.require(identity.not_anonymous())

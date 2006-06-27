@@ -22,6 +22,17 @@ class Venues(controllers.Controller, util.RestAdapter):
     def dynsearch(self, name):
         return util.dynsearch(Venue, name)
 
+    @expose()
+    @turbogears.validate(form=venue_search_form)
+    def search(self, search, tg_errors=None):
+        if tg_errors:
+            util.redirect_previous()
+        try:
+            v = Venue.byName(search['text'])
+            redirect("/venues/%s" % str(v.id))
+        except SQLObjectNotFound:
+            redirect("/venues/new?name=%s" % search['text'])
+
     @expose(template=".templates.venue.list")
     def list(self):
         venues = Venue.select(AND(Venue.q.verified == True, Venue.q.active == True),
@@ -29,7 +40,7 @@ class Venues(controllers.Controller, util.RestAdapter):
         for v in venues:
             v.eventcount = Event.select(AND(Event.q.venueID == v.id,
                 Event.q.date >= date.today())).count()
-        return dict(venues=venues)
+        return dict(venues=venues, venue_search_form=venue_search_form)
 
     @expose(template=".templates.venue.show")
     def show(self, id):

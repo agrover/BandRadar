@@ -7,6 +7,12 @@
 </head>
 
 <body>
+    <div id="searchbox">
+        <h2>Search Events</h2>
+        <?python from bandradar.artists import artist_search_form ?>
+        ${event_search_form(action="/events/search")}
+    </div>
+
     <h2>Event List</h2>
 
     <p py:for="e in events">

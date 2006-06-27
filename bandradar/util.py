@@ -39,9 +39,9 @@ def who_added():
         return identity.current.user
 
 class BRAutoCompleteField(w.AutoCompleteField):
-    def __init__(self, search_controller):
+    def __init__(self, search_controller, label=""):
         super(w.AutoCompleteField, self).__init__(
-            label="",
+            label=label,
             search_controller=search_controller,
             search_param="name",
             result_name="results",

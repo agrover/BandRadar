@@ -7,6 +7,12 @@
 </head>
 
 <body>
+    <div id="searchbox">
+        <h2>Search Bands</h2>
+        <?python from bandradar.artists import artist_search_form ?>
+        ${artist_search_form(action="/artists/search")}
+    </div>
+
     <h2>Band List</h2>
     With shows:
     <a href="/artists/list/today">Today</a>
