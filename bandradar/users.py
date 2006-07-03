@@ -143,23 +143,8 @@ class Users(controllers.Controller, util.RestAdapter, identity.SecureResource):
     @expose()
     def logout(self):
         identity.current.logout()
+        turbogears.flash("Logged out.")
         redirect("/")
-
-    @expose(allow_json=True)
-    def dynsearch(self, name):
-        def my_search(like_str):
-            result_cnt = 6
-            return UserAcct.select(LIKE(func.LOWER(UserAcct.q.user_name), like_str),
-                orderBy=UserAcct.q.user_name)[:result_cnt]
-
-        # check startswith first
-        like_str = "%s%%" % str(name).lower()
-        names = [a.user_name for a in my_search(like_str)]
-        if not len(names):
-            # then go all out
-            like_str = "%%%s%%" % str(name).lower()
-            names = [a.user_name for a in my_search(like_str)]
-        return dict(results=names)
 
     @expose(template=".templates.user.list")
     def list(self):

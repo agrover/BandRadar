@@ -13,7 +13,7 @@
         ${artist_search_form(action="/artists/search")}
     </div>
 
-    <h2>Search Results</h2>
+    <h2>Artist Search Results</h2>
     <p py:for="a in artists">
         <p><b><a href="/artists/${a.id}">${a.name}</a></b></p>
     </p>

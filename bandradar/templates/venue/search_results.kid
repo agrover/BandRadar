@@ -13,7 +13,7 @@
         ${venue_search_form(action="/venues/search")}
     </div>
 
-    <h2>Venue List</h2>
+    <h2>Venue Search Results</h2>
 
     <p py:for="v in venues">
         <p>
