@@ -99,6 +99,12 @@ class SearchBox(w.WidgetsList):
 user_search_form = w.ListForm(fields=SearchBox(), name="search",
     submit_text="Search!")
 
+class LostPasswdForm(w.WidgetsList):
+    email = w.TextField(label="Email",
+        validator=v.All(v.NotEmpty, v.Email(strip=True)))
+
+lost_passwd_form = w.TableForm(fields=LostPasswdForm(), submit_text="Send")
+
 #
 # CONTROLLER
 #
@@ -218,5 +224,39 @@ class Users(controllers.Controller, util.RestAdapter, identity.SecureResource):
         except SQLObjectNotFound:
             turbogears.flash("Error saving changes")
         redirect(turbogears.url("/users/%s" % u.user_name))
+
+    @expose(template=".templates.user.lost_passwd")
+    def lost_passwd(self):
+        return dict(lost_passwd_form=lost_passwd_form);
+
+    @expose(template=".templates.output")
+    @turbogears.validate(form=lost_passwd_form)
+    @turbogears.error_handler(lost_passwd)    
+    def lost_passwd_send(self, email):
+        try:
+            u = UserAcct.by_email_address(email)
+            import smtplib
+            import pkg_resources
+            from email.MIMEText import MIMEText
+
+            msg_to = u.email_address
+            msg_from = "BandRadar Help <help@bandradar.com>"
+            body = pkg_resources.resource_string(__name__, 
+                        'templates/user/lost_passwd_email.txt')
+            body  = body % {'password': u.password,
+                'user_name': u.user_name}
+            msg = MIMEText(body)
+            msg['Subject'] = "bandradar.com password reminder"
+            msg['From'] = msg_from
+            msg['To'] = msg_to
+
+            s = smtplib.SMTP()
+            s.connect()
+            s.sendmail(msg_from, [msg_to], msg.as_string())
+            s.close()
+        except SQLObjectNotFound:
+            pass
+
+        return dict(output="Email sent to %s." % email)
 
     #delete. display confirmation

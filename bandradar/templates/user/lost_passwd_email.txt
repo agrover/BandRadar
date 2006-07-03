@@ -1,0 +1,9 @@
+Hello!
+
+You requested that we email your password for bandradar.com.  Your login
+information is:
+
+User Name: %(user_name)s
+Password: %(password)s
+
+Regards -- bandradar.com

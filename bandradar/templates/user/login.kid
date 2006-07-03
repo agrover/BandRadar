@@ -52,6 +52,7 @@
             <input py:for="name,value in original_parameters.items()"
                 type="hidden" name="${name}" value="${value}"/>
         </form>
+        <a href="/users/lost_passwd">Forgot my password</a>
     </div>
     <hr />
     <div id="newuserbox">
