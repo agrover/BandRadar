@@ -254,9 +254,9 @@ class Users(controllers.Controller, util.RestAdapter, identity.SecureResource):
             s.connect()
             s.sendmail(msg_from, [msg_to], msg.as_string())
             s.close()
-        except SQLObjectNotFound:
-            pass
 
-        return dict(output="Email sent to %s." % email)
+            return dict(output="Email sent to %s." % email)
+        except SQLObjectNotFound:
+            return dict(output="Email unknown - no email sent.")
 
     #delete. display confirmation
