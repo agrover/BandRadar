@@ -1,12 +1,8 @@
 import logging
-
 import cherrypy
-
 import turbogears
 from turbogears import controllers, expose, redirect
 from turbogears import identity
-
-from bandradar import json
 
 from artists import Artists, artist_search_form
 from venues import Venues
@@ -17,8 +13,13 @@ from model import Event
 
 import datetime
 
-
 log = logging.getLogger("bandradar.controllers")
+
+def br_startup():
+    log.info("BandRadar started")
+
+turbogears.startup.call_on_startup.append(br_startup)
+
 
 class Root(controllers.RootController):
 
