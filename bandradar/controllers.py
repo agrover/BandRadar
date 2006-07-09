@@ -3,6 +3,7 @@ import cherrypy
 import turbogears
 from turbogears import controllers, expose, redirect
 from turbogears import identity
+from turbogears import scheduler
 
 from artists import Artists, artist_search_form
 from venues import Venues
@@ -10,15 +11,22 @@ from events import Events
 from users import Users
 from importers import Importers
 from model import Event
+import batch
 
 import datetime
 
 log = logging.getLogger("bandradar.controllers")
 
+
 def br_startup():
-    log.info("BandRadar started")
+    scheduler.add_interval_task(batch.task, 60)
+    #scheduler.add_weekday_task(my_task, range(1,8), (3,0))
+
+def br_shutdown():
+    pass
 
 turbogears.startup.call_on_startup.append(br_startup)
+turbogears.startup.call_on_shutdown.append(br_shutdown)
 
 
 class Root(controllers.RootController):

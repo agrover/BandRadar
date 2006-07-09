@@ -7,7 +7,8 @@ from turbogears import identity
 hub = PackageHub("bandradar")
 __connection__ = hub
 
-soClasses = ('UserAcct', 'Group', 'Permission', 'Venue', 'Artist', 'Event')
+soClasses = ('UserAcct', 'Group', 'Permission', 'Venue', 'Artist', 'Event',
+             'BatchRecord')
 
 
 class Venue(SQLObject):
@@ -49,6 +50,15 @@ class Event(SQLObject):
     verified = BoolCol(default=False)
     active = BoolCol(default=True)
     event_index = DatabaseIndex('date', 'time', 'venue', unique=True)
+
+
+class BatchRecord(SQLObject):
+    # when the batch thread starts and finishes
+    started = DateTimeCol(default=datetime.now)
+    finished = DateTimeCol(default=None)
+    # the period of new data it is processing
+    first_handled = DateTimeCol(default=None)
+    last_handled = DateTimeCol(default=None)
 
 
 class VisitIdentity(SQLObject):
