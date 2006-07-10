@@ -5,7 +5,6 @@ from turbogears import controllers, expose, redirect
 from turbogears import identity
 from turbogears import widgets as w
 from turbogears import validators as v
-#from turbogears.identity import ProviderWrapper
 
 from model import UserAcct, Event, Artist, hub
 from sqlobject import SQLObjectNotFound, LIKE, func
