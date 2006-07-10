@@ -53,11 +53,12 @@ def task():
 
         s = smtplib.SMTP()
         s.connect()
-        s.sendmail(msg_from, [msg_to], msg.as_string())
+        try:
+            s.sendmail(msg_from, [msg_to], msg.as_string())
+        except smtplib.SMTPException, smtp:
+            # todo: record bounces so a human can do something
+            log.error("smtp error %s" % repr(smtp))
         s.close()
-
-
-        log.info("would send email about %d things to %s" % (len(events), user.user_name))
 
     current.finished = datetime.datetime.now()
     hub.commit()
