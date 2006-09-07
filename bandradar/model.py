@@ -117,7 +117,6 @@ class UserAcct(SQLObject):
     zip_code = UnicodeCol(length=10, default=None)
     url = UnicodeCol(length=256, default=None)
     artists = RelatedJoin('Artist')
-    events = RelatedJoin('Event')
     last_updated = DateTimeCol(default=datetime.now())
     last_emailed = DateTimeCol(default=None)
     event_email = BoolCol(default=True)
