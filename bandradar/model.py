@@ -8,7 +8,7 @@ hub = PackageHub("bandradar")
 __connection__ = hub
 
 soClasses = ('UserAcct', 'Group', 'Permission', 'Venue', 'Artist', 'Event',
-             'BatchRecord')
+             'BatchRecord', 'Attendance')
 
 
 class Venue(SQLObject):
@@ -18,6 +18,7 @@ class Venue(SQLObject):
     phone = UnicodeCol(length=12, default=None)
     created = DateTimeCol(default=datetime.now())
     added_by = ForeignKey('UserAcct', default=None)
+    last_updated = DateTimeCol(default=datetime.now())
     verified = BoolCol(default=False)
     active = BoolCol(default=True)
 
@@ -30,6 +31,7 @@ class Artist(SQLObject):
     users = RelatedJoin('UserAcct')
     created = DateTimeCol(default=datetime.now())
     added_by = ForeignKey('UserAcct', default=None)
+    last_updated = DateTimeCol(default=datetime.now())
     verified = BoolCol(default=False)
     active = BoolCol(default=True)
 
@@ -45,11 +47,22 @@ class Event(SQLObject):
     venue = ForeignKey('Venue')
     added_by = ForeignKey('UserAcct', default=None)
     artists = RelatedJoin('Artist')
-    users = RelatedJoin('UserAcct')
     created = DateTimeCol(default=datetime.now())
+    added_by = ForeignKey('UserAcct', default=None)
+    last_updated = DateTimeCol(default=datetime.now())
     verified = BoolCol(default=False)
     active = BoolCol(default=True)
     event_index = DatabaseIndex('date', 'time', 'venue', unique=True)
+
+
+class Attendance(SQLObject):
+    event = ForeignKey('Event')
+    user = ForeignKey('UserAcct')
+    comment = UnicodeCol(default=None)
+    planning_to_go = BoolCol(default=False)
+    attended = BoolCol(default=False)
+    created = DateTimeCol(default=datetime.now())
+    last_updated = DateTimeCol(default=datetime.now())
 
 
 class BatchRecord(SQLObject):
@@ -105,6 +118,7 @@ class UserAcct(SQLObject):
     url = UnicodeCol(length=256, default=None)
     artists = RelatedJoin('Artist')
     events = RelatedJoin('Event')
+    last_updated = DateTimeCol(default=datetime.now())
     last_emailed = DateTimeCol(default=None)
     event_email = BoolCol(default=True)
     other_email = BoolCol(default=False)
