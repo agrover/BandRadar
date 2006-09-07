@@ -17,7 +17,7 @@ class WWBL:
         if event.rfind(':') != -1:
             event_name, event = event.split(':', 1)
         elif event.rfind('w/') != -1:
-            event_name, event = event.split('w/')
+            event_name, event = event.split('w/', 1)
 
         artists = [a.strip(' "') for a in event.split(",")]
         if not event_name:
@@ -70,6 +70,8 @@ class WWBL:
                     if len(addr_phone) > 1:
                         venue['phone'] = addr_phone[1] 
                 b1 = p.findNext('b')
+                if not b1.string:
+                    continue
                 venue['name'] = self.u(b1.string.strip())
                 b2 = b1.findNext('b')
                 events = b2.string.strip().split(";")
@@ -104,8 +106,8 @@ class WWBL:
 
 if __name__ == "__main__":
     wwbl = WWBL()
-    wwbl.parse_day(datetime.date.today())
-    #wwbl.parse_day(datetime.date(2006, 4, 22))
+    #wwbl.parse_day(datetime.date.today())
+    wwbl.parse_day(datetime.date(2006, 1, 10))
 
 #find named anchors
 # if a.parent = div class preview
