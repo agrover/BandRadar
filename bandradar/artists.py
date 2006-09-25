@@ -40,9 +40,15 @@ class Artists(controllers.Controller, util.RestAdapter):
     @expose(template=".templates.artist.list")
     def list(self, listby="today", orderby="alpha"):
 
-        def listday(day_delta):
+        def artists_with_shows(day_delta, day_count=1):
             day_result = []
-            events = Event.select(Event.q.date == date.today()-timedelta(day_delta))
+            start_date = date.today() - timedelta(day_delta)
+            where_clause = AND(Event.q.date >= start_date, Event.q.verified == True,
+                Event.q.active == True)
+            if day_count != 0:
+                end_date = start_date + timedelta(day_count-1)
+                where_clause = AND(where_clause, Event.q.date <= end_date)
+            events = Event.select(where_clause)
             for event in events:
                 for artist in event.artists:
                     art = dict(id=artist.id, name=artist.name)
@@ -53,29 +59,22 @@ class Artists(controllers.Controller, util.RestAdapter):
                     day_result.append(art)
             return day_result
 
-        if listby == "all":
-            result = []
-            artists = Artist.select(AND(Artist.q.verified == True,
-                Artist.q.active == True), orderBy=Artist.q.name)
-            for artist in artists:
-                art = dict(id=artist.id, name=artist.name)
-                if identity.current.user:
-                    art['is_tracked'] = artist in identity.current.user.artists
-                else:
-                    art['is_tracked'] = False
-                result.append(art)
-        elif listby == "yesterday":
-            result = listday(-1)
-        elif listby == "today":
-            result = listday(0)
+        if listby == "today":
+            result = artists_with_shows(0)
         elif listby == "tomorrow":
-            result = listday(1)
-        elif listby == "top":
-            result = []
+            result = artists_with_shows(1)
+        elif listby == "yesterday":
+            result = artists_with_shows(-1)
+        elif listby == "week":
+            result = artists_with_shows(0, 7)
+        elif listby == "all":
+            result = artists_with_shows(0, 0)
 
         # order by alpha, pop, date
+        import operator
+        result.sort(key=operator.itemgetter("name"))
 
-        return dict(artists=result, artist_search_form=artist_search_form)
+        return dict(artists=result, count=len(result), artist_search_form=artist_search_form)
 
     @expose(template=".templates.artist.show")
     def show(self, id):
@@ -163,7 +162,7 @@ class Artists(controllers.Controller, util.RestAdapter):
             a = Artist.get(id)
             for e in a.events:
                 a.removeEvent(e)
-            e.destroySelf()
+            a.destroySelf()
             turbogears.flash("Deleted")
         except SQLObjectNotFound:
             turbogears.flash("Delete failed")
