@@ -42,7 +42,7 @@ class Artists(controllers.Controller, util.RestAdapter):
 
         def artists_with_shows(day_delta, day_count=1):
             day_result = []
-            start_date = date.today() - timedelta(day_delta)
+            start_date = date.today() + timedelta(day_delta)
             where_clause = AND(Event.q.date >= start_date, Event.q.verified == True,
                 Event.q.active == True)
             if day_count != 0:
@@ -74,7 +74,8 @@ class Artists(controllers.Controller, util.RestAdapter):
         import operator
         result.sort(key=operator.itemgetter("name"))
 
-        return dict(artists=result, count=len(result), artist_search_form=artist_search_form)
+        return dict(artists=result, count=len(result), 
+            artist_search_form=artist_search_form)
 
     @expose(template=".templates.artist.show")
     def show(self, id):
