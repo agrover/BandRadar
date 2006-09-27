@@ -17,7 +17,7 @@ class AutoCompleteValidator(v.Schema):
 class EventForm(w.WidgetsList):
     id = w.HiddenField(validator=v.Int)
     name = w.TextField()
-    artists = w.TextField(help_text="Enter artists, comma-separated", validator=v.NotEmpty(strip=True))
+    artists = w.TextArea(help_text="Enter artists, one per line", validator=v.NotEmpty(strip=True), rows=3, cols=30)
     date = w.CalendarDatePicker(not_empty=True)
     time = w.TextField()
     cost = w.TextField()
@@ -71,7 +71,7 @@ class Events(controllers.Controller, util.RestAdapter):
         if id:
             try:
                 e = Event.get(id)
-                artists_str = ", ".join([a.name for a in e.artists])
+                artists_str = "\n".join([a.name for a in e.artists])
                 form_vals = dict(id=id, name=e.name, date=e.date, cost=e.cost,
                     ages=e.ages, description=e.description, url=e.url,
                     time=e.time, venue=dict(text=e.venue.name),
@@ -100,7 +100,7 @@ class Events(controllers.Controller, util.RestAdapter):
             v = Venue(name=kw['venue']['text'], added_by=util.who_added())
 
         artists = kw.get('artists')
-        artist_list = [artist.strip() for artist in artists.split(",")]
+        artist_list = [artist.strip() for artist in artists.split('\n')]
         name = kw.get('name')
         if not name:
             name = artists
