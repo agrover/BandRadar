@@ -24,16 +24,14 @@ class WWBL:
             event_name = ", ".join(artists)
         return event_name, artists
 
-    def u(self, string):
-        return unicode(string, 'latin1')
-
     def parse_day(self, date):
         venues = []
         baseurl = "http://wweek.com/calendar/music/index.php?date="
         datestr = str(int(time.mktime(date.timetuple())))
         url = baseurl + datestr
         usock = urllib.urlopen(url)
-        soup = BeautifulSoup(usock.read())
+        text = unicode(usock.read(), 'latin1')
+        soup = BeautifulSoup(text)
         #find all anchors with e.g. name="42820"
         anchors = soup('a', {'name':re.compile("\d+")})
         for anchor in anchors:
@@ -45,8 +43,8 @@ class WWBL:
                 event_dict = {}
                 div = anchor.parent
                 event_dict['name'], event_dict['artists'] = \
-                    self.parse_event(self.u(div.h2.string.strip()))
-                venue["name"] = self.u(anchor.findNextSibling('b').string.strip())
+                    self.parse_event(div.h2.string.strip())
+                venue["name"] = anchor.findNextSibling('b').string.strip()
                 txt = div.fetchText(re.compile("\|.*"), recursive=False)
                 result = txt[0].replace("[|", " ").strip().split(",")
                 venue["addr"] = result[0].strip()
@@ -72,7 +70,7 @@ class WWBL:
                 b1 = p.findNext('b')
                 if not b1.string:
                     continue
-                venue['name'] = self.u(b1.string.strip())
+                venue['name'] = b1.string.strip()
                 b2 = b1.findNext('b')
                 events = b2.string.strip().split(";")
                 for event in events:
@@ -80,7 +78,7 @@ class WWBL:
                     m = re.search(r'(.*?)\(([\d:&]+\ ?[ap]m)\)$', event)
                     if m:
                         event_dict['time'] = m.group(2)
-                        event = self.u(m.group(1))
+                        event = m.group(1)
                     event_dict['name'], event_dict['artists'] = self.parse_event(event)
                     event_dict['date'] = date
                     venue['events'].append(event_dict)
@@ -107,7 +105,7 @@ class WWBL:
 if __name__ == "__main__":
     wwbl = WWBL()
     #wwbl.parse_day(datetime.date.today())
-    wwbl.parse_day(datetime.date(2006, 1, 10))
+    print wwbl.parse_day(datetime.date(2006, 9, 28))
 
 #find named anchors
 # if a.parent = div class preview
