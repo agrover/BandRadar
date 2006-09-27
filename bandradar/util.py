@@ -23,10 +23,17 @@ def dynsearch(model, name):
 def search(model, name, tg_errors=None):
     if tg_errors:
         redirect_previous()
+
     name_str = "%s%%" % str(name).lower()
     result = model.select(LIKE(func.LOWER(model.q.name), name_str),
         orderBy=model.q.name)
     result_cnt = len(list(result))
+    if not result_cnt:
+        name_str = "%%%s%%" % str(name).lower()
+        result = model.select(LIKE(func.LOWER(model.q.name), name_str),
+            orderBy=model.q.name)
+        result_cnt = len(list(result))
+
     if not result_cnt:
         turbogears.flash("Not Found")
         redirect_previous()

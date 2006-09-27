@@ -3,7 +3,7 @@
     py:extends="'../master.kid'">
 
 <head>
-    <title>BandRadar - Event List</title>
+    <title>BandRadar - Band List</title>
 </head>
 
 <body>
@@ -13,20 +13,10 @@
         ${event_search_form(action="/events/search")}
     </div>
 
-    <h2>Event List (${count})</h2>
-    Events:
-    <a href="/events/list/today">Today</a>
-    <a href="/events/list/tomorrow">Tomorrow</a>
-    <a href="/events/list/yesterday">Yesterday</a>
-    <a href="/events/list/week">Upcoming week</a>
-    <a href="/events/list/all">All upcoming</a>
-
+    <h2>Event Search Results</h2>
     <p py:for="e in events">
-        <p><a href="/events/${e.id}">${e.name}</a> ${e.date} ${e.cost}</p>
+        <p><b><a href="/events/${e.id}">${e.name}</a></b> ${e.date}</p>
     </p>
 
-    <p>
-        <a href="/events/edit">Add a new Event</a>
-    </p>
 </body>
 </html>

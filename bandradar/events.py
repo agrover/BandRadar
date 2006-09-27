@@ -42,11 +42,17 @@ class Events(controllers.Controller, util.RestAdapter):
     def dynsearch(self, name):
         return util.dynsearch(Event, name)
 
+    @expose(template=".templates.event.search_results")
+    @turbogears.validate(form=event_search_form)
+    def search(self, search, tg_errors=None):
+        results = util.search(Event, search['text'], tg_errors)
+        return dict(events=results, event_search_form=event_search_form)
+
     @expose(template=".templates.event.list")
     def list(self, listby="all"):
         e = Event.select(AND(Event.q.verified == True, Event.q.active == True),
             orderBy=Event.q.name)
-        return dict(events=e, event_search_form=event_search_form)
+        return dict(events=e, count=e.count(), event_search_form=event_search_form)
 
     @expose(template=".templates.event.show")
     def show(self, id):
