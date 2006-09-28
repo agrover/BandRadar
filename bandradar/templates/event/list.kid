@@ -22,7 +22,7 @@
     <a href="/events/list/all">All upcoming</a>
 
     <p py:for="e in events">
-        <p><a href="/events/${e.id}">${e.name}</a> ${e.date} ${e.cost}</p>
+        <p><a href="/events/${e.id}">${e.name} @ ${e.venue.name}</a> ${e.get_fdate()} ${e.cost}</p>
     </p>
 
     <p>

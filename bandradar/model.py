@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, date, timedelta
 
 from sqlobject import *
 from turbogears.database import PackageHub
@@ -53,6 +53,14 @@ class Event(SQLObject):
     verified = BoolCol(default=False)
     active = BoolCol(default=True)
     event_index = DatabaseIndex('date', 'time', 'venue', unique=True)
+
+    def get_fdate(self):
+        thedate = date.today()
+        if self.date == thedate:
+            return "today"
+        if self.date == thedate + timedelta(1):
+            return "tomorrow"
+        return self.date
 
 
 class Attendance(SQLObject):

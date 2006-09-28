@@ -3,8 +3,10 @@ from turbogears import controllers, expose, redirect
 from turbogears import identity
 from turbogears import widgets as w
 from turbogears import validators as v
+
 from model import Event, Venue, Artist, hub
 from sqlobject import SQLObjectNotFound, LIKE, func, AND
+from datetime import date, timedelta
 import util
 from cgi import escape
 
@@ -49,10 +51,32 @@ class Events(controllers.Controller, util.RestAdapter):
         return dict(events=results, event_search_form=event_search_form)
 
     @expose(template=".templates.event.list")
-    def list(self, listby="all"):
-        e = Event.select(AND(Event.q.verified == True, Event.q.active == True),
-            orderBy=Event.q.name)
-        return dict(events=e, count=e.count(), event_search_form=event_search_form)
+    def list(self, listby="today", orderby="alpha"):
+
+        def events_in_period(day_delta, day_count=1):
+            day_result = []
+            start_date = date.today() + timedelta(day_delta)
+            where_clause = AND(Event.q.date >= start_date, Event.q.verified == True,
+                Event.q.active == True)
+            if day_count != 0:
+                end_date = start_date + timedelta(day_count-1)
+                where_clause = AND(where_clause, Event.q.date <= end_date)
+            events = Event.select(where_clause, orderBy=(Event.q.date, Event.q.name))
+            return events
+
+        if listby == "today":
+            result = events_in_period(0)
+        elif listby == "tomorrow":
+            result = events_in_period(1)
+        elif listby == "yesterday":
+            result = events_in_period(-1)
+        elif listby == "week":
+            result = events_in_period(0, 7)
+        elif listby == "all":
+            result = events_in_period(0, 0)
+
+        return dict(events=result, count=result.count(), 
+            listby=listby, event_search_form=event_search_form)
 
     @expose(template=".templates.event.show")
     def show(self, id):
