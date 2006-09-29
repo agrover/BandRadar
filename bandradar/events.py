@@ -6,7 +6,7 @@ from turbogears import validators as v
 
 from model import Event, Venue, Artist, hub
 from sqlobject import SQLObjectNotFound, LIKE, func, AND
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta
 import util
 from cgi import escape
 
@@ -127,7 +127,7 @@ class Events(controllers.Controller, util.RestAdapter):
         try:
             v = Venue.byName(kw['venue']['text'])
         except SQLObjectNotFound:
-            v = Venue(name=kw['venue']['text'], added_by=util.who_added())
+            v = Venue(name=kw['venue']['text'], added_by=identity.current.user)
 
         artists = kw.get('artists')
         artist_list = [artist.strip() for artist in artists.split('\n')]
@@ -154,6 +154,7 @@ class Events(controllers.Controller, util.RestAdapter):
         e.set(**kw)
         e.name = name
         e.venue = v
+        e.last_updated = datetime.now()
         for artist in artist_list:
             try:
                 a = Artist.byName(artist)

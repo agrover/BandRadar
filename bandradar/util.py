@@ -55,12 +55,6 @@ def redirect_previous():
 def redirect(where):
     turbogears.redirect(turbogears.url(where))
 
-def who_added():
-    if "admin" in identity.current.groups:
-        return None
-    else:
-        return identity.current.user
-
 class BRAutoCompleteField(w.AutoCompleteField):
     def __init__(self, search_controller, label=""):
         super(w.AutoCompleteField, self).__init__(

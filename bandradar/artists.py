@@ -1,6 +1,7 @@
 import turbogears
 from turbogears import controllers, expose, redirect
 from turbogears import identity
+from turbogears import database
 from turbogears import widgets as w
 from turbogears import validators as v
 
@@ -12,8 +13,8 @@ import util
 class ArtistForm(w.WidgetsList):
     id = w.HiddenField()
     name = w.TextField(validator=v.NotEmpty)
-    desc = w.TextArea(label="Description")
-    url = w.TextField(label="Website", attrs={'size':90},
+    description = w.TextArea(label="Description", rows=4)
+    url = w.TextField(label="Website", attrs={'size':60},
         validator=v.Any(v.URL, v.Empty))
 
 artist_form = w.TableForm(fields=ArtistForm(), name="artist", submit_text="Save")
@@ -93,11 +94,11 @@ class Artists(controllers.Controller, util.RestAdapter):
     @expose(template=".templates.artist.edit")
     @identity.require(identity.not_anonymous())
     def edit(self, id=0, **kw):
-        form_vals = {}
+        a = {}
         if id:
             try:
                 a = Artist.get(id)
-                form_vals = dict(id=id, name=a.name, desc=a.description, url=a.url)
+                form_vals = database.so_to_dict(a)
             except SQLObjectNotFound:
                 pass
         form_vals.update(kw)
