@@ -55,6 +55,12 @@ def redirect_previous():
 def redirect(where):
     turbogears.redirect(turbogears.url(where))
 
+class AutoCompleteValidator(v.Schema):
+    def _to_python(self, value, state):
+        text = value['text']
+        value['text'] = v.NotEmpty(strip=True).to_python(text)
+        return value
+
 class BRAutoCompleteField(w.AutoCompleteField):
     def __init__(self, search_controller, label=""):
         super(w.AutoCompleteField, self).__init__(
@@ -63,7 +69,7 @@ class BRAutoCompleteField(w.AutoCompleteField):
             search_param="name",
             result_name="results",
             only_suggest=True,
-            validator=v.Schema(text=v.NotEmpty(strip=True)),
+            validator=AutoCompleteValidator(),
             attrs={'size':20})
 
 class RestAdapter:

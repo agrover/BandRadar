@@ -63,14 +63,15 @@ class Venues(controllers.Controller, util.RestAdapter):
         return dict(venue=v, past_events=past_events, future_events=future_events)
 
     @expose(template=".templates.venue.edit")
-    def edit(self, id=0, name="", addr="", url=""):
-        v = {}
+    def edit(self, id=0):
         if id:
             try:
                 v = Venue.get(id)
             except SQLObjectNotFound:
                 turbogears.flash("Invalid ID")
                 redirect(turbogears.url("/venues/list"))
+        else:
+            v = {}
         return dict(venue_form=venue_form, form_vals=v)
 
     @expose()

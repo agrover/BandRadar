@@ -1,6 +1,7 @@
 import turbogears
 from turbogears import controllers, expose, redirect
 from turbogears import identity
+from turbogears import database
 from turbogears import widgets as w
 from turbogears import validators as v
 
@@ -9,12 +10,6 @@ from sqlobject import SQLObjectNotFound, LIKE, func, AND
 from datetime import date, datetime, timedelta
 import util
 from cgi import escape
-
-class AutoCompleteValidator(v.Schema):
-    def _to_python(self, value, state):
-        text = value['text']
-        value['text'] = v.NotEmpty(strip=True).to_python(text)
-        return value
 
 class EventForm(w.WidgetsList):
     id = w.HiddenField(validator=v.Int)
@@ -101,12 +96,9 @@ class Events(controllers.Controller, util.RestAdapter):
         if id:
             try:
                 e = Event.get(id)
-                artists_str = "\n".join([a.name for a in e.artists])
-                form_vals = dict(id=id, name=e.name, date=e.date, cost=e.cost,
-                    ages=e.ages, description=e.description, url=e.url,
-                    time=e.time, venue=dict(text=e.venue.name),
-                    artists=artists_str)
-                    # use different template since we're editing existing
+                form_vals = database.so_to_dict(e)
+                form_vals['artists'] = "\n".join([a.name for a in e.artists])
+                form_vals['venue'] = dict(text=e.venue.name)
                 template = ".templates.event.edit"
             except SQLObjectNotFound:
                 pass
@@ -146,7 +138,7 @@ class Events(controllers.Controller, util.RestAdapter):
         # inserting
         else:
             e = Event(name=name, date=kw['date'], time=kw['time'], venue=v,
-                added_by=util.who_added())
+                added_by=identity.current.user)
             flash_msg = "added"
 
         del kw['artists']
@@ -160,7 +152,7 @@ class Events(controllers.Controller, util.RestAdapter):
                 if not a in e.artists:
                     e.addArtist(a)
             except SQLObjectNotFound:
-                a = Artist(name=artist, added_by=util.who_added())
+                a = Artist(name=artist, added_by=identity.current.user)
                 e.addArtist(a)
         turbogears.flash("Event %s" % flash_msg)
         redirect(turbogears.url("/events/%s" % e.id))

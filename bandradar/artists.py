@@ -94,6 +94,7 @@ class Artists(controllers.Controller, util.RestAdapter):
     @expose(template=".templates.artist.edit")
     @identity.require(identity.not_anonymous())
     def edit(self, id=0, **kw):
+        form_vals = {}
         if id:
             try:
                 a = Artist.get(id)
