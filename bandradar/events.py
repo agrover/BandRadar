@@ -154,7 +154,6 @@ class Events(controllers.Controller, util.RestAdapter):
         e.set(**kw)
         e.name = name
         e.venue = v
-        e.last_updated = datetime.now()
         for artist in artist_list:
             try:
                 a = Artist.byName(artist)

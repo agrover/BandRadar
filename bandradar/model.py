@@ -10,34 +10,40 @@ __connection__ = hub
 soClasses = ('UserAcct', 'Group', 'Permission', 'Venue', 'Artist', 'Event',
              'BatchRecord', 'Attendance')
 
+class BRSQLObject(SQLObject):
 
-class Venue(SQLObject):
+    created = DateTimeCol(default=datetime.now())
+    last_updated = DateTimeCol(default=datetime.now())
+
+    def __setattr__(self, name, value):
+        super(BRSQLObject, self).__setattr__(name, value)
+        if name in self.sqlmeta.columns.keys():
+            super(BRSQLObject, self).__setattr__('last_updated', datetime.now())
+
+
+class Venue(BRSQLObject):
     name = UnicodeCol(alternateID=True, length=100)
     description = UnicodeCol(default=None)
     address = UnicodeCol(default=None)
     url = UnicodeCol(length=256, default=None)
     phone = UnicodeCol(length=12, default=None)
-    created = DateTimeCol(default=datetime.now())
     added_by = ForeignKey('UserAcct', default=None)
-    last_updated = DateTimeCol(default=datetime.now())
     verified = BoolCol(default=False)
     active = BoolCol(default=True)
 
 
-class Artist(SQLObject):
+class Artist(BRSQLObject):
     name = UnicodeCol(alternateID=True, length=100)
     description = UnicodeCol(default=None)
     url = UnicodeCol(length=256, default=None)
     events = RelatedJoin('Event')
     users = RelatedJoin('UserAcct')
-    created = DateTimeCol(default=datetime.now())
     added_by = ForeignKey('UserAcct', default=None)
-    last_updated = DateTimeCol(default=datetime.now())
     verified = BoolCol(default=False)
     active = BoolCol(default=True)
 
 
-class Event(SQLObject):
+class Event(BRSQLObject):
     name = UnicodeCol(length=200)
     description = UnicodeCol(default=None)
     time = UnicodeCol(length=20, default=None)
@@ -48,9 +54,7 @@ class Event(SQLObject):
     venue = ForeignKey('Venue')
     added_by = ForeignKey('UserAcct', default=None)
     artists = RelatedJoin('Artist')
-    created = DateTimeCol(default=datetime.now())
     added_by = ForeignKey('UserAcct', default=None)
-    last_updated = DateTimeCol(default=datetime.now())
     verified = BoolCol(default=False)
     active = BoolCol(default=True)
     event_index = DatabaseIndex('date', 'time', 'venue', unique=True)
@@ -64,14 +68,12 @@ class Event(SQLObject):
         return self.date.strftime("%a %m/%d")
 
 
-class Attendance(SQLObject):
+class Attendance(BRSQLObject):
     event = ForeignKey('Event')
     user = ForeignKey('UserAcct')
     comment = UnicodeCol(default=None)
     planning_to_go = BoolCol(default=False)
     attended = BoolCol(default=False)
-    created = DateTimeCol(default=datetime.now())
-    last_updated = DateTimeCol(default=datetime.now())
 
 
 class BatchRecord(SQLObject):
@@ -90,10 +92,7 @@ class VisitIdentity(SQLObject):
 
 
 class Group(SQLObject):
-    """
-    An ultra-simple group definition.
-    """
-    
+
     # names like "Group" and "Order" are reserved words in SQL
     # so we set the name to something safe for SQL
     class sqlmeta:
@@ -111,22 +110,17 @@ class Group(SQLObject):
     permissions = RelatedJoin( "Permission")
 
 
-class UserAcct(SQLObject):
-    """
-    Reasonably basic User definition. Probably would want additional attributes.
-    """
+class UserAcct(BRSQLObject):
     user_name = UnicodeCol( length=16, alternateID=True,
                            alternateMethodName="by_user_name" )
     email_address = UnicodeCol( length=255, alternateID=True,
                                alternateMethodName="by_email_address" )
     display_name = UnicodeCol( length=255 )
     password = UnicodeCol( length=40 )
-    created = DateTimeCol( default=datetime.now )
     # site-specific fields
     zip_code = UnicodeCol(length=10, default=None)
     url = UnicodeCol(length=256, default=None)
     artists = RelatedJoin('Artist')
-    last_updated = DateTimeCol(default=datetime.now())
     last_emailed = DateTimeCol(default=None)
     event_email = BoolCol(default=True)
     other_email = BoolCol(default=False)

@@ -7,7 +7,7 @@ from turbogears import validators as v
 
 from model import Artist, Event, hub
 from sqlobject import SQLObjectNotFound, LIKE, func, AND
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta
 import util
 
 class ArtistForm(w.WidgetsList):
@@ -94,7 +94,6 @@ class Artists(controllers.Controller, util.RestAdapter):
     @expose(template=".templates.artist.edit")
     @identity.require(identity.not_anonymous())
     def edit(self, id=0, **kw):
-        a = {}
         if id:
             try:
                 a = Artist.get(id)
@@ -108,18 +107,16 @@ class Artists(controllers.Controller, util.RestAdapter):
     @identity.require(identity.not_anonymous())
     @turbogears.validate(form=artist_form)
     @turbogears.error_handler(edit)
-    def save(self, name, id=0, desc="", url=""):
+    def save(self, id=0, **kw):
         if id:
             try:
                 a = Artist.get(id)
-                a.name = name
-                a.description = desc
-                a.url = url
+                a.set(**kw)
                 turbogears.flash("Updated")
             except SQLObjectNotFound:
                 turbogears.flash("Update Error")
         else:
-            a = Artist(name=name, description=desc, url=url, added_by=util.who_added())
+            a = Artist(added_by=identity.current.user, **kw)
             if not "admin" in identity.current.groups:
                 identity.current.user.addArtist(a)
             turbogears.flash("Added")

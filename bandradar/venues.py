@@ -85,7 +85,7 @@ class Venues(controllers.Controller, util.RestAdapter):
             except SQLObjectNotFound:
                 turbogears.flash("Update Error")
         else:
-            v = Venue(**kw)
+            v = Venue(added_by=identity.current.user, **kw)
             turbogears.flash("Added")
         redirect(turbogears.url("/venues/%s" % v.id))
 
