@@ -10,7 +10,9 @@
     <div id="body">
         <h2>Venue Details</h2>
         <p>${v.name}</p>
+        <p>Description: ${v.description}</p>
         <p>Address: ${v.address}</p>
+        <p>Phone: ${v.phone}</p>
         <p>URL: ${v.url}</p>
 
         <div py:for="e in past_events">

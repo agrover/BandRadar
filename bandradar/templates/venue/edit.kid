@@ -9,12 +9,7 @@
 <body>
     <h2>Edit a venue</h2>
 
-    <form action="/venues/save" method="post">
-        <input type="hidden" name="id" value="${id}" />
-        <label>Name:</label><input type="text" name="name" size="40" value="${name}"/><br/>
-        <label>Address:</label><input type="text" name="addr" size="40" value="${addr}"/><br/>
-        <label>URL:</label><input type="text" name="url" size="40" value="${url}"/><br/>
-        <input type="submit" name="submit" value="Save!" />
-    </form>
+    ${venue_form.display(value=form_vals, action="/venues/save")}
+
 </body>
 </html>

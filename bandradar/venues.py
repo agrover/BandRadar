@@ -9,6 +9,17 @@ from sqlobject import SQLObjectNotFound, LIKE, func, AND
 from datetime import date
 import util
 
+class VenueForm(w.WidgetsList):
+    id = w.HiddenField(validator=v.Int)
+    name = w.TextField(validator=v.NotEmpty)
+    description = w.TextArea(rows=3)
+    address = w.TextField()
+    phone = w.TextField()
+    url = w.TextField(label="Website", attrs=dict(size=50),
+        validator=v.Any(v.URL, v.Empty))
+
+venue_form = w.TableForm(fields=VenueForm(), name="venue", submit_text="Save")
+
 class SearchBox(w.WidgetsList):
     search = util.BRAutoCompleteField("/venues/dynsearch")
 
@@ -53,28 +64,29 @@ class Venues(controllers.Controller, util.RestAdapter):
 
     @expose(template=".templates.venue.edit")
     def edit(self, id=0, name="", addr="", url=""):
+        v = {}
         if id:
             try:
                 v = Venue.get(id)
-                name = v.name
-                addr = v.address
-                url = v.url
             except SQLObjectNotFound:
                 turbogears.flash("Invalid ID")
                 redirect(turbogears.url("/venues/list"))
-        return dict(id=id, name=name, addr=addr, url=url)
+        return dict(venue_form=venue_form, form_vals=v)
 
     @expose()
-    def save(self, submit, id, name, addr="", url=""):
-        try:
-            v = Venue.get(id)
-            v.name = name
-            v.address = addr
-            v.url = url
-            turbogears.flash("Updated")
-        except SQLObjectNotFound:
-            v = Venue(name=name, address=addr, url=url)
-            turbogears.flash("Added to DB")
+    @turbogears.validate(form=venue_form)
+    @turbogears.error_handler(edit)
+    def save(self, id=0, **kw):
+        if id:
+            try:
+                v = Venue.get(id)
+                v.set(**kw)
+                turbogears.flash("Updated")
+            except SQLObjectNotFound:
+                turbogears.flash("Update Error")
+        else:
+            v = Venue(**kw)
+            turbogears.flash("Added")
         redirect(turbogears.url("/venues/%s" % v.id))
 
     @expose()
