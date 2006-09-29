@@ -47,7 +47,7 @@ class WWBL:
                 venue["name"] = anchor.findNextSibling('b').string.strip()
                 txt = div.fetchText(re.compile("\|.*"), recursive=False)
                 result = txt[0].replace("[|", " ").strip().split(",")
-                venue["addr"] = result[0].strip()
+                venue["address"] = result[0].strip()
                 venue["phone"] = result[1].strip()
                 # get italicized text
                 ielems = div.fetch('i')
@@ -64,7 +64,7 @@ class WWBL:
                 cleantxt = txt[0].strip().strip('[|').strip()
                 addr_phone = [txt.strip() for txt in cleantxt.split(",")]
                 if len(addr_phone) > 0:
-                    venue['addr'] = addr_phone[0]
+                    venue['address'] = addr_phone[0]
                     if len(addr_phone) > 1:
                         venue['phone'] = addr_phone[1] 
                 b1 = p.findNext('b')
