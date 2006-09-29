@@ -60,7 +60,7 @@ class Venues(controllers.Controller, util.RestAdapter):
             Event.q.date < date.today()),orderBy=Event.q.date)[:5]
         future_events = Event.select(AND(Event.q.venueID == v.id,
             Event.q.date >= date.today()),orderBy=Event.q.date)
-        return dict(v=v, past_events=past_events, future_events=future_events)
+        return dict(venue=v, past_events=past_events, future_events=future_events)
 
     @expose(template=".templates.venue.edit")
     def edit(self, id=0, name="", addr="", url=""):
