@@ -62,6 +62,14 @@ class Importers(controllers.Controller, identity.SecureResource):
                 v = Venue.byName(venue['name'])
             except SQLObjectNotFound:
                 v = Venue(name=venue['name'])
+                try:
+                    v.address = venue['addr']
+                except:
+                    pass
+                try:
+                    v.phone = venue['phone']
+                except:
+                    pass
 
             for event in venue["events"]:
                 time = event.get("time", "")
