@@ -10,16 +10,18 @@
     <div id="body">
         <h2>Event Details</h2>
         <p>${event.name}</p>
-        <p>Description: ${event.description}</p>
-        <p>Date: ${event.date}</p>
-        <p>Time: ${event.time}</p>
-        <p>Cost: ${event.cost}</p>
-        <p>Ages: ${event.ages}</p>
-        <p>Website: <a href="${event.url}">${event.url}</a></p>
-        <p>Where: <a href="/venues/${event.venue.id}">${event.venue.name}</a></p>
+        <p py:if="event.description">Description: ${event.description}</p>
+        <p>Date: ${event.date.strftime("%x")}</p>
+        <p py:if="event.time">Time: ${event.time}</p>
+        <p py:if="event.cost">Cost: ${event.cost}</p>
+        <p py:if="event.ages">Ages: ${event.ages}</p>
+        <p py:if="event.url">Website: <a href="${event.url}">${event.url}</a></p>
+        <p>Where: <a href="/venues/${event.venue.id}">${event.venue.name}</a>
+            <span py:if="event.venue.address">(${event.venue.address})</span>
+        </p>
         With:
         <span py:replace="XML(artisthtml)"></span>
-        <p>Added: ${event.created}</p>
+        <p>Added: ${event.created.strftime("%x %X")}</p>
         <p py:if="event.added_by">Added By: ${event.added_by.user_name}</p>
 
         <div py:replace="edit_links(event.id, 'event')" />
