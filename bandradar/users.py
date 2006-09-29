@@ -8,7 +8,7 @@ from turbogears import validators as v
 
 from model import UserAcct, Event, Artist, hub
 from sqlobject import SQLObjectNotFound, LIKE, func
-from datetime import date, datetime
+from datetime import date
 import formencode
 import util
 

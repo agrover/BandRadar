@@ -7,7 +7,7 @@ from turbogears import validators as v
 
 from model import Artist, Event, hub
 from sqlobject import SQLObjectNotFound, LIKE, func, AND
-from datetime import date, datetime, timedelta
+from datetime import date, timedelta
 import util
 
 class ArtistForm(w.WidgetsList):
