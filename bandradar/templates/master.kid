@@ -32,7 +32,7 @@
 <body py:match="item.tag=='{http://www.w3.org/1999/xhtml}body'">
     <?python from turbogears import identity ?>
     <p>
-        <a href="/"><img id="logo" src="/static/images/bandradar-logo.gif"/></a>
+        <a href="/"><img id="logo" src="/static/images/logo3md.png"/></a>
     </p>
 
     <div id="header">
