@@ -8,6 +8,7 @@ from turbogears import validators as v
 from model import Event, Venue, Artist, hub
 from sqlobject import SQLObjectNotFound, LIKE, func, AND
 from datetime import date, datetime, timedelta
+import artists as artist_module
 import util
 from cgi import escape
 
@@ -123,6 +124,8 @@ class Events(controllers.Controller, util.RestAdapter):
 
         artists = kw.get('artists')
         artist_list = [artist.strip() for artist in artists.split('\n')]
+        # elim blank items in list
+        artist_list = [artist for artist in artist_list if artist]
         name = kw.get('name')
         if not name:
             name = artists
@@ -131,7 +134,7 @@ class Events(controllers.Controller, util.RestAdapter):
         if id:
             try:
                 e = Event.get(id)
-                flash_msg = "updated"
+                flash_msg = "updated" + str(artist_list)
             except SQLObjectNotFound:
                 turbogears.flash("Database error, please try again")
                 redirect(turbogears.url("/"))
@@ -146,6 +149,7 @@ class Events(controllers.Controller, util.RestAdapter):
         e.set(**kw)
         e.name = name
         e.venue = v
+        # add new artists
         for artist in artist_list:
             try:
                 a = Artist.byName(artist)
@@ -154,6 +158,11 @@ class Events(controllers.Controller, util.RestAdapter):
             except SQLObjectNotFound:
                 a = Artist(name=artist, added_by=identity.current.user)
                 e.addArtist(a)
+        # remove old artists
+        for artist in e.artists:
+            if artist.name not in artist_list:
+                e.removeArtist(artist)
+                artist_module.delete_if_dangling(artist)
         turbogears.flash("Event %s" % flash_msg)
         redirect(turbogears.url("/events/%s" % e.id))
 
