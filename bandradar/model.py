@@ -27,7 +27,7 @@ class Venue(BRSQLObject):
     address = UnicodeCol(default=None)
     url = UnicodeCol(length=256, default=None)
     phone = UnicodeCol(length=32, default=None)
-    added_by = ForeignKey('UserAcct', default=None)
+    added_by = ForeignKey('UserAcct')
     verified = BoolCol(default=False)
     active = BoolCol(default=True)
 
@@ -38,7 +38,7 @@ class Artist(BRSQLObject):
     url = UnicodeCol(length=256, default=None)
     events = RelatedJoin('Event')
     users = RelatedJoin('UserAcct')
-    added_by = ForeignKey('UserAcct', default=None)
+    added_by = ForeignKey('UserAcct')
     verified = BoolCol(default=False)
     active = BoolCol(default=True)
 
@@ -52,9 +52,8 @@ class Event(BRSQLObject):
     ages = UnicodeCol(length=20, default=None)
     url = UnicodeCol(length=256, default=None)
     venue = ForeignKey('Venue')
-    added_by = ForeignKey('UserAcct', default=None)
     artists = RelatedJoin('Artist')
-    added_by = ForeignKey('UserAcct', default=None)
+    added_by = ForeignKey('UserAcct')
     verified = BoolCol(default=False)
     active = BoolCol(default=True)
     event_index = DatabaseIndex('date', 'time', 'venue', unique=True)
