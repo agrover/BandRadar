@@ -61,7 +61,7 @@ class Importers(controllers.Controller, identity.SecureResource):
             try:
                 v = Venue.byName(venue['name'])
             except SQLObjectNotFound:
-                v = Venue(name=venue['name'])
+                v = Venue(name=venue['name'], added_by=identity.current.user)
 
                 optional_fields = ("address", "phone")
                 for field in optional_fields:
@@ -71,8 +71,8 @@ class Importers(controllers.Controller, identity.SecureResource):
                         pass
 
             for event in venue["events"]:
-                time = event.get("time", "")
-                cost = event.get("cost", "")
+                time = event.get("time")
+                cost = event.get("cost")
 
                 db_events = Event.selectBy(date=event["date"],
                     time=time, venue=v)
@@ -81,13 +81,14 @@ class Importers(controllers.Controller, identity.SecureResource):
                     e = list(db_events)[0]
                 else:
                     e = Event(venue=v, name=event["name"],
-                        date=event["date"], time=time, cost=cost)
+                        date=event["date"], time=time, cost=cost,
+                        added_by=identity.current.user)
 
                 for artist in event["artists"]:
                     try:
                         a = Artist.byName(artist)
                     except SQLObjectNotFound:
-                        a = Artist(name=artist)
+                        a = Artist(name=artist, added_by=identity.current.user)
                     if not e.id in [existing.id for existing in a.events]:
                         a.addEvent(e)
 
@@ -130,12 +131,11 @@ class Importers(controllers.Controller, identity.SecureResource):
     def delete_event(self, event):
         for a in event.artists:
             event.removeArtist(a)
-            if not a.events:
-                a.destroySelf()
+            a.destroy_if_unused()
         v = event.venue
-        event.destroySelf()
         if not Event.select(Event.q.venueID == v.id).count():
-            event.venue.destroySelf()
+            v.destroySelf()
+        event.destroySelf()
 
     def review_delete(self, **kw):
         e_counter = 0

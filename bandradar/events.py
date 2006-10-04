@@ -171,8 +171,6 @@ class Events(controllers.Controller, util.RestAdapter):
     def delete(self, id):
         try:
             e = Event.get(id)
-            for a in e.artists:
-                e.removeArtist(a)
             e.destroySelf()
             turbogears.flash("Deleted")
         except SQLObjectNotFound:

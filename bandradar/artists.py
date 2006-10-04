@@ -160,17 +160,8 @@ class Artists(controllers.Controller, util.RestAdapter):
     def delete(self, id):
         try:
             a = Artist.get(id)
-            for e in a.events:
-                a.removeEvent(e)
-            for u in a.users:
-                a.removeUser(u)
             a.destroySelf()
             turbogears.flash("Deleted")
         except SQLObjectNotFound:
             turbogears.flash("Delete failed")
         redirect(turbogears.url("/artists/list"))
-
-    def delete_if_dangling(self, artist):
-        if artist.events or artist.users:
-            return
-        artist.destroySelf()
