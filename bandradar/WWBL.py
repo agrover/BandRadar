@@ -30,7 +30,6 @@ class WWBL:
         datestr = str(int(time.mktime(date.timetuple())))
         url = baseurl + datestr
         usock = urllib.urlopen(url)
-        #text = unicode(usock.read(), 'latin1')
         soup = BeautifulSoup(usock.read())
         #find all anchors with e.g. name="42820"
         anchors = soup('a', {'name':re.compile("\d+")})
