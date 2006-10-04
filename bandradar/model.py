@@ -42,6 +42,18 @@ class Artist(BRSQLObject):
     verified = BoolCol(default=False)
     active = BoolCol(default=True)
 
+    def destroySelf(self):
+        for e in self.events:
+            self.removeEvent(e)
+        for u in self.users:
+            self.removeUser(u)        
+        super(Artist, self).destroySelf()
+
+    def destroy_if_unused(self):
+        if self.events or self.users:
+            return
+        self.destroySelf()
+
 
 class Event(BRSQLObject):
     name = UnicodeCol(length=200)
@@ -57,6 +69,11 @@ class Event(BRSQLObject):
     verified = BoolCol(default=False)
     active = BoolCol(default=True)
     event_index = DatabaseIndex('date', 'time', 'venue', unique=True)
+
+    def destroySelf(self):
+        for a in self.artists:
+            self.removeArtist(a)
+        super(Event, self).destroySelf()
 
     def get_fdate(self):
         thedate = date.today()
@@ -123,9 +140,15 @@ class UserAcct(BRSQLObject):
     last_emailed = DateTimeCol(default=None)
     event_email = BoolCol(default=True)
     other_email = BoolCol(default=False)
-
     # groups this user belongs to
     groups = RelatedJoin( "Group")
+
+    def destroySelf(self):
+        for a in self.artists:
+            self.removeEvent(a)
+        for g in self.groups:
+            self.removeGroup(g)        
+        super(UserAcct, self).destroySelf()
 
     def _get_permissions( self ):
         perms = set()
