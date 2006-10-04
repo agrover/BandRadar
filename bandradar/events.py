@@ -134,7 +134,7 @@ class Events(controllers.Controller, util.RestAdapter):
         if id:
             try:
                 e = Event.get(id)
-                flash_msg = "updated" + str(artist_list)
+                flash_msg = "updated"
             except SQLObjectNotFound:
                 turbogears.flash("Database error, please try again")
                 redirect(turbogears.url("/"))
