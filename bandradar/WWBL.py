@@ -30,8 +30,8 @@ class WWBL:
         datestr = str(int(time.mktime(date.timetuple())))
         url = baseurl + datestr
         usock = urllib.urlopen(url)
-        text = unicode(usock.read(), 'latin1')
-        soup = BeautifulSoup(text)
+        #text = unicode(usock.read(), 'latin1')
+        soup = BeautifulSoup(usock.read())
         #find all anchors with e.g. name="42820"
         anchors = soup('a', {'name':re.compile("\d+")})
         for anchor in anchors:
@@ -45,12 +45,12 @@ class WWBL:
                 event_dict['name'], event_dict['artists'] = \
                     self.parse_event(div.h2.string.strip())
                 venue["name"] = anchor.findNextSibling('b').string.strip()
-                txt = div.fetchText(re.compile("\|.*"), recursive=False)
-                result = txt[0].replace("[|", " ").strip().split(",")
+                txt = div.findAll(text=re.compile("\|.*"), recursive=False)
+                result = txt[0].strip().split(",", 1)
                 venue["address"] = result[0].strip()
-                venue["phone"] = result[1].strip()
+                venue["phone"] = result[1].split(",")[0].strip(" [|")
                 # get italicized text
-                ielems = div.fetch('i')
+                ielems = div.findAll('i')
                 for i in ielems:
                     if i.string:
                         event_dict['time'], event_dict['cost'], event_dict['ages'] = \
@@ -60,7 +60,7 @@ class WWBL:
             elif anchor.parent.name == "p":
                 # handle normal entries
                 p = anchor.parent
-                txt = p.fetchText(re.compile("\|.*"), recursive=False)
+                txt = p.findAll(text=re.compile("\|.*"), recursive=False)
                 cleantxt = txt[0].strip().strip('[|').strip()
                 addr_phone = [txt.strip() for txt in cleantxt.split(",")]
                 if len(addr_phone) > 0:
@@ -87,7 +87,6 @@ class WWBL:
         return venues
 
     def parse_preview_moreinfo(self, text):
-        #moreinfo = text.split(".", 1)[1].strip()
         m = re.search(r'([\d:&]+\ ?[ap]m)\.?(.*?)\.(.*?)\.', text)
         if not m:
             return ("UNK", "UNK", "UNK")

@@ -26,7 +26,7 @@ class Venue(BRSQLObject):
     description = UnicodeCol(default=None)
     address = UnicodeCol(default=None)
     url = UnicodeCol(length=256, default=None)
-    phone = UnicodeCol(length=12, default=None)
+    phone = UnicodeCol(length=32, default=None)
     added_by = ForeignKey('UserAcct', default=None)
     verified = BoolCol(default=False)
     active = BoolCol(default=True)
