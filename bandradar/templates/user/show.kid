@@ -18,27 +18,14 @@
         <div py:if="viewing_self">
             <a href="/users/${user.user_name}/edit">Edit</a>
         </div>
+
     </div>
 
     <h4>Bands Tracked</h4>
-    <p py:for="artist, before, after in art_list">
-        <a href="/artists/${artist.id}">${artist.name}</a>
-        <div>
-            Past Events
-            <p py:for="event in before">
-                <a href="/events/${event.id}">${event.name}, ${event.venue.name},
-                ${event.date}</a>
-            </p>
-        </div>
-        <div>
-            Upcoming Events
-            <p py:for="event in after">
-                <a href="/events/${event.id}">${event.name}, ${event.venue.name},
-                ${event.date}</a>
-            </p>
-        </div>
+    <p py:for="artist, old, new in art_list">
+        <a href="/artists/${artist.id}">${artist.name}</a> (${old} performed,
+        ${new} upcoming)
     </p>
 
-    <div py:replace="edit_links(user.user_name, 'user')" />
 </body>
 </html>

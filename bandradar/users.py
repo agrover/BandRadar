@@ -163,14 +163,14 @@ class Users(controllers.Controller, util.RestAdapter, identity.SecureResource):
             u = UserAcct.by_user_name(user_name)
             art_list = []
             for a in u.artists:
-                before = []
-                after = []
+                old = 0
+                new = 0
                 for e in a.events:
                     if e.date < date.today():
-                        before.append(e)
+                        old += 1
                     else:
-                        after.append(e)
-                art_list.append((a, before, after))
+                        new += 1
+                art_list.append((a, old, new))
             if identity.current.user and identity.current.user.user_name == user_name:
                 viewing_self = True
             else:
