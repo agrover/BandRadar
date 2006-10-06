@@ -22,7 +22,8 @@
         With:
         <span py:replace="XML(artisthtml)"></span>
         <p>Added: ${event.created.strftime("%x %X")}</p>
-        <p py:if="event.added_by">Added By: ${event.added_by.user_name}</p>
+        <p py:if="event.added_by">Added By: <a href="/users/${event.added_by.user_name}">
+            ${event.added_by.user_name}</a></p>
 
         <div py:replace="edit_links(event.id, 'event')" />
     </div>

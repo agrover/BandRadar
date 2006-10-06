@@ -10,9 +10,10 @@
     <div id="userinfo">
         <h2>${user.user_name}</h2>
         <p>${user.display_name}</p>
-        <p>Since: ${user.created}</p>
-        <p>Zip: ${user.zip_code}</p>
+        <p>Since: ${user.created.strftime("%x")}</p>
+        <p>Zip Code: ${user.zip_code}</p>
         <p>Website: <a href="${user.url}">${user.url}</a></p>
+        <p>More info: ${user.description}</p>
 
         <div py:if="viewing_self">
             <a href="/users/${user.user_name}/edit">Edit</a>

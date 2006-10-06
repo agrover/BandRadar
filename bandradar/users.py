@@ -70,6 +70,7 @@ class UserForm(w.WidgetsList):
     zip_code = w.TextField(label="Zip Code", validator=v.PostalCode(strip=True))
     url = w.TextField(label="Website", attrs={'size':70},
         validator=v.Any(v.URL, v.Empty))
+    description = w.TextArea(label="About Me", rows=3, cols=70)
     event_email = w.CheckBox(label="Upcoming Events Email",
         help_text="email about upcoming events for tracked artists", default=False)
     other_email = w.CheckBox(label="Suggested Events Email",
@@ -200,8 +201,9 @@ class Users(controllers.Controller, util.RestAdapter, identity.SecureResource):
     @expose()
     @turbogears.validate(form=user_form)
     @turbogears.error_handler(edit)
-    def save(self, user_name, display_name, email_address, zip_code="", url="",
-            event_email=False, other_email=False, old_pass="", pass1="", pass2=""):
+    def save(self, user_name, display_name, email_address, zip_code=None, url=None,
+            description=None, event_email=False, other_email=False,
+            old_pass=None, pass1=None, pass2=None):
         if not ((identity.current.user
                 and identity.current.user.user_name == user_name)
                 or "admin" in identity.current.groups):
@@ -213,6 +215,7 @@ class Users(controllers.Controller, util.RestAdapter, identity.SecureResource):
             u.email_address = email_address
             u.zip_code = zip_code
             u.url = url
+            u.description = description
             u.event_email = event_email
             u.other_email = other_email
             # old pw checked by validator, if present
