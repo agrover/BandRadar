@@ -14,6 +14,7 @@ class BRSQLObject(SQLObject):
 
     created = DateTimeCol(default=datetime.now())
     last_updated = DateTimeCol(default=datetime.now())
+    description = UnicodeCol(default=None)
 
     def __setattr__(self, name, value):
         super(BRSQLObject, self).__setattr__(name, value)
@@ -23,7 +24,6 @@ class BRSQLObject(SQLObject):
 
 class Venue(BRSQLObject):
     name = UnicodeCol(alternateID=True, length=100)
-    description = UnicodeCol(default=None)
     address = UnicodeCol(default=None)
     url = UnicodeCol(length=256, default=None)
     phone = UnicodeCol(length=32, default=None)
@@ -34,7 +34,6 @@ class Venue(BRSQLObject):
 
 class Artist(BRSQLObject):
     name = UnicodeCol(alternateID=True, length=100)
-    description = UnicodeCol(default=None)
     url = UnicodeCol(length=256, default=None)
     events = RelatedJoin('Event')
     users = RelatedJoin('UserAcct')
@@ -57,7 +56,6 @@ class Artist(BRSQLObject):
 
 class Event(BRSQLObject):
     name = UnicodeCol(length=200)
-    description = UnicodeCol(default=None)
     time = UnicodeCol(length=20, default=None)
     date = DateCol()
     cost = UnicodeCol(length=60, default=None)
@@ -87,7 +85,6 @@ class Event(BRSQLObject):
 class Attendance(BRSQLObject):
     event = ForeignKey('Event')
     user = ForeignKey('UserAcct')
-    comment = UnicodeCol(default=None)
     planning_to_go = BoolCol(default=False)
     attended = BoolCol(default=False)
 
