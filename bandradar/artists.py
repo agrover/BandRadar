@@ -76,7 +76,7 @@ class Artists(controllers.Controller, util.RestAdapter):
         result.sort(key=operator.itemgetter("name"))
 
         return dict(artists=result, count=len(result), 
-            artist_search_form=artist_search_form)
+            listby=listby, artist_search_form=artist_search_form)
 
     @expose(template=".templates.artist.show")
     def show(self, id):

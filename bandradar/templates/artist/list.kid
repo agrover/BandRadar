@@ -13,7 +13,7 @@
         ${artist_search_form(action="/artists/search")}
     </div>
 
-    <h2>Band List (${count})</h2>
+    <h2>Band List (${count} for ${listby})</h2>
     With shows:
     <a href="/artists/list/today">Today</a>
     <a href="/artists/list/tomorrow">Tomorrow</a>

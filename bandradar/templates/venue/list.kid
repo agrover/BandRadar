@@ -9,7 +9,7 @@
 <body>
     <div id="searchbox">
         <h2>Search Venues</h2>
-        <?python from bandradar.artists import artist_search_form ?>
+        <?python from bandradar.venues import venue_search_form ?>
         ${venue_search_form(action="/venues/search")}
     </div>
 
@@ -18,7 +18,7 @@
     <p py:for="v in venues">
         <p>
             <a href="/venues/${v.id}">${v.name}</a>
-            <span py:if="v.eventcount > 0"> (${v.eventcount} upcoming)</span>
+            <span py:if="v.eventcount"> (${v.eventcount} upcoming)</span>
         </p>
     </p>
 

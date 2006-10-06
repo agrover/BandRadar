@@ -13,7 +13,7 @@
         ${event_search_form(action="/events/search")}
     </div>
 
-    <h2>Event List (${count})</h2>
+    <h2>Event List (${count} for ${listby})</h2>
     Events:
     <a href="/events/list/today">Today</a>
     <a href="/events/list/tomorrow">Tomorrow</a>
