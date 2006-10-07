@@ -178,6 +178,9 @@ class Users(controllers.Controller, util.RestAdapter, identity.SecureResource):
         except SQLObjectNotFound:
             turbogears.flash("User not found")
             redirect(turbogears.url("/"))
+
+        art_list.sort()
+
         return dict(user=u, art_list=art_list, viewing_self=viewing_self)
 
     @expose(template=".templates.user.edit")

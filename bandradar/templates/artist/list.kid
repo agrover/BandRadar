@@ -21,12 +21,18 @@
     <a href="/artists/list/week">Upcoming week</a>
     <a href="/artists/list/all">All upcoming</a>
 
-    <div>
-        <p py:for="a in artists">
-            <p><b py:strip="not a['is_tracked']"><a href="/artists/${a['id']}">${a['name']}</a></b></p>
-        </p>
-    </div>
-
+    <table>
+        <tr py:for="artist in artists">
+            <td>
+                <a py:if="artist['is_tracked']" href="/artists/${artist['id']}/untrack">Untrack</a>
+                <a py:if="not artist['is_tracked']" href="/artists/${artist['id']}/track">Track</a>
+            </td>
+            <td>
+            <b py:strip="not artist['is_tracked']">
+            <a href="/artists/${artist['id']}">${artist['name']}</a></b>
+            </td>
+        </tr>
+    </table>
     <p>
         <a href="/artists/edit">Add a new Band</a>
     </p>

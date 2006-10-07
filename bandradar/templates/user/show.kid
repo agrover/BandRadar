@@ -22,10 +22,22 @@
     </div>
 
     <h4>Bands Tracked</h4>
-    <p py:for="artist, old, new in art_list">
-        <a href="/artists/${artist.id}">${artist.name}</a> (${old} performed,
-        ${new} upcoming)
-    </p>
+    <table>
+        <th>Band</th>
+        <th>Events Performed</th>
+        <th>Events Upcoming</th>
+        <tr py:for="artist, old, new in art_list">
+            <td>
+                <a href="/artists/${artist.id}">${artist.name}</a>
+            </td>
+            <td>
+                ${old}
+            </td>
+            <td>
+                ${new}
+            </td>
+        </tr>
+    </table>
 
 </body>
 </html>
