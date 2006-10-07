@@ -132,7 +132,6 @@ class UserAcct(BRSQLObject):
                            alternateMethodName="by_user_name" )
     email_address = UnicodeCol( length=255, alternateID=True,
                                alternateMethodName="by_email_address" )
-    display_name = UnicodeCol( length=255 )
     password = UnicodeCol( length=40 )
     # site-specific fields
     zip_code = UnicodeCol(length=10, default=None)

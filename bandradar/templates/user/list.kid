@@ -10,7 +10,7 @@
     <h2>User List</h2>
 
     <p py:for="u in users">
-        <p><a href="/users/${u.user_name}">${u.display_name} (${u.user_name})</a></p>
+        <p><a href="/users/${u.user_name}">${u.user_name} (tracking ${len(u.artists)})</a></p>
     </p>
 </body>
 </html>

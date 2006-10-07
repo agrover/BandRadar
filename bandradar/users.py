@@ -49,6 +49,7 @@ class PassMatches(formencode.FancyValidator):
 class NewUserForm(w.WidgetsList):
 #    forward_url = w.HiddenField()
     user_name = w.TextField(label="Login", help_text="letters, numbers, '_' or '-'",
+        attrs={'size':16, 'maxlength':16},
         validator=v.All(UniqueUsername, v.PlainText(strip=True), v.NotEmpty))
     email = w.TextField(label="Email",
         validator=v.All(UniqueEmail, v.NotEmpty, v.Email(strip=True)))
@@ -65,7 +66,6 @@ newuser_form = w.TableForm(fields=NewUserForm(), name="newuser",
 
 class UserForm(w.WidgetsList):
     user_name = w.HiddenField()
-    display_name = w.TextField(label="Real Name", validator=v.NotEmpty)
     email_address = w.TextField(label="Email", validator=v.Email(strip=True))
     zip_code = w.TextField(label="Zip Code", validator=v.PostalCode(strip=True))
     url = w.TextField(label="Website", attrs={'size':70},
@@ -139,7 +139,7 @@ class Users(controllers.Controller, util.RestAdapter, identity.SecureResource):
     @turbogears.error_handler(login)
     def usercreate(self, user_name, email, zip, pass1, pass2,
              forward_url=None, previous_url=None):
-        u = UserAcct(user_name=user_name, email_address=email, display_name="",
+        u = UserAcct(user_name=user_name, email_address=email,
             password=pass1)
         turbogears.flash("Account created!")
         identity.current_provider.validate_identity(user_name, pass1,
@@ -192,7 +192,7 @@ class Users(controllers.Controller, util.RestAdapter, identity.SecureResource):
         form_vals = {}
         try:
             u = UserAcct.by_user_name(user_name)
-            form_vals = dict(user_name=u.user_name, display_name=u.display_name,
+            form_vals = dict(user_name=u.user_name,
                 email_address=u.email_address, zip_code=u.zip_code, url=u.url,
                 event_email=u.event_email, other_email=u.other_email)
         except SQLObjectNotFound:
@@ -204,7 +204,7 @@ class Users(controllers.Controller, util.RestAdapter, identity.SecureResource):
     @expose()
     @turbogears.validate(form=user_form)
     @turbogears.error_handler(edit)
-    def save(self, user_name, display_name, email_address, zip_code=None, url=None,
+    def save(self, user_name, email_address, zip_code=None, url=None,
             description=None, event_email=False, other_email=False,
             old_pass=None, pass1=None, pass2=None):
         if not ((identity.current.user
@@ -214,7 +214,6 @@ class Users(controllers.Controller, util.RestAdapter, identity.SecureResource):
 
         try:
             u = UserAcct.by_user_name(user_name)
-            u.display_name = display_name
             u.email_address = email_address
             u.zip_code = zip_code
             u.url = url

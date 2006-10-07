@@ -75,7 +75,9 @@ class BRAutoCompleteField(w.AutoCompleteField):
 class RestAdapter:
     @turbogears.expose()
     def default(self, *vpath, **params):
-        if len(vpath) == 1:
+        if not len(vpath):
+            return self.list()
+        elif len(vpath) == 1:
             identifier = vpath[0]
             action = self.show
         elif len(vpath) == 2:
