@@ -41,14 +41,11 @@ class Artist(BRSQLObject):
     verified = BoolCol(default=False)
     active = BoolCol(default=True)
 
-    def __cmp__(self, other):
-        return cmp(self.name, other.name)
-
     def destroySelf(self):
         for e in self.events:
             self.removeEvent(e)
         for u in self.users:
-            self.removeUser(u)        
+            self.removeUserAcct(u)        
         super(Artist, self).destroySelf()
 
     def destroy_if_unused(self):
@@ -126,9 +123,9 @@ class Group(SQLObject):
     permissions = RelatedJoin( "Permission")
 
     def __cmp__(self, other):
-        if isinstance(self, basestring):
-            self = Group.by_group_name(self)
-        return cmp(self.group_name, other)
+        if isinstance(other, basestring):
+            other = Group.by_group_name(other)
+        return cmp(self.group_name, other.group_name)
 
 class UserAcct(BRSQLObject):
     user_name = UnicodeCol( length=16, alternateID=True,
