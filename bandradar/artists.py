@@ -89,7 +89,8 @@ class Artists(controllers.Controller, util.RestAdapter):
         except SQLObjectNotFound:
             turbogears.flash("Artist ID not found")
             redirect(turbogears.url("/artists/list"))
-        return dict(artist=a, events=a.events, is_tracked=is_tracked)
+        return dict(artist=a, events=a.events,
+            tracked_count=len(a.users), is_tracked=is_tracked)
 
     @expose(template=".templates.artist.edit")
     @identity.require(identity.not_anonymous())

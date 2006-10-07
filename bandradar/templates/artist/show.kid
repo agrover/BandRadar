@@ -13,6 +13,7 @@
         <p>${artist.name}</p>
         <p>${artist.description}</p>
         <p py:if="artist.added_by and not 'admin' in artist.added_by.groups">Added by: ${artist.added_by.user_name}</p>
+        <p py:if="tracked_count">Users tracking: ${tracked_count}</p>
         <p py:if="is_tracked">
             <i>currently being tracked by you.</i>
             <a href="/artists/${artist.id}/untrack?viewing=yes">Untrack</a>

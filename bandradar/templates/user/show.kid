@@ -26,9 +26,9 @@
         <th>Band</th>
         <th>Events Performed</th>
         <th>Events Upcoming</th>
-        <tr py:for="artist, old, new in art_list">
+        <tr py:for="name, id, old, new in art_list">
             <td>
-                <a href="/artists/${artist.id}">${artist.name}</a>
+                <a href="/artists/${id}">${name}</a>
             </td>
             <td>
                 ${old}

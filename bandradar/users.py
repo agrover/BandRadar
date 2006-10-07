@@ -170,7 +170,7 @@ class Users(controllers.Controller, util.RestAdapter, identity.SecureResource):
                         old += 1
                     else:
                         new += 1
-                art_list.append((a, old, new))
+                art_list.append((a.name, a.id, old, new))
             if identity.current.user and identity.current.user.user_name == user_name:
                 viewing_self = True
             else:
