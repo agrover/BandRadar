@@ -17,8 +17,8 @@
 
     <p py:for="v in venues">
         <p>
-            <a href="/venues/${v.id}">${v.name}</a>
-            <span py:if="v.eventcount"> (${v.eventcount} upcoming)</span>
+            <a href="/venues/${v['id']}">${v['name']}</a>
+            <span py:if="v['eventcount']"> (${v['eventcount']} upcoming)</span>
         </p>
     </p>
 

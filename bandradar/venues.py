@@ -41,12 +41,14 @@ class Venues(controllers.Controller, util.RestAdapter):
 
     @expose(template=".templates.venue.list")
     def list(self):
+        venue_list = []
         venues = Venue.select(AND(Venue.q.verified == True, Venue.q.active == True),
             orderBy=Venue.q.name)
         for v in venues:
-            v.eventcount = Event.select(AND(Event.q.venueID == v.id,
+            eventcount = Event.select(AND(Event.q.venueID == v.id,
                 Event.q.date >= date.today())).count()
-        return dict(venues=venues, venue_search_form=venue_search_form)
+            venue_list.append(dict(name=v.name, id=v.id, eventcount=eventcount))
+        return dict(venues=venue_list, venue_search_form=venue_search_form)
 
     @expose(template=".templates.venue.show")
     def show(self, id):
