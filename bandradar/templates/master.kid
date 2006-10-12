@@ -31,41 +31,44 @@
 
 <body py:match="item.tag=='{http://www.w3.org/1999/xhtml}body'">
     <?python from turbogears import identity ?>
-    <p>
-        <a href="/"><img id="logo" src="/static/images/logo3md.png"/></a>
-    </p>
+    <div id="main_column">
 
-    <div id="header">
-        <span py:if="not identity.current.user">
-            <a href="/users/login">Login/Register</a>
-        </span>
-        <span py:if="identity.current.user">
-            <a href="/users/${identity.current.user.user_name}">${identity.current.user.user_name}'s Bands</a>
-        </span>
-        <a href="/">Main</a>
-        <a href="/artists/list">Bands</a>
-        <a href="/events/list">Events</a>
-        <a href="/venues/list">Venues</a>
-        <span py:if="'admin' in identity.current.groups">
-            <a href="/importers/webimport">Import Events</a>
-            <a href="/importers/review">Review Events</a>
-        </span>
-        <span py:if="identity.current.user">
-            <a href="/users/logout">Logout</a>
-        </span>
-    </div>
+        <div id="logo">
+            <a href="/"><img src="/static/images/logo3md.png"/></a>
+        </div>
 
-    <div py:if="tg_flash" class="flash" py:content="tg_flash"></div>
+        <div id="header">
+            <span py:if="not identity.current.user">
+                <a href="/users/login">Login/Register</a>
+            </span>
+            <span py:if="identity.current.user">
+                <a href="/users/${identity.current.user.user_name}">${identity.current.user.user_name}'s Bands</a>
+            </span>
+            <a href="/">Main</a>
+            <a href="/artists/list">Bands</a>
+            <a href="/events/list">Events</a>
+            <a href="/venues/list">Venues</a>
+            <span py:if="'admin' in identity.current.groups">
+                <a href="/importers/webimport">Import Events</a>
+                <a href="/importers/review">Review Events</a>
+            </span>
+            <span py:if="identity.current.user">
+                <a href="/users/logout">Logout</a>
+            </span>
+        </div>
 
-    <div id="content">
-        <div py:replace="[item.text] + item[:]"/>
-    </div>
+        <div py:if="tg_flash" class="flash" py:content="tg_flash"></div>
 
-    <div id="footer">
-        <a href="/about">about</a>
-        <a href="/privacy">privacy</a>
-        <a href="/contact">contact</a>
-        <a href="/feeds">rss</a>
+        <div id="content">
+            <div py:replace="[item.text] + item[:]"/>
+        </div>
+
+        <div id="footer">
+            <a href="/about">about</a>
+            <a href="/privacy">privacy</a>
+            <a href="/contact">contact</a>
+            <a href="/feeds">rss</a>
+        </div>
     </div>
 </body>
 </html>

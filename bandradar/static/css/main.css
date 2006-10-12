@@ -1,7 +1,10 @@
 body
 {
-    background-color: white;
-    color: black;
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+    font-weight: normal;
+    font-size: small;
+    background-color: #ddd;
+    margin: 0 0 0 0
 }
 
 p
@@ -14,6 +17,19 @@ h2
     margin: 0 0 0 0;
 }
 
+#main_column
+{
+    color: black;
+    background-color: white;
+    margin-left: 150px;
+    margin-right: 150px;
+}
+
+#logo
+{
+    text-align: center;
+}
+
 #header
 {
     text-align: center;
@@ -21,8 +37,6 @@ h2
 
 #content
 {
-    margin-left: 150px;
-    margin-right: 150px;
 }
 
 #footer
