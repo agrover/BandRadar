@@ -31,6 +31,10 @@
 
 <body py:match="item.tag=='{http://www.w3.org/1999/xhtml}body'">
     <?python from turbogears import identity ?>
+
+    <div id="right">right</div>
+    <div id="left">left</div>
+
     <div id="main_column">
 
         <div id="logo">
@@ -68,6 +72,8 @@
             <a href="/contact">contact</a>
             <a href="/feeds">rss</a>
         </div>
+    </div>
+    <div id="end">
     </div>
 </body>
 </html>

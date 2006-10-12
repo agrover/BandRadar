@@ -3,8 +3,10 @@ body
     font-family: Verdana, Arial, Helvetica, sans-serif;
     font-weight: normal;
     font-size: small;
-    background-color: #ddd;
-    margin: 0 0 0 0
+    background-image: url(../images/gradient-left.png);
+    background-repeat: repeat-y;
+    margin: 0;
+    height: 100%
 }
 
 a
@@ -19,12 +21,12 @@ img
 
 p
 {
-    margin: 0 0 0 0;
+    margin: 0;
 }
 
 h2
 {
-    margin: 0 0 0 0;
+    margin: 0;
 }
 
 #main_column
@@ -33,6 +35,21 @@ h2
     background-color: white;
     margin-left: 150px;
     margin-right: 150px;
+    padding: .5em;
+}
+
+#right
+{
+    float: right;
+    width: 150px;
+    min-height: 100%;
+    background-image: url(../images/gradient-right.png);
+    
+}
+
+#end
+{
+    clear: both;
 }
 
 #logo
