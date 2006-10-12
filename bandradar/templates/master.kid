@@ -44,7 +44,6 @@
             <span py:if="identity.current.user">
                 <a href="/users/${identity.current.user.user_name}">${identity.current.user.user_name}'s Bands</a>
             </span>
-            <a href="/">Main</a>
             <a href="/artists/list">Bands</a>
             <a href="/events/list">Events</a>
             <a href="/venues/list">Venues</a>

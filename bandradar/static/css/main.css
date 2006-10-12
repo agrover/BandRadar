@@ -45,6 +45,11 @@ h2
     text-align: center;
 }
 
+#header a
+{
+    padding: 0 .5em 0 .5em;
+}
+
 #content
 {
     min-height: 400px
@@ -54,4 +59,9 @@ h2
 {
     text-align: center;
     color: gray;
+}
+
+#footer a
+{
+    padding: 0 1em 0 1em;
 }
