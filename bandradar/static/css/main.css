@@ -7,6 +7,16 @@ body
     margin: 0 0 0 0
 }
 
+a
+{
+    text-decoration: none;
+}
+
+img
+{
+    border-style: none;
+}
+
 p
 {
     margin: 0 0 0 0;
@@ -37,6 +47,7 @@ h2
 
 #content
 {
+    min-height: 400px
 }
 
 #footer
