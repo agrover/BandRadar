@@ -1,18 +1,17 @@
 body {
-    font-family: Verdana, Arial, Helvetica, sans-serif;
-    font-weight: normal;
-    font-size: small;
+    font: normal small Verdana, Arial, Helvetica, sans-serif;
     background: black url(../images/background.png) repeat-y center;
     margin: 0 auto 0 auto;
     width: 600px;
 }
 
 a { text-decoration: none; }
+a:link { color: #070; }
+a:visited { color: #0B0; }
+a:hover { color: #0B0; }
 
 img { border-style: none; }
-
 p { margin: 0; }
-
 h2 { margin: 0; }
 
 #main_column {
@@ -27,6 +26,9 @@ h2 { margin: 0; }
 #header a { padding: 0 .5em 0 .5em; }
 
 #content { min-height: 400px }
+
+.fieldhelp { color: gray; }
+.fielderror { color: red; }
 
 #footer {
     text-align: center;

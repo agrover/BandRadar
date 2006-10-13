@@ -53,8 +53,10 @@ class NewUserForm(w.WidgetsList):
         validator=v.All(UniqueUsername, v.PlainText(strip=True), v.NotEmpty))
     email = w.TextField(label="Email",
         validator=v.All(UniqueEmail, v.NotEmpty, v.Email(strip=True)))
-    zip = w.TextField(label="Zip Code", validator=v.PostalCode(strip=True))
-    pass1 = w.PasswordField(label="Password", help_text="Minimum length 6",
+    zip = w.TextField(label="Zip Code",
+        attrs={'size':10, 'maxlength':10},
+        validator=v.PostalCode(strip=True))
+    pass1 = w.PasswordField(label="Password", help_text="Length 6-40 chars",
         validator=v.All(v.MinLength(6), v.NotEmpty))
     pass2 = w.PasswordField(label="Password again", validator=v.NotEmpty)
 

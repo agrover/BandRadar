@@ -7,8 +7,7 @@
 </head>
 
 <body>
-    <h4>Rapid development means accounts may be occasionally purged, sorry</h4>
-    <h4>Welcome to BandRadar, ${user}!</h4>
+    <p id="tagline">Portland's easy way to track your favorite bands!</p>
 
     <div id="searchbox">
         <?python from bandradar.artists import artist_search_form ?>
