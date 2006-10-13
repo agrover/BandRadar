@@ -3,11 +3,11 @@
     py:extends="'../master.kid'">
 
 <head>
-    <title>BandRadar - Edit a user</title>
+    <title>BandRadar - Edit user information</title>
 </head>
 
 <body>
-    <h2>Edit ${user_name}</h2>
+    <h2>${user_name}</h2>
 
     ${user_form(value=form_vals, action="/users/save")}
 

@@ -57,8 +57,11 @@ class NewUserForm(w.WidgetsList):
         attrs={'size':10, 'maxlength':10},
         validator=v.PostalCode(strip=True))
     pass1 = w.PasswordField(label="Password", help_text="Length 6-40 chars",
+        attrs={'maxlength':40},
         validator=v.All(v.MinLength(6), v.NotEmpty))
-    pass2 = w.PasswordField(label="Password again", validator=v.NotEmpty)
+    pass2 = w.PasswordField(label="Password again",
+        attrs={'maxlength':40},
+        validator=v.NotEmpty)
 
 class NewUserSchema(v.Schema):
     chained_validators = [v.FieldsMatch("pass1", "pass2")]
@@ -69,10 +72,12 @@ newuser_form = w.TableForm(fields=NewUserForm(), name="newuser",
 class UserForm(w.WidgetsList):
     user_name = w.HiddenField()
     email_address = w.TextField(label="Email", validator=v.Email(strip=True))
-    zip_code = w.TextField(label="Zip Code", validator=v.PostalCode(strip=True))
-    url = w.TextField(label="Website", attrs={'size':70},
+    zip_code = w.TextField(label="Zip Code",
+        attrs={'size':10, 'maxlength':10},
+        validator=v.PostalCode(strip=True))
+    url = w.TextField(label="Website", attrs={'size':60},
         validator=v.Any(v.URL, v.Empty))
-    description = w.TextArea(label="About Me", rows=3, cols=70)
+    description = w.TextArea(label="About Me", rows=3, cols=60)
     event_email = w.CheckBox(label="Upcoming Events Email",
         help_text="email about upcoming events for tracked artists", default=False)
     other_email = w.CheckBox(label="Suggested Events Email",

@@ -11,7 +11,7 @@ import MBL
 import WWBL
 
 class Merc(w.WidgetsList):
-    url = w.TextField(label="URL", attrs={'size':90},
+    url = w.TextField(label="URL", attrs={'size':60},
         validator=v.All(v.NotEmpty, v.URL))
 
 class WWeek(w.WidgetsList):

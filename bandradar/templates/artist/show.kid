@@ -9,22 +9,23 @@
 <body>
     <?python from turbogears import identity ?>
     <div id="body">
-        <h2>Band Details</h2>
-        <p>${artist.name}</p>
+        <p class="name">${artist.name}</p>
         <p>${artist.description}</p>
         <p py:if="artist.added_by and not 'admin' in artist.added_by.groups">Added by: ${artist.added_by.user_name}</p>
         <p py:if="tracked_count">Users tracking: ${tracked_count}</p>
         <p py:if="is_tracked">
             <i>currently being tracked by you.</i>
-            <a href="/artists/${artist.id}/untrack?viewing=yes">Untrack</a>
+            <a class="button" href="/artists/${artist.id}/untrack?viewing=yes">Untrack</a>
         </p>
         <p py:if="not is_tracked">
             <i>not currently tracked by you.</i>
-            <a href="/artists/${artist.id}/track?viewing=yes">Track</a>
+            <a class="button" href="/artists/${artist.id}/track?viewing=yes">Track</a>
         </p>
 
-        <h4>Events</h4>
-        <span py:if="identity.current.user">(Know of an upcoming event not listed? <a href="/events/edit?artist_prefill=${artist.id}">Add it</a>!)</span>
+        <div id="list_title">Events
+        <a py:if="identity.current.user" class="button" 
+            href="/events/edit?artist_prefill=${artist.id}">Add new event</a>
+        </div>
         <p py:for="event in events">
             <a href="/events/${event.id}">${event.name}</a> @ 
             <a href="/venues/${event.venue.id}">${event.venue.name}</a>

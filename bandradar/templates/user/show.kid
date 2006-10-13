@@ -15,7 +15,7 @@
         <p>More info: ${user.description}</p>
 
         <div py:if="viewing_self">
-            <a href="/users/${user.user_name}/edit">Edit</a>
+            <a class="button" href="/users/${user.user_name}/edit">Edit</a>
         </div>
 
     </div>

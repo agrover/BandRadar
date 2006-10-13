@@ -13,19 +13,27 @@
         ${artist_search_form(action="/artists/search")}
     </div>
 
-    <h2>Band List (${count} for ${listby})</h2>
+    <div id="list_title">
+        Band List (${count} for ${listby})
+        <span class="button"><a href="/artists/edit">Add a new Band</a></span>
+    </div>
+
+    <div id="list_heading">
     With shows:
-    <a href="/artists/list/today">Today</a>
-    <a href="/artists/list/tomorrow">Tomorrow</a>
-    <a href="/artists/list/yesterday">Yesterday</a>
-    <a href="/artists/list/week">Upcoming week</a>
-    <a href="/artists/list/all">All upcoming</a>
+        <ul>
+        <li><a href="/artists/list/today">Today</a></li>
+        <li><a href="/artists/list/tomorrow">Tomorrow</a></li>
+        <li><a href="/artists/list/yesterday">Yesterday</a></li>
+        <li><a href="/artists/list/week">Upcoming week</a></li>
+        <li><a href="/artists/list/all">All upcoming</a></li>
+        </ul>
+    </div>
 
     <table>
         <tr py:for="artist in artists">
             <td>
-                <a py:if="artist['is_tracked']" href="/artists/${artist['id']}/untrack">Untrack</a>
-                <a py:if="not artist['is_tracked']" href="/artists/${artist['id']}/track">Track</a>
+                <a class="button" py:if="artist['is_tracked']" href="/artists/${artist['id']}/untrack">Untrack</a>
+                <a class="button" py:if="not artist['is_tracked']" href="/artists/${artist['id']}/track">Track</a>
             </td>
             <td>
             <b py:strip="not artist['is_tracked']">
@@ -33,8 +41,5 @@
             </td>
         </tr>
     </table>
-    <p>
-        <a href="/artists/edit">Add a new Band</a>
-    </p>
 </body>
 </html>

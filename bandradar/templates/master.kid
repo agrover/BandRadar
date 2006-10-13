@@ -2,20 +2,34 @@
 <?python import sitetemplate ?>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:py="http://purl.org/kid/ns#" py:extends="sitetemplate">
 
-<div py:def="venue_detail(venue)">
-    <p><a href="/venues/${venue.id}">${venue.Name}</a></p>
-    <p py:if="venue.Address">Address: ${venue.Address}</p>
-    <p py:if="venue.Url">Website: <a href="${venue.Url}">xx</a></p>
-    <p py:if="venue.Phone">Phone: ${venue.Phone}</p>
-</div>
-
-<div py:def="edit_links(id, type)">
+<div class="edit_links" py:def="edit_links(id, type)">
     <?python from turbogears import identity ?>
     <div py:if="'admin' in identity.current.groups">
-        <p><a href="/${type}s/${id}/edit">Edit this ${type}</a></p>
-        <p><a href="/${type}s/delete?id=${id}">Delete this ${type}</a></p>
+        <p><a class="button" href="/${type}s/${id}/edit">Edit this ${type}</a></p>
+        <p><a class="button" href="/${type}s/delete?id=${id}">Delete this ${type}</a></p>
     </div>
 </div>
+
+<div py:def="header()" id="header">
+    <?python from turbogears import identity ?>
+    <span py:if="not identity.current.user">
+        <a href="/users/login">Login/Register</a>
+    </span>
+    <span py:if="identity.current.user">
+        <a href="/users/${identity.current.user.user_name}">${identity.current.user.user_name}'s bands</a>
+    </span>
+    <a href="/artists/list">Bands</a>
+    <a href="/events/list">Events</a>
+    <a href="/venues/list">Venues</a>
+    <span py:if="identity.current.user">
+        <a href="/users/logout">Logout</a>
+    </span>
+    <span py:if="'admin' in identity.current.groups">
+        <a href="/importers/webimport">Import Events</a>
+        <a href="/importers/review">Review Events</a>
+    </span>
+</div>
+
 
 <head py:match="item.tag=='{http://www.w3.org/1999/xhtml}head'">
     <meta content="text/html; charset=UTF-8" http-equiv="content-type" />
@@ -38,24 +52,7 @@
             <a href="/"><img src="/static/images/logo3md.png"/></a>
         </div>
 
-        <div id="header">
-            <span py:if="not identity.current.user">
-                <a href="/users/login">Login/Register</a>
-            </span>
-            <span py:if="identity.current.user">
-                <a href="/users/${identity.current.user.user_name}">${identity.current.user.user_name}'s Bands</a>
-            </span>
-            <a href="/artists/list">Bands</a>
-            <a href="/events/list">Events</a>
-            <a href="/venues/list">Venues</a>
-            <span py:if="'admin' in identity.current.groups">
-                <a href="/importers/webimport">Import Events</a>
-                <a href="/importers/review">Review Events</a>
-            </span>
-            <span py:if="identity.current.user">
-                <a href="/users/logout">Logout</a>
-            </span>
-        </div>
+        <div py:replace="header()" />
 
         <div py:if="tg_flash" class="flash" py:content="tg_flash"></div>
 
