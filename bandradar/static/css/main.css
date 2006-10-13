@@ -1,5 +1,4 @@
-body
-{
+body {
     font-family: Verdana, Arial, Helvetica, sans-serif;
     font-weight: normal;
     font-size: small;
@@ -8,60 +7,29 @@ body
     width: 600px;
 }
 
-a
-{
-    text-decoration: none;
-}
+a { text-decoration: none; }
 
-img
-{
-    border-style: none;
-}
+img { border-style: none; }
 
-p
-{
-    margin: 0;
-}
+p { margin: 0; }
 
-h2
-{
-    margin: 0;
-}
+h2 { margin: 0; }
 
-#main_column
-{
+#main_column {
     color: black;
     background-color: white;
     padding: .5em;
 }
 
-#logo
-{
-    text-align: center;
-}
+#logo { text-align: center; }
 
-#header
-{
-    text-align: center;
-}
+#header { text-align: center; }
+#header a { padding: 0 .5em 0 .5em; }
 
-#header a
-{
-    padding: 0 .5em 0 .5em;
-}
+#content { min-height: 400px }
 
-#content
-{
-    min-height: 400px
-}
-
-#footer
-{
+#footer {
     text-align: center;
     color: gray;
 }
-
-#footer a
-{
-    padding: 0 1em 0 1em;
-}
+#footer a { padding: 0 1em 0 1em; }
