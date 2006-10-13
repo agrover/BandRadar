@@ -3,10 +3,9 @@ body
     font-family: Verdana, Arial, Helvetica, sans-serif;
     font-weight: normal;
     font-size: small;
-    background-image: url(../images/gradient-left.png);
-    background-repeat: repeat-y;
-    margin: 0;
-    height: 100%
+    background: black url(../images/background.png) repeat-y center;
+    margin: 0 auto 0 auto;
+    width: 600px;
 }
 
 a
@@ -33,23 +32,7 @@ h2
 {
     color: black;
     background-color: white;
-    margin-left: 150px;
-    margin-right: 150px;
     padding: .5em;
-}
-
-#right
-{
-    float: right;
-    width: 150px;
-    min-height: 100%;
-    background-image: url(../images/gradient-right.png);
-    
-}
-
-#end
-{
-    clear: both;
 }
 
 #logo
