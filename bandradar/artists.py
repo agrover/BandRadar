@@ -70,6 +70,8 @@ class Artists(controllers.Controller, util.RestAdapter):
             result = artists_with_shows(0, 7)
         elif listby == "all":
             result = artists_with_shows(0, 0)
+        else:
+            result = []
 
         # order by alpha, pop, date
         import operator
