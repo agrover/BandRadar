@@ -6,9 +6,9 @@ body {
 }
 
 a { text-decoration: none; }
-a:link { color: #070; }
-a:visited { color: #0B0; }
-a:hover { color: #0B0; }
+a:link { color: #060; }
+a:visited { color: #0A0; }
+a:hover { color: #0A0; text-decoration: underline; }
 
 img { border-style: none; }
 p { margin: 0; }
