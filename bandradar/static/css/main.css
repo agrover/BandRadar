@@ -24,6 +24,13 @@ h2 {
     font-size: medium;
 }
 
+.flash {
+    font-weight: bold;
+    font-size: large;
+    border: 2px solid green;
+    background-color: #dfd;
+}
+
 .listform li { display: inline; }
 .listform li div { display: inline; }
 
