@@ -4,6 +4,7 @@ import turbogears
 from turbogears import controllers, expose, redirect
 from turbogears import identity
 from turbogears import scheduler
+from sqlobject import AND
 
 from artists import Artists, artist_search_form
 from venues import Venues
@@ -39,7 +40,8 @@ class Root(controllers.RootController):
         else:
             user = "unknown person"
 
-        events = Event.select(Event.q.date == datetime.date.today(),
+        events = Event.select(AND(Event.q.date == datetime.date.today(),
+            Event.q.verified == True, Event.q.active == True),
             orderBy=Event.q.name)[:10]
 
         return dict(user=user, search_form=artist_search_form, events=events)
