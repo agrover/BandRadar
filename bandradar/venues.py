@@ -48,7 +48,8 @@ class Venues(controllers.Controller, util.RestAdapter):
             eventcount = Event.select(AND(Event.q.venueID == v.id,
                 Event.q.date >= date.today())).count()
             venue_list.append(dict(name=v.name, id=v.id, eventcount=eventcount))
-        return dict(venues=venue_list, venue_search_form=venue_search_form)
+        return dict(venues=venue_list, count=len(venue_list),
+            venue_search_form=venue_search_form)
 
     @expose(template=".templates.venue.show")
     def show(self, id):
@@ -65,6 +66,7 @@ class Venues(controllers.Controller, util.RestAdapter):
         return dict(venue=v, past_events=past_events, future_events=future_events)
 
     @expose(template=".templates.venue.edit")
+    @identity.require(identity.in_group("admin"))
     def edit(self, id=0):
         if id:
             try:
@@ -77,6 +79,7 @@ class Venues(controllers.Controller, util.RestAdapter):
         return dict(venue_form=venue_form, form_vals=v)
 
     @expose()
+    @identity.require(identity.in_group("admin"))
     @turbogears.validate(form=venue_form)
     @turbogears.error_handler(edit)
     def save(self, id=0, **kw):
@@ -93,6 +96,7 @@ class Venues(controllers.Controller, util.RestAdapter):
         redirect(turbogears.url("/venues/%s" % v.id))
 
     @expose()
+    @identity.require(identity.in_group("admin"))
     def delete(self, id):
         if Event.select(Event.q.venueID == id).count():
             turbogears.flash("Delete failed")

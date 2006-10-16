@@ -8,24 +8,35 @@
 
 <body>
     <div id="body">
-        <h2>Venue Details</h2>
-        <p>${venue.name}</p>
-        <p py:if="venue.description">Description: ${venue.description}</p>
-        <p py:if="venue.address">Address: ${venue.address}</p>
-        <p py:if="venue.phone">Phone: ${venue.phone}</p>
-        <p py:if="venue.url">URL: ${venue.url}</p>
+        <h2>Venue: ${venue.name}</h2>
+        <div id="details">
+            <p py:if="venue.description">Description: ${venue.description}</p>
+            <p py:if="venue.address">Address: ${venue.address}</p>
+            <p py:if="venue.phone">Phone: ${venue.phone}</p>
+            <p py:if="venue.url">URL: ${venue.url}</p>
+            <p py:if="not 'admin' in venue.added_by.groups">
+            Added by: <a href="/users/${venue.added_by.user_name}">
+                ${venue.added_by.user_name}</a></p>
 
+        </div>
         <h3>Past events</h3>
-        <div py:for="e in past_events">
-            <p>${e.date.strftime("%x")}: <a href="/events/${e.id}">${e.name}</a> ${e.time} ${e.cost}</p>
+        <div class="event_list">
+            <p py:for="e in past_events">
+                ${e.date.strftime("%x")}: <a href="/events/${e.id}">${e.name}</a>
+                ${e.time} ${e.cost}
+            </p>
         </div>
 
         <h3>Upcoming events</h3>
-        <div py:for="e in future_events">
-            <p>${e.date.strftime("%x")}: <a href="/events/${e.id}">${e.name}</a> ${e.time} ${e.cost}</p>
+        <div class="event_list">
+            <p py:for="e in future_events">
+                ${e.date.strftime("%x")}: <a href="/events/${e.id}">${e.name}</a>
+                ${e.time} ${e.cost}
+            </p>
+            <p py:if="not len(list(future_events))">None</p>
         </div>
 
-        <div py:replace="edit_links(venue.id, 'venue')" />
+        <div py:replace="edit_links(venue)" />
     </div>
 </body>
 </html>

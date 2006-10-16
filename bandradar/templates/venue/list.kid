@@ -13,7 +13,11 @@
         ${venue_search_form(action="/venues/search")}
     </div>
 
-    <h2>Venue List</h2>
+    <div id="list_title">
+        <?python from turbogears import identity ?>
+        <span py:if="'admin' in identity.current.groups" class="button">
+            <a href="/venues/edit">Add a new venue</a></span>
+    </div>
 
     <p py:for="v in venues">
         <p>
