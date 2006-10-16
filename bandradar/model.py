@@ -24,7 +24,7 @@ class BRSQLObject(SQLObject):
     def _fdate(self, past_date):
         elapsed = datetime.now() - past_date
         if elapsed.days:
-            return "%s (%d days ago)" % (past_date.strftime("%m/%d"), elapsed.days)
+            return "%s (%d days ago)" % (past_date.strftime("%x"), elapsed.days)
         if elapsed.seconds / 7200:
             return "%s (%d hours ago)" % (past_date.strftime("%H:%M"),
                 elapsed.seconds / 3600)
