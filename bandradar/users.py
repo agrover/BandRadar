@@ -161,7 +161,9 @@ class Users(controllers.Controller, util.RestAdapter, identity.SecureResource):
 
     @expose(template=".templates.user.list")
     def list(self):
-        u = UserAcct.select(orderBy=UserAcct.q.user_name)
+        u = []
+        if 'admin' in identity.current.groups:
+            u = UserAcct.select(orderBy=UserAcct.q.user_name)
         return dict(users=u)
 
     @expose(template=".templates.user.show")
