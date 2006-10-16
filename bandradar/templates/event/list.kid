@@ -13,20 +13,34 @@
         ${event_search_form(action="/events/search")}
     </div>
 
-    <h2>Event List (${count} for ${listby})</h2>
-    Events:
-    <a href="/events/list/today">Today</a>
-    <a href="/events/list/tomorrow">Tomorrow</a>
-    <a href="/events/list/yesterday">Yesterday</a>
-    <a href="/events/list/week">Upcoming week</a>
-    <a href="/events/list/all">All upcoming</a>
+    <div id="list_title">
+        Event List (${count} for ${listby})
+        <span class="button"><a href="/events/edit">Add a new event</a></span>
+    </div>
 
-    <p py:for="e in events">
-        <p><a href="/events/${e.id}">${e.name} @ ${e.venue.name}</a> ${e.get_fdate()} ${e.cost}</p>
-    </p>
+    <div id="list_heading">
+    With shows:
+        <ul>
+        <li><a href="/events/list/today">Today</a></li>
+        <li><a href="/events/list/tomorrow">Tomorrow</a></li>
+        <li><a href="/events/list/yesterday">Yesterday</a></li>
+        <li><a href="/events/list/week">Upcoming week</a></li>
+        <li><a href="/events/list/all">All upcoming</a></li>
+        </ul>
+    </div>
 
-    <p>
-        <a href="/events/edit">Add a new Event</a>
-    </p>
+    <table>
+        <tr py:for="event in events">
+            <td>
+                <a href="/events/${event.id}">${event.name} @ ${event.venue.name}</a>
+            </td>
+            <td>
+                ${event.get_fdate()}
+            </td>
+            <td>
+                ${event.cost} ${event.ages}
+            </td>
+        </tr>
+    </table>
 </body>
 </html>
