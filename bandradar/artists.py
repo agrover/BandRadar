@@ -42,7 +42,7 @@ class Artists(controllers.Controller, util.RestAdapter):
     def list(self, listby="today", orderby="alpha"):
 
         def artists_with_shows(day_delta, day_count=1):
-            day_result = []
+            day_result = {}
             start_date = date.today() + timedelta(day_delta)
             where_clause = AND(Event.q.date >= start_date, Event.q.verified == True,
                 Event.q.active == True)
@@ -52,12 +52,12 @@ class Artists(controllers.Controller, util.RestAdapter):
             events = Event.select(where_clause)
             for event in events:
                 for artist in event.artists:
-                    art = dict(id=artist.id, name=artist.name)
                     if identity.current.user:
-                        art['is_tracked'] = artist in identity.current.user.artists
+                        is_tracked = artist in identity.current.user.artists
                     else:
-                        art['is_tracked'] = False
-                    day_result.append(art)
+                        is_tracked = False
+                    art = dict(id=artist.id, name=artist.name)
+                    day_result[artist.name] = (artist.id, is_tracked)
             return day_result
 
         if listby == "today":
@@ -71,13 +71,16 @@ class Artists(controllers.Controller, util.RestAdapter):
         elif listby == "all":
             result = artists_with_shows(0, 0)
         else:
-            result = []
+            result = {}
 
-        # order by alpha, pop, date
-        import operator
-        result.sort(key=operator.itemgetter("name"))
+        # we stored items in a dict to uniquify artist names.
+        # now, sort and put back in a list
+        keys = result.keys()
+        keys.sort()
+        result_list = [dict(name=key, id=result[key][0], is_tracked=result[key][1])
+            for key in keys]
 
-        return dict(artists=result, count=len(result), 
+        return dict(artists=result_list, count=len(result),
             listby=listby, artist_search_form=artist_search_form)
 
     @expose(template=".templates.artist.show")
