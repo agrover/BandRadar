@@ -55,6 +55,18 @@ def redirect_previous():
 def redirect(where):
     turbogears.redirect(turbogears.url(where))
 
+def can_edit(object):
+    if 'admin' in identity.current.groups:
+        return True
+    if object.added_by == identity.current.user:
+        return True
+    return False
+
+def can_delete(object):
+    if 'admin' in identity.current.groups:
+        return True
+    return False
+
 class AutoCompleteValidator(v.Schema):
     def _to_python(self, value, state):
         text = value['text']
