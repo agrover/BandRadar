@@ -82,6 +82,7 @@ class Event(BRSQLObject):
     verified = BoolCol(default=False)
     active = BoolCol(default=True)
     event_index = DatabaseIndex('date', 'time', 'venue', unique=True)
+    date_index = DatabaseIndex('date')
 
     def destroySelf(self):
         for a in self.artists:
