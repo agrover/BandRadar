@@ -93,11 +93,12 @@ class Event(BRSQLObject):
 
     def get_fdate(self):
         thedate = date.today()
+        note = ""
         if self.date == thedate:
-            return "today"
+            note = " (today)"
         if self.date == thedate + timedelta(1):
-            return "tomorrow"
-        return self.date.strftime("%a %m/%d")
+            note = " (tomorrow)"
+        return self.date.strftime("%a %m/%d") + note
 
 
 class Attendance(BRSQLObject):
