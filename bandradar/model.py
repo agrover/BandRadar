@@ -21,21 +21,23 @@ class BRSQLObject(SQLObject):
         if name in self.sqlmeta.columns.keys():
             super(BRSQLObject, self).__setattr__('last_updated', datetime.now())
 
-    def _get_fdate(self, past_date):
+    def _fdate(self, past_date):
         elapsed = datetime.now() - past_date
         if elapsed.days:
-            return "%d days ago" % elapsed.days
-        if elapsed.seconds / 3600:
-            return "%d hours ago" % elapsed.seconds / 3600
-        if elapsed.seconds / 60:
-            return "%d minutes ago" % elapsed.seconds / 60
+            return "%s (%d days ago)" % (past_date.strftime("%m/%d"), elapsed.days)
+        if elapsed.seconds / 7200:
+            return "%s (%d hours ago)" % (past_date.strftime("%H:%M"),
+                elapsed.seconds / 3600)
+        if elapsed.seconds / 120:
+            return "%s (%d minutes ago)" % (past_date.strftime("%H:%M"),
+                elapsed.seconds / 60)
         return "%d seconds ago" % elapsed.seconds
 
     def get_fupdated(self):
-        return self._get_fdate(self.last_updated)
+        return self._fdate(self.last_updated)
 
     def get_fcreated(self):
-        return self._get_fdate(self.created)
+        return self._fdate(self.created)
 
 class Venue(BRSQLObject):
     name = UnicodeCol(alternateID=True, length=100)
