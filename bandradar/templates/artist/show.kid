@@ -11,7 +11,8 @@
     <div id="body">
         <p class="name">${artist.name}</p>
         <p>${artist.description}</p>
-        <p py:if="artist.added_by and not 'admin' in artist.added_by.groups">Added by: ${artist.added_by.user_name}</p>
+        <p py:if="not 'admin' in artist.added_by.groups">Added by:
+            ${artist.added_by.user_name}</p>
         <p py:if="tracked_count">Users tracking: ${tracked_count}</p>
         <p py:if="is_tracked">
             <i>currently being tracked by you.</i>
@@ -27,11 +28,12 @@
             href="/events/edit?artist_prefill=${artist.id}">Add new event</a>
         </div>
         <p py:for="event in events">
+            ${event.get_fdate()}:
             <a href="/events/${event.id}">${event.name}</a> @ 
             <a href="/venues/${event.venue.id}">${event.venue.name}</a>
         </p>
 
-        <div py:replace="edit_links(artist.id, 'artist')" />
+        <div py:replace="edit_links(artist)" />
     </div>
 </body>
 </html>

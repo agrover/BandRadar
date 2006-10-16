@@ -15,9 +15,15 @@ p { margin: 0; }
 input { border: 1px solid black; }
 textarea { border: 1px solid black; }
 h2 {
-    margin: 0;
+    margin: 0 0 .5em 0;
     font-size: normal;
 }
+h3 {
+    margin: 0 0 .5em 0;
+    font-size: small;
+}
+
+.event_list { margin: 0 0 1em 1em; }
 
 .name {
     font-weight: bold;
@@ -82,6 +88,8 @@ h2 {
 #header a { padding: 0 .5em 0 .5em; }
 
 #content { min-height: 400px }
+
+#details { margin: 0 0 1em 1em; }
 
 .fieldhelp { color: gray; }
 .fielderror { color: red; }

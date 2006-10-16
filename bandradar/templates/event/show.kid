@@ -8,24 +8,27 @@
 
 <body>
     <div id="body">
-        <h2>Event Details</h2>
-        <p>${event.name}</p>
-        <p py:if="event.description">Description: ${event.description}</p>
-        <p>Date: ${event.date.strftime("%x")}</p>
-        <p py:if="event.time">Time: ${event.time}</p>
-        <p py:if="event.cost">Cost: ${event.cost}</p>
-        <p py:if="event.ages">Ages: ${event.ages}</p>
-        <p py:if="event.url">Website: <a href="${event.url}">${event.url}</a></p>
-        <p>Where: <a href="/venues/${event.venue.id}">${event.venue.name}</a>
-            <span py:if="event.venue.address">(${event.venue.address})</span>
-        </p>
-        With:
-        <span py:replace="XML(artisthtml)"></span>
-        <p>Added: ${event.created.strftime("%x %X")}</p>
-        <p py:if="event.added_by">Added By: <a href="/users/${event.added_by.user_name}">
-            ${event.added_by.user_name}</a></p>
+        <h2>Event: ${event.name}</h2>
+        <div id="details">
+            <p py:if="event.description">Description: ${event.description}</p>
+            <p>Date: ${event.date.strftime("%x")}</p>
+            <p py:if="event.time">Time: ${event.time}</p>
+            <p py:if="event.cost">Cost: ${event.cost}</p>
+            <p py:if="event.ages">Ages: ${event.ages}</p>
+            <p py:if="event.url">Website: <a href="${event.url}">${event.url}</a></p>
+            <p>Where: <a href="/venues/${event.venue.id}">${event.venue.name}</a>
+                <span py:if="event.venue.address">(${event.venue.address})</span>
+            </p>
+            With:
+            <span py:replace="XML(artisthtml)"></span>
+            <p py:if="not 'admin' in event.added_by.groups">
+            Added by: <a href="/users/${event.added_by.user_name}">
+                ${event.added_by.user_name}</a></p>
+            <p>Added: ${event.get_fcreated()}</p>
+            <p>Changed: ${event.get_fupdated()}</p>
+        </div>
 
-        <div py:replace="edit_links(event.id, 'event')" />
+        <div py:replace="edit_links(event)" />
     </div>
 </body>
 </html>

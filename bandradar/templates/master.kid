@@ -2,12 +2,14 @@
 <?python import sitetemplate ?>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:py="http://purl.org/kid/ns#" py:extends="sitetemplate">
 
-<div class="edit_links" py:def="edit_links(id, type)">
-    <?python from turbogears import identity ?>
-    <div py:if="'admin' in identity.current.groups">
-        <p><a class="button" href="/${type}s/${id}/edit">Edit this ${type}</a></p>
-        <p><a class="button" href="/${type}s/delete?id=${id}">Delete this ${type}</a></p>
-    </div>
+<div class="edit_links" py:def="edit_links(object)">
+    <?python from bandradar.util import can_edit, can_delete ?>
+    <p py:if="can_edit(object)"><a class="button"
+         href="/${str.lower(object.__class__.__name__)}s/${object.id}/edit">
+            Edit this ${object.__class__.__name__}</a></p>
+    <p py:if="can_delete(object)"><a class="button"
+        href="/${str.lower(object.__class__.__name__)}s/delete?id=${object.id}">
+            Delete this ${object.__class__.__name__}</a></p>
 </div>
 
 <div py:def="header()" id="header">
