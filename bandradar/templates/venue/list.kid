@@ -15,6 +15,7 @@
 
     <div id="list_title">
         <?python from turbogears import identity ?>
+        Venue List
         <span py:if="'admin' in identity.current.groups" class="button">
             <a href="/venues/edit">Add a new venue</a></span>
     </div>
@@ -24,10 +25,6 @@
             <a href="/venues/${v['id']}">${v['name']}</a>
             <span py:if="v['eventcount']"> (${v['eventcount']} upcoming)</span>
         </p>
-    </p>
-
-    <p>
-        <a href="/venues/edit">Add a new venue</a>
     </p>
 </body>
 </html>
