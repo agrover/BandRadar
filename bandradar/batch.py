@@ -29,6 +29,7 @@ def task():
                 user_events.add(event)
                 send_to[user] = user_events
 
+    email_sent = 0
     for u, events in send_to.iteritems():
         import smtplib
         import pkg_resources
@@ -55,11 +56,13 @@ def task():
         s.connect()
         try:
             s.sendmail(msg_from, [msg_to], msg.as_string())
+            email_sent += 1
         except smtplib.SMTPException, smtp:
             # todo: record bounces so a human can do something
             log.error("smtp error %s" % repr(smtp))
         s.close()
 
+    current.email_sent = email_sent;
     current.finished = datetime.datetime.now()
     hub.commit()
     hub.end()

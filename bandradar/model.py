@@ -115,6 +115,7 @@ class BatchRecord(SQLObject):
     # the period of new data it is processing
     first_handled = DateTimeCol(default=None)
     last_handled = DateTimeCol(default=None)
+    email_sent = IntCol(default=0)
 
 
 class VisitIdentity(SQLObject):
