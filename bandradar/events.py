@@ -15,8 +15,8 @@ from cgi import escape
 class EventForm(w.WidgetsList):
     id = w.HiddenField(validator=v.Int)
     name = w.TextField(label="Event Name", help_text="If different from artists' names")
-    venue = util.BRAutoCompleteField("/venues/dynsearch", label="Venue")
     artists = w.TextArea(help_text="Enter artists, one per line", validator=v.NotEmpty(strip=True), rows=3, cols=30)
+    venue = util.BRAutoCompleteField("/venues/dynsearch", label="Venue")
     date = w.CalendarDatePicker(not_empty=True)
     time = w.TextField()
     cost = w.TextField()
