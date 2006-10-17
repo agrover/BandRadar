@@ -33,6 +33,7 @@ h3 {
 .flash {
     font-weight: bold;
     font-size: large;
+    text-align: center;
     border: 2px solid green;
     background-color: #dfd;
 }
