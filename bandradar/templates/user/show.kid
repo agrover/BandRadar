@@ -20,7 +20,7 @@
 
     </div>
 
-    <h4>Bands Tracked</h4>
+    <h4>Bands Tracked: ${len(art_list)}</h4>
     <table>
         <th>Band</th>
         <th>Events Performed</th>
