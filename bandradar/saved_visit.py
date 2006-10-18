@@ -11,6 +11,8 @@ import util
 import logging
 log = logging.getLogger("bandradar.saved_visit")
 
+cookie_name = "saved_visit"
+
 
 def saved_visit_is_on():
     "Returns True if ip tracking is properly enabled, False otherwise."
@@ -32,16 +34,16 @@ def shutdown_extension():
 def remember(user):
     months = 6
     future_time = datetime.utcnow() + timedelta(months*30)
-    cherrypy.response.simple_cookie['userName'] = user.user_name
-    cherrypy.response.simple_cookie['userName']['path'] = "/"
+    cherrypy.response.simple_cookie[cookie_name] = user.user_name
+    cherrypy.response.simple_cookie[cookie_name]['path'] = "/"
     # use official Netscape cookie time format, bleh
-    cherrypy.response.simple_cookie['userName']['expires'] = \
+    cherrypy.response.simple_cookie[cookie_name]['expires'] = \
         future_time.strftime("%a, %d-%b-%Y %X GMT")
 
 def forget():
-    cherrypy.response.simple_cookie['userName'] = "_"
-    cherrypy.response.simple_cookie['userName']['path'] = "/"
-    cherrypy.response.simple_cookie['userName']['expires'] = 0    
+    cherrypy.response.simple_cookie[cookie_name] = "_"
+    cherrypy.response.simple_cookie[cookie_name]['path'] = "/"
+    cherrypy.response.simple_cookie[cookie_name]['expires'] = 0    
 
 class SavedVisitPlugin(object):
     
@@ -58,7 +60,7 @@ class SavedVisitPlugin(object):
         else:
             # if we're not logged in, see if the cookie is there, and log in
             try:
-                username = cherrypy.request.simple_cookie['userName'].value
+                username = cherrypy.request.simple_cookie[cookie_name].value
                 u = UserAcct.by_user_name(username)
                 identity.current_provider.validate_identity(u.user_name,
                     u.password, visit.key)
