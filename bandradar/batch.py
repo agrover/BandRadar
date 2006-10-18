@@ -1,7 +1,7 @@
 import turbogears
 import logging
 from sqlobject.util.threadinglocal import local as threading_local
-from model import hub, BatchRecord, Event
+from model import hub, BatchRecord, Event, AND
 import datetime
 
 log = logging.getLogger("bandradar.batch")
@@ -17,11 +17,15 @@ def task():
     else:
         from_when = datetime.date.today()
 
-    current = BatchRecord(first_handled=from_when, last_handled=datetime.datetime.now())
+    last_handled = datetime.datetime.now()
+    current = BatchRecord(first_handled=from_when, last_handled=last_handled)
     hub.commit()
 
     send_to = {}
-    new_events = Event.select(Event.q.created > from_when)
+    # date range includes start, doesn't include end instant
+    # (next iteration will handle) 
+    new_events = Event.select(AND(Event.q.approved >= from_when,
+        Event.q.approved < last_handled))
     for event in new_events:
         for artist in event.artists:
             for user in artist.users:

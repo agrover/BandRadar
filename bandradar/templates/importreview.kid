@@ -20,19 +20,19 @@
             </td>
             <td>
                 <input py:attrs="type='hidden', name='eid' + str(e_counter), value=e.id" />
-                <a href="/events/${e.id}/edit"><b py:strip="e.verified">${e.name}</b></a>
+                <a href="/events/${e.id}/edit"><b py:strip="e.approved">${e.name}</b></a>
                 <br />${e.date} ${e.time} ${e.cost}
             </td>
             <td>
                 <div py:for="artist in e.artists">
                     <a href="/artists/${artist.id}/edit">
-                        <b py:strip="artist.verified">${artist.name}</b>
+                        <b py:strip="artist.approved">${artist.name}</b>
                     </a>
                 </div>
             </td>
             <td>
                 <a href="/venues/${e.venue.id}/edit">
-                    <b py:strip="e.venue.verified">${e.venue.name}</b><br />
+                    <b py:strip="e.venue.approved">${e.venue.name}</b><br />
                 </a>
                 ${e.venue.address} ${e.venue.phone}
             </td>

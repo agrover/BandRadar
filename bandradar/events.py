@@ -52,8 +52,7 @@ class Events(controllers.Controller, util.RestAdapter):
         def events_in_period(day_delta, day_count=1):
             day_result = []
             start_date = date.today() + timedelta(day_delta)
-            where_clause = AND(Event.q.date >= start_date, Event.q.verified == True,
-                Event.q.active == True)
+            where_clause = AND(Event.q.date >= start_date, Event.q.approved != None)
             if day_count != 0:
                 end_date = start_date + timedelta(day_count-1)
                 where_clause = AND(where_clause, Event.q.date <= end_date)

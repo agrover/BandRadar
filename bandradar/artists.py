@@ -44,8 +44,7 @@ class Artists(controllers.Controller, util.RestAdapter):
         def artists_with_shows(day_delta, day_count=1):
             day_result = {}
             start_date = date.today() + timedelta(day_delta)
-            where_clause = AND(Event.q.date >= start_date, Event.q.verified == True,
-                Event.q.active == True)
+            where_clause = AND(Event.q.date >= start_date, Event.q.approved != None)
             if day_count != 0:
                 end_date = start_date + timedelta(day_count-1)
                 where_clause = AND(where_clause, Event.q.date <= end_date)
@@ -126,7 +125,7 @@ class Artists(controllers.Controller, util.RestAdapter):
             a = Artist(added_by=identity.current.user, **kw)
             if not "admin" in identity.current.groups:
                 identity.current.user.addArtist(a)
-            turbogears.flash("Added")
+            turbogears.flash("Artist added")
         redirect(turbogears.url("/artists/%s" % a.id))
 
     @expose()

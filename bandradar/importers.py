@@ -6,7 +6,7 @@ from turbogears import widgets as w
 from turbogears import validators as v
 from model import Event, Venue, Artist, hub
 from sqlobject import SQLObjectNotFound, AND, OR
-from datetime import date
+from datetime import date, datetime
 import MBL
 import WWBL
 
@@ -95,10 +95,10 @@ class Importers(controllers.Controller, identity.SecureResource):
     @expose(template="bandradar.templates.importreview")
     def review(self):
         try_to_show = 25
-        total = Event.select(Event.q.verified == False).count()
-        events = Event.select(Event.q.verified == False,
-            orderBy=Event.q.name)[:try_to_show]
+        result = Event.select(Event.q.approved == None, orderBy=Event.q.name)
+        total = result.count()
         shown = min(total, try_to_show)
+        events = result[:shown]
         return dict(events=events, shown=shown, total=total)
 
     @expose()
@@ -113,6 +113,7 @@ class Importers(controllers.Controller, identity.SecureResource):
 
     def review_import(self, **kw):
         e_counter = 0
+        now = datetime.now()
         while True:
             try:
                 e_id = kw["eid"+str(e_counter)]
@@ -122,11 +123,11 @@ class Importers(controllers.Controller, identity.SecureResource):
             if not kw.has_key("accept"+e_id):
                 continue
             e = Event.get(e_id)
-            e.verified = True
+            e.approved = now
             v = e.venue
-            v.verified = True
+            v.approved = now
             for artist in e.artists:
-                artist.verified = True
+                artist.approved = now
 
     def delete_event(self, event):
         for a in event.artists:
@@ -152,7 +153,7 @@ class Importers(controllers.Controller, identity.SecureResource):
 
     @expose()
     def reviewpurge(self):
-        new_events = Event.select(Event.q.verified == False)
+        new_events = Event.select(Event.q.approved == None)
         for event in new_events:
             self.delete_event(event)
         redirect(turbogears.url("/importers/review"))

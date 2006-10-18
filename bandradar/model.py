@@ -13,6 +13,7 @@ soClasses = ('UserAcct', 'Group', 'Permission', 'Venue', 'Artist', 'Event',
 class BRSQLObject(SQLObject):
 
     created = DateTimeCol(default=datetime.now())
+    approved = DateTimeCol(default=None)
     last_updated = DateTimeCol(default=datetime.now())
     description = UnicodeCol(default=None)
 
@@ -45,8 +46,6 @@ class Venue(BRSQLObject):
     url = UnicodeCol(length=256, default=None)
     phone = UnicodeCol(length=32, default=None)
     added_by = ForeignKey('UserAcct')
-    verified = BoolCol(default=False)
-    active = BoolCol(default=True)
 
 
 class Artist(BRSQLObject):
@@ -55,8 +54,6 @@ class Artist(BRSQLObject):
     events = RelatedJoin('Event')
     users = RelatedJoin('UserAcct')
     added_by = ForeignKey('UserAcct')
-    verified = BoolCol(default=False)
-    active = BoolCol(default=True)
 
     def destroySelf(self):
         for e in self.events:
@@ -81,8 +78,6 @@ class Event(BRSQLObject):
     venue = ForeignKey('Venue')
     artists = RelatedJoin('Artist')
     added_by = ForeignKey('UserAcct')
-    verified = BoolCol(default=False)
-    active = BoolCol(default=True)
     event_index = DatabaseIndex('date', 'time', 'venue', unique=True)
     date_index = DatabaseIndex('date')
 
@@ -148,11 +143,11 @@ class Group(SQLObject):
         return cmp(self.group_name, other.group_name)
 
 class UserAcct(BRSQLObject):
-    user_name = UnicodeCol( length=16, alternateID=True,
-                           alternateMethodName="by_user_name" )
-    email_address = UnicodeCol( length=255, alternateID=True,
-                               alternateMethodName="by_email_address" )
-    password = UnicodeCol( length=40 )
+    user_name = UnicodeCol(length=16, alternateID=True,
+                           alternateMethodName="by_user_name")
+    email_address = UnicodeCol(length=255, alternateID=True,
+                               alternateMethodName="by_email_address")
+    password = UnicodeCol(length=40)
     # site-specific fields
     zip_code = UnicodeCol(length=10, default=None)
     url = UnicodeCol(length=256, default=None)
@@ -187,8 +182,8 @@ class UserAcct(BRSQLObject):
 
 
 class Permission(SQLObject):
-    permission_name = UnicodeCol( length=16, alternateID=True,
-                                 alternateMethodName="by_permission_name" )
-    description = UnicodeCol( length=255 )
+    permission_name = UnicodeCol(length=16, alternateID=True,
+                                 alternateMethodName="by_permission_name")
+    description = UnicodeCol(length=255)
     
-    groups = RelatedJoin( "Group")
+    groups = RelatedJoin("Group")

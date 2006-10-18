@@ -41,7 +41,7 @@ class Root(controllers.RootController):
             user = "unknown person"
 
         events = Event.select(AND(Event.q.date == datetime.date.today(),
-            Event.q.verified == True, Event.q.active == True),
+            Event.q.approved != None),
             orderBy=Event.q.name)[:10]
 
         return dict(user=user, search_form=artist_search_form, events=events)

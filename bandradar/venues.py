@@ -42,8 +42,7 @@ class Venues(controllers.Controller, util.RestAdapter):
     @expose(template=".templates.venue.list")
     def list(self):
         venue_list = []
-        venues = Venue.select(AND(Venue.q.verified == True, Venue.q.active == True),
-            orderBy=Venue.q.name)
+        venues = Venue.select(Venue.q.approved != None, orderBy=Venue.q.name)
         for v in venues:
             eventcount = Event.select(AND(Event.q.venueID == v.id,
                 Event.q.date >= date.today())).count()

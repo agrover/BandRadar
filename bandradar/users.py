@@ -156,7 +156,7 @@ class Users(controllers.Controller, util.RestAdapter, identity.SecureResource):
     @expose()
     def logout(self):
         identity.current.logout()
-        turbogears.flash("Logged out.")
+        turbogears.flash("Logged out")
         redirect("/")
 
     @expose(template=".templates.user.list")
