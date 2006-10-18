@@ -14,7 +14,7 @@
     </div>
 
     <div id="list_title">
-        Event List (${count} for ${listby})
+        Events ${listby} (${count})
         <span class="button"><a href="/events/edit">Add a new event</a></span>
     </div>
 

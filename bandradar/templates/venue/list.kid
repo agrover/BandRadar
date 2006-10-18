@@ -15,7 +15,7 @@
 
     <div id="list_title">
         <?python from turbogears import identity ?>
-        Venue List
+        All Venues
         <span py:if="'admin' in identity.current.groups" class="button">
             <a href="/venues/edit">Add a new venue</a></span>
     </div>
