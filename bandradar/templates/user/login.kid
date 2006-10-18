@@ -30,14 +30,14 @@
                         <input type="password" id="password" name="password"/>
                     </td>
                 </tr>
-<!--            <tr>
+                <tr>
                     <td class="label">
                         <label for="remember">Remember me:</label>
                     </td>
                     <td class="field">
                         <input type="checkbox" id="remember" name="remember"/>
                     </td>
-                </tr> -->
+                </tr>
 
                 <tr>
                     <td colspan="2" class="buttons">

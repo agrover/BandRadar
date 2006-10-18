@@ -11,6 +11,7 @@ from sqlobject import SQLObjectNotFound, LIKE, func
 from datetime import date
 import formencode
 import util
+import saved_visit
 
 #
 # VALIDATORS
@@ -122,6 +123,8 @@ class Users(controllers.Controller, util.RestAdapter, identity.SecureResource):
     def login(self, *args, **kw):
 
         if not identity.current.anonymous and identity.was_login_attempted():
+            if kw.get("remember", None):
+                saved_visit.remember(identity.current.user)
             redirect(kw['forward_url'])
 
         forward_url = None
@@ -155,6 +158,7 @@ class Users(controllers.Controller, util.RestAdapter, identity.SecureResource):
 
     @expose()
     def logout(self):
+        saved_visit.forget()
         identity.current.logout()
         turbogears.flash("Logged out")
         redirect("/")

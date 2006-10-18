@@ -22,9 +22,13 @@ log = logging.getLogger("bandradar.controllers")
 def br_startup():
     scheduler.add_interval_task(batch.task, 60)
     #scheduler.add_weekday_task(my_task, range(1,8), (3,0))
+    import saved_visit
+    saved_visit.start_extension()
 
 def br_shutdown():
-    pass
+    import saved_visit
+    saved_visit.shutdown_extension()
+    #pass
 
 turbogears.startup.call_on_startup.append(br_startup)
 turbogears.startup.call_on_shutdown.append(br_shutdown)
