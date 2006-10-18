@@ -123,8 +123,6 @@ class Users(controllers.Controller, util.RestAdapter, identity.SecureResource):
     def login(self, *args, **kw):
 
         if not identity.current.anonymous and identity.was_login_attempted():
-            if kw.get("remember", None):
-                saved_visit.remember(identity.current.user)
             redirect(kw['forward_url'])
 
         forward_url = None
