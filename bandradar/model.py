@@ -11,7 +11,6 @@ soClasses = ('UserAcct', 'Group', 'Permission', 'Venue', 'Artist', 'Event',
              'BatchRecord', 'Attendance')
 
 class BRSQLObject(SQLObject):
-
     created = DateTimeCol(default=datetime.now())
     approved = DateTimeCol(default=None)
     last_updated = DateTimeCol(default=datetime.now())
@@ -47,6 +46,7 @@ class BRSQLObject(SQLObject):
             if attr in valid_attributes:
                 clean[attr] = value
         return clean
+
 
 class Venue(BRSQLObject):
     name = UnicodeCol(alternateID=True, length=100)
@@ -122,9 +122,10 @@ class BatchRecord(SQLObject):
 
 
 class VisitIdentity(SQLObject):
-    visit_key = StringCol( length=40, alternateID=True,
-                          alternateMethodName="by_visit_key" )
+    visit_key = StringCol(length=40, alternateID=True,
+                          alternateMethodName="by_visit_key")
     user_id = IntCol()
+    expiry = DateTimeCol(default=None)
 
 
 class Group(SQLObject):
@@ -149,6 +150,7 @@ class Group(SQLObject):
         if isinstance(other, basestring):
             other = Group.by_group_name(other)
         return cmp(self.group_name, other.group_name)
+
 
 class UserAcct(BRSQLObject):
     user_name = UnicodeCol(length=16, alternateID=True,

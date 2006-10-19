@@ -3,7 +3,7 @@ import turbogears
 from turbogears import visit
 from turbogears import identity
 from sqlobject import SQLObjectNotFound
-from model import UserAcct, hub
+from model import UserAcct, VisitIdentity, hub
 from datetime import datetime, timedelta
 import time
 import util
@@ -33,14 +33,15 @@ def shutdown_extension():
     if not saved_visit_is_on():
         return
     
-def remember(user):
+def remember(visit):
     months = 6
     future_time = datetime.utcnow() + timedelta(months*30)
-    cherrypy.response.simple_cookie[cookie_name] = user.user_name
+    cherrypy.response.simple_cookie[cookie_name] = visit.key
     cherrypy.response.simple_cookie[cookie_name]['path'] = "/"
     # use official Netscape cookie time format, bleh
     cherrypy.response.simple_cookie[cookie_name]['expires'] = \
         future_time.strftime("%a, %d-%b-%Y %X GMT")
+    return future_time
 
 def forget():
     cherrypy.response.simple_cookie[cookie_name] = "_"
@@ -58,12 +59,14 @@ class SavedVisitPlugin(object):
             # if we are logged in, watch for the "remember" param, and set the
             # cookie if so.
             if cherrypy.request.params.pop("remember", None):
-                remember(identity.current.user)
+                vi = VisitIdentity.by_visit_key(visit.key)
+                vi.expiry = remember(visit)
         else:
             # if we're not logged in, see if the cookie is there, and log in
             try:
-                username = cherrypy.request.simple_cookie[cookie_name].value
-                u = UserAcct.by_user_name(username)
+                saved_key = cherrypy.request.simple_cookie[cookie_name].value
+                vi = VisitIdentity.by_visit_key(saved_key)
+                u = UserAcct.get(vi.user_id)
                 identity.current_provider.validate_identity(u.user_name,
                     u.password, visit.key)
                 # must commit or db will forget we logged in, when we 
