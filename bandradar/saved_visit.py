@@ -15,8 +15,10 @@ cookie_name = "saved_visit"
 
 
 def saved_visit_is_on():
-    "Returns True if ip tracking is properly enabled, False otherwise."
-    return cherrypy.config.get('visit.on', False)# and cherrypy.config.get('visit.saved_visit.on', False)
+    "Returns True if config is properly enabled, False otherwise."
+    return turbogears.config.get("visit.on", False) and \
+        turbogears.config.get( "identity.on", False ) and \
+        turbogears.config.get("saved_visit.on", False)
 
 #Interface for the TurboGears extension
 def start_extension():
@@ -52,7 +54,7 @@ class SavedVisitPlugin(object):
         pass
 
     def record_request(self, visit):
-        if not identity.current.anonymous:
+        if identity.current.user:
             # if we are logged in, watch for the "remember" param, and set the
             # cookie if so.
             if cherrypy.request.params.pop("remember", None):
