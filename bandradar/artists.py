@@ -117,12 +117,12 @@ class Artists(controllers.Controller, util.RestAdapter):
         if id:
             try:
                 a = Artist.get(id)
-                a.set(**kw)
+                a.set(**a.clean_dict(kw))
                 turbogears.flash("Updated")
             except SQLObjectNotFound:
                 turbogears.flash("Update Error")
         else:
-            a = Artist(added_by=identity.current.user, **kw)
+            a = Artist(added_by=identity.current.user, **a.clean_dict(kw))
             if not "admin" in identity.current.groups:
                 identity.current.user.addArtist(a)
             turbogears.flash("Artist added")

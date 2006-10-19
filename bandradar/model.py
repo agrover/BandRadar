@@ -40,6 +40,14 @@ class BRSQLObject(SQLObject):
     def get_fcreated(self):
         return self._fdate(self.created)
 
+    def clean_dict(self, dirty_dict):
+        clean = {}
+        valid_attributes = self.sqlmeta.columns.keys()
+        for attr, value in dirty_dict.iteritems():
+            if attr in valid_attributes:
+                clean[attr] = value
+        return clean
+
 class Venue(BRSQLObject):
     name = UnicodeCol(alternateID=True, length=100)
     address = UnicodeCol(default=None)

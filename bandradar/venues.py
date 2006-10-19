@@ -85,12 +85,12 @@ class Venues(controllers.Controller, util.RestAdapter):
         if id:
             try:
                 v = Venue.get(id)
-                v.set(**kw)
+                v.set(**v.clean_dict(kw))
                 turbogears.flash("Updated")
             except SQLObjectNotFound:
                 turbogears.flash("Update Error")
         else:
-            v = Venue(added_by=identity.current.user, **kw)
+            v = Venue(added_by=identity.current.user, **v.clean_dict(kw))
             turbogears.flash("Added")
         redirect(turbogears.url("/venues/%s" % v.id))
 

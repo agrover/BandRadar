@@ -121,13 +121,13 @@ class Events(controllers.Controller, util.RestAdapter):
         except SQLObjectNotFound:
             v = Venue(name=kw['venue']['text'], added_by=identity.current.user)
 
-        artists = kw.get('artists')
+        artists = kw.pop('artists', None)
         artist_list = [artist.strip() for artist in artists.split('\n')]
         # elim blank items in list
         artist_list = [artist for artist in artist_list if artist]
-        name = kw.get('name')
+        name = kw.get('name', None)
         if not name:
-            name = artists
+            name = ", ".join(artist_list)
 
         # updating
         if id:
@@ -143,9 +143,8 @@ class Events(controllers.Controller, util.RestAdapter):
                 added_by=identity.current.user)
             flash_msg = "added"
 
-        del kw['artists']
         del kw['venue']
-        e.set(**kw)
+        e.set(**e.clean_dict(kw))
         e.name = name
         e.venue = v
         # add new artists
