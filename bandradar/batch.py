@@ -10,6 +10,17 @@ def task():
     log.info("batch started")
     hub.threadingLocal = threading_local()
     hub.begin()
+
+    try:
+        send_email()
+        cleanup_db()
+
+    finally:
+        log.info("batch finished")
+        hub.end()
+
+def send_email():
+
     last = BatchRecord.select(orderBy=BatchRecord.q.last_handled).reversed()[:1]
     if len(list(last)):
         last_rec = last[0]
@@ -69,5 +80,18 @@ def task():
     current.email_sent = email_sent;
     current.finished = datetime.datetime.now()
     hub.commit()
-    hub.end()
-    log.info("batch finished")
+
+def cleanup_db():
+    from model import VisitIdentity
+    from turbogears.visit.sovisit import TG_Visit
+
+    now = datetime.datetime.now()
+    old_visits = TG_Visit.select(TG_Visit.q.expiry < now)
+    for old_visit in old_visits:
+        try:
+            visit_identity = VisitIdentity.by_visit_key(old_visit.visit_key)
+            if visit_identity.expiry == None or visit_identity.expiry < now:
+                visit_identity.destroySelf()
+        except SQLObjectNotFound:
+            pass
+        old_visit.destroySelf()
