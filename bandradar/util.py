@@ -67,6 +67,18 @@ def can_delete(object):
         return True
     return False
 
+class ButtonWidget(w.Widget):
+    params=['label', 'action']
+
+    template = '''
+    <form xmlns:py="http://purl.org/kid/ns#"
+        class="buttonform"
+        action="${action}"
+        method="POST">
+        <input class="button" type="submit" value="${label}"/>
+    </form>
+    '''
+
 class AutoCompleteValidator(v.Schema):
     def _to_python(self, value, state):
         text = value['text']

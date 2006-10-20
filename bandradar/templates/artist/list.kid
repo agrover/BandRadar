@@ -15,7 +15,7 @@
 
     <div id="list_title">
         Bands playing: ${listby} (${count})
-        <span class="button"><a href="/artists/edit">Add a new Band</a></span>
+        ${tg_ButtonWidget(action="/artists/edit", label="Add a new Band")}
     </div>
 
     <div id="list_heading">
@@ -32,8 +32,8 @@
     <table>
         <tr py:for="artist in artists">
             <td>
-                <a class="button" py:if="artist['is_tracked']" href="/artists/${artist['id']}/untrack">Untrack</a>
-                <a class="button" py:if="not artist['is_tracked']" href="/artists/${artist['id']}/track">Track</a>
+                <span py:if="not artist['is_tracked']">${tg_ButtonWidget(action="/artists/%s/track" % artist['id'], label="Track")}</span>
+                <span py:if="artist['is_tracked']">${tg_ButtonWidget(action="/artists/%s/untrack" % artist['id'], label="Untrack")}</span>
             </td>
             <td>
             <b py:strip="not artist['is_tracked']">

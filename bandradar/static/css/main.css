@@ -61,6 +61,7 @@ h3 {
 
 .edit_links p { margin-bottom: .5em; }
 
+.buttonform { display: inline; }
 .button {
     font-size: x-small;
     font-weight: normal;
@@ -68,6 +69,7 @@ h3 {
     background-color: #dfd;
     padding: 0 .5em 0 .5em;
 }
+.button:hover { cursor: pointer }
 
 #main_column {
     color: black;
