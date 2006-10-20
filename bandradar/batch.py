@@ -95,3 +95,4 @@ def cleanup_db():
         except SQLObjectNotFound:
             pass
         old_visit.destroySelf()
+    hub.commit()
