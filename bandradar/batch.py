@@ -1,7 +1,7 @@
 import turbogears
 import logging
 from sqlobject.util.threadinglocal import local as threading_local
-from model import hub, BatchRecord, Event, AND
+from model import hub, BatchRecord, Event, AND, SQLObjectNotFound
 import datetime
 
 log = logging.getLogger("bandradar.batch")
