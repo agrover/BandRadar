@@ -4,12 +4,13 @@
 
 <div class="edit_links" py:def="edit_links(object)">
     <?python from bandradar.util import can_edit, can_delete ?>
-    <p py:if="can_edit(object)"><a class="button"
-         href="/${str.lower(object.__class__.__name__)}s/${object.id}/edit">
-            Edit this ${object.__class__.__name__}</a></p>
-    <p py:if="can_delete(object)"><a class="button"
-        href="/${str.lower(object.__class__.__name__)}s/delete?id=${object.id}">
-            Delete this ${object.__class__.__name__}</a></p>
+    <?python clsname = str.lower(object.__class__.__name__) ?>
+    <p py:if="can_edit(object)">
+        ${tg_ButtonWidget(action="/%ss/%d/edit" % (clsname, object.id), label="Edit this %s" % clsname)}
+    </p>
+    <p py:if="can_delete(object)">
+        ${tg_ButtonWidget(action="/%ss/%d/delete" % (clsname, object.id), label="Delete this %s" % clsname)}
+    </p>
 </div>
 
 <div py:def="header()" id="header">

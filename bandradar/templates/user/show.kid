@@ -15,7 +15,7 @@
         <p>More info: ${user.description}</p>
 
         <div py:if="viewing_self">
-            <a class="button" href="/users/${user.user_name}/edit">Edit</a>
+            ${tg_ButtonWidget(action="/users/%s/edit" % user.user_name, label="Edit")}
         </div>
 
     </div>

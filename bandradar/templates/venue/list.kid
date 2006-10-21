@@ -16,8 +16,9 @@
     <div id="list_title">
         <?python from turbogears import identity ?>
         All Venues
-        <span py:if="'admin' in identity.current.groups" class="button">
-            <a href="/venues/edit">Add a new venue</a></span>
+        <span py:if="'admin' in identity.current.groups">
+            ${tg_ButtonWidget(action="/venues/edit", label="Add a new venue")}
+        </span>
     </div>
 
     <p py:for="v in venues">

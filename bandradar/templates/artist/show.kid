@@ -17,18 +17,20 @@
         <p>Added: ${artist.get_fcreated()}</p>
         <p>Changed: ${artist.get_fupdated()}</p>
         <p py:if="tracked_count">Users tracking: ${tracked_count}</p>
-        <p py:if="is_tracked">
+        <div py:if="is_tracked">
             <i>currently being tracked by you.</i>
-            <a class="button" href="/artists/${artist.id}/untrack?viewing=yes">Untrack</a>
-        </p>
-        <p py:if="not is_tracked">
+            ${tg_ButtonWidget(action="/artists/%s/untrack?viewing=yes" % artist.id, label="Untrack")}
+        </div>
+        <div py:if="not is_tracked">
             <i>not currently tracked by you.</i>
-            <a class="button" href="/artists/${artist.id}/track?viewing=yes">Track</a>
-        </p>
+            ${tg_ButtonWidget(action="/artists/%s/track?viewing=yes" % artist.id, label="Track")}
+        </div>
 
-        <div id="list_title">Events
-        <a py:if="identity.current.user" class="button" 
-            href="/events/edit?artist_prefill=${artist.id}">Add new event</a>
+        <div id="list_title">
+            Events
+            <span py:if="identity.current.user">
+                ${tg_ButtonWidget(action="/events/edit", label="Add a new event")}
+            </span>
         </div>
         <p py:for="event in events">
             ${event.get_fdate()}:
