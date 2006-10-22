@@ -6,7 +6,6 @@ from sqlobject import SQLObjectNotFound
 from model import UserAcct, VisitIdentity, hub
 from datetime import datetime, timedelta
 import time
-import util
 
 import logging
 log = logging.getLogger("bandradar.saved_visit")
