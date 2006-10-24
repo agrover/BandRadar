@@ -24,7 +24,7 @@
     <a href="/artists/list">Bands</a>
     <a href="/events/list">Events</a>
     <a href="/venues/list">Venues</a>
-    <a href="/comment">Give us feedback</a>
+    <a href="/comment">Comments?</a>
     <span py:if="identity.current.user">
         <a href="/users/logout">Logout</a>
     </span>
@@ -67,7 +67,7 @@
         <div id="footer">
             <a href="/about">about</a> |
             <a href="/privacy">privacy</a> |
-            <a href="/contact">contact</a> |
+<!--            <a href="/contact">contact</a> | -->
             <a href="/feeds">rss</a>
         </div>
     </div>

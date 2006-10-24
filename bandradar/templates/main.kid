@@ -11,7 +11,7 @@
         <h3>The easy way to track your favorite Portland bands!</h3>
         <ul>
             <li>Find out who's playing</li>
-            <li>Get notified when your bands play live</li>
+            <li>Get notified when bands you like play live</li>
             <li>Your band's gig not here? Add it!</li>
         </ul>
     </div>

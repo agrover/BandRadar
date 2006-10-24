@@ -8,6 +8,17 @@
 
 <body>
     <h2>About BandRadar</h2>
-    blah blah blah
+    <p>
+    BandRadar is meant to be a tool to help both people who love live music
+    in Portland, by providing an easy way to find out about upcoming shows
+    by the bands you like, without having to scour many different websites and
+    newspapers for information on upcoming shows. 
+    </p>
+    <br />
+    <p>
+    BandRadar also gives bands, venues, and promoters another way to find out
+    about their events.
+    </p>
+
 </body>
 </html>
