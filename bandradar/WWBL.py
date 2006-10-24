@@ -9,6 +9,11 @@ import re
 # events = {name, [artists], date(date), str(time), str(cost)}
 # artists = [artist]
 
+def date_to_url(date):
+    baseurl = "http://wweek.com/calendar/music/index.php?date="
+    datestr = str(int(time.mktime(date.timetuple())))
+    return baseurl + datestr
+
 class WWBL:
 
     def parse_event(self, event):
@@ -26,10 +31,7 @@ class WWBL:
 
     def parse_day(self, date):
         venues = []
-        baseurl = "http://wweek.com/calendar/music/index.php?date="
-        datestr = str(int(time.mktime(date.timetuple())))
-        url = baseurl + datestr
-        usock = urllib.urlopen(url)
+        usock = urllib.urlopen(date_to_url(date))
         soup = BeautifulSoup(usock.read())
         #find all anchors with e.g. name="42820"
         anchors = soup('a', {'name':re.compile("\d+")})
