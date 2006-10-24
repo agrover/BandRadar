@@ -29,8 +29,8 @@ comment_form = w.TableForm(fields=CommentForm(), name="comment", submit_text="Se
 
 
 def br_startup():
-    scheduler.add_interval_task(batch.task, 60)
-    #scheduler.add_weekday_task(my_task, range(1,8), (3,0))
+    #scheduler.add_interval_task(batch.task, 60)
+    scheduler.add_weekday_task(batch.task, range(1,8), (3,0))
     saved_visit.start_extension()
 
 def br_shutdown():
@@ -51,7 +51,7 @@ class Root(controllers.RootController):
 
         events = Event.select(AND(Event.q.date == datetime.date.today(),
             Event.q.approved != None),
-            orderBy=Event.q.name)[:10]
+            orderBy=Event.q.name)#[:10]
 
         return dict(user=user, search_form=artist_search_form, events=events)
 
