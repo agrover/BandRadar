@@ -20,8 +20,9 @@ h2 {
 }
 h3 {
     margin: 0 0 .5em 0;
-    font-size: small;
+    font-size: medium;
 }
+h4 { margin: 0 0 .5em 0; }
 
 .event_list { margin: 0 0 1em 1em; }
 
@@ -38,6 +39,12 @@ h3 {
     background-color: #dfd;
 }
 
+.listform { display: inline; }
+.listform ul {
+    display: inline;
+    padding-left: .5em;
+    margin: 0;
+}
 .listform li { display: inline; }
 .listform li div { display: inline; }
 
@@ -89,6 +96,25 @@ h3 {
     border: 1px solid black;
 }
 #header a { padding: 0 .3em 0 .3em; }
+
+#tagline {
+    border: 2px solid green;
+    margin: 1em;
+    padding: .5em 1em .5em 1em;
+    background-color: #080;
+    color: white;
+}
+#tagline ul {
+    margin: 0 0 .5em 0;
+}
+
+#searchbox {
+    margin: 1em;
+}
+#searchbox h2 {
+    display: inline;
+    margin-bottom: 0;
+}
 
 #content { min-height: 400px }
 
