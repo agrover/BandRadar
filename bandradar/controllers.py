@@ -23,7 +23,7 @@ import datetime
 log = logging.getLogger("bandradar.controllers")
 
 class CommentForm(w.WidgetsList):
-    comment = w.TextArea(label="Comments?", rows=4, validator=v.NotEmpty)
+    comment = w.TextArea(label="Comments?", rows=4, validator=v.NotEmpty(strip=True))
 
 comment_form = w.TableForm(fields=CommentForm(), name="comment", submit_text="Send")
 
@@ -91,6 +91,8 @@ class Root(controllers.RootController):
         return dict(comment_form=comment_form)
 
     @expose()
+    @turbogears.validate(form=comment_form)
+    @turbogears.error_handler(comment)
     def commentsave(self, comment):
         c = Comment(comment=comment)
         if identity.current.user:
