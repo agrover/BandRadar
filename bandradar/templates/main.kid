@@ -7,14 +7,23 @@
 </head>
 
 <body>
-    <p id="tagline">Portland's easy way to track your favorite bands!</p>
+    <div id="tagline">
+        Portland's easy way to track your favorite bands!
+
+    <ul>
+        <li>Find out who is playing</li>
+        <li>Get notified when bands you like are playing</li>
+    </ul>
+
+    </div>
 
     <div id="searchbox">
+        Ba
         <?python from bandradar.artists import artist_search_form ?>
         ${artist_search_form(action="/artists/search")}
     </div>
 
-    <h5>Tonight's events</h5>
+    <h5>Tonight's most tracked events</h5>
 
     <p py:for="event in events">
         <a href="/events/${event.id}">${event.name} @ ${event.venue.name}</a>

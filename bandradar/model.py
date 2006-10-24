@@ -8,7 +8,7 @@ hub = PackageHub("bandradar")
 __connection__ = hub
 
 soClasses = ('UserAcct', 'Group', 'Permission', 'Venue', 'Artist', 'Event',
-             'BatchRecord', 'Attendance')
+             'BatchRecord', 'Attendance', 'Comment')
 
 class BRSQLObject(SQLObject):
     created = DateTimeCol(default=datetime.now())
@@ -120,6 +120,10 @@ class BatchRecord(SQLObject):
     last_handled = DateTimeCol(default=None)
     email_sent = IntCol(default=0)
 
+class Comment(SQLObject):
+    created = DateTimeCol(default=datetime.now)
+    comment = UnicodeCol()
+    comment_by = IntCol(default=None)
 
 class VisitIdentity(SQLObject):
     visit_key = StringCol(length=40, alternateID=True,
