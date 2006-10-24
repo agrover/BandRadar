@@ -13,12 +13,12 @@ def dynsearch(model, name):
 
     # check startswith first
     like_str = "%s%%" % str(name).lower()
-    names = [a.name for a in my_search(like_str)]
+    names = set([a.name for a in my_search(like_str)])
     if not len(names):
         # then go all out
         like_str = "%%%s%%" % str(name).lower()
-        names = [a.name for a in my_search(like_str)]
-    return dict(results=names)
+        names = set([a.name for a in my_search(like_str)])
+    return dict(results=list(names))
 
 def search(model, name, tg_errors=None):
     if tg_errors:
