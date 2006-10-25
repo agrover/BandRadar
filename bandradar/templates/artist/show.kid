@@ -29,7 +29,7 @@
         <div id="list_title">
             Events
             <span py:if="identity.current.user">
-                ${tg_ButtonWidget(action="/events/edit", label="Add a new event")}
+                ${tg_ButtonWidget(action="/events/edit?artist_prefill=%s" % artist.id, label="Add a new event")}
             </span>
         </div>
         <p py:for="event in events">
