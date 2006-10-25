@@ -25,6 +25,11 @@ class WWBL:
             event_name, event = event.split('w/', 1)
 
         artists = [a.strip(' "') for a in event.split(",")]
+        artists = [a.replace(" & friends", "") for a in artists]
+        artists = [a.replace(" & guests", "") for a in artists]
+        if artists[0].startswith("DJs"):
+            artists[0] = artists[0].replace("DJs", "")
+            artists = ["DJ " + a.strip() for a in artists]
         if not event_name:
             event_name = ", ".join(artists)
         return event_name, artists
@@ -99,6 +104,14 @@ class WWBL:
     def parse_week(self, start_date):
         venues = []
         for i in range(7):
+            venues.extend(self.parse_day(start_date + datetime.timedelta(i)))
+        return venues
+
+    def parse_month(self, start_date):
+        venues = []
+        end_date = start_date.replace(month=start_date.month+1)
+        end_date = end_date - datetime.timedelta(1)
+        for i in xrange(end_date.day):
             venues.extend(self.parse_day(start_date + datetime.timedelta(i)))
         return venues
 
