@@ -77,10 +77,10 @@ class Artist(BRSQLObject):
 
 
 class Event(BRSQLObject):
-    name = UnicodeCol(length=200)
+    name = UnicodeCol(length=400)
     time = UnicodeCol(length=20, default=None)
     date = DateCol()
-    cost = UnicodeCol(length=60, default=None)
+    cost = UnicodeCol(length=120, default=None)
     ages = UnicodeCol(length=20, default=None)
     url = UnicodeCol(length=256, default=None)
     venue = ForeignKey('Venue')
