@@ -8,7 +8,6 @@ from turbogears import validators as v
 from model import Event, Venue, Artist, hub
 from sqlobject import SQLObjectNotFound, LIKE, func, AND
 from datetime import date, datetime, timedelta
-import artists as artist_module
 import util
 from cgi import escape
 
@@ -160,7 +159,7 @@ class Events(controllers.Controller, util.RestAdapter):
         for artist in e.artists:
             if artist.name not in artist_list:
                 e.removeArtist(artist)
-                artist_module.delete_if_dangling(artist)
+                artist.destroy_if_unused()
         turbogears.flash("Event %s" % flash_msg)
         redirect(turbogears.url("/events/%s" % e.id))
 
