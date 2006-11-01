@@ -8,14 +8,14 @@
 
 <body>
     <div id="searchbox">
-        <h2>Search Venues</h2>
+        <h2>Search all Venues</h2>
         <?python from bandradar.venues import venue_search_form ?>
         ${venue_search_form(action="/venues/search")}
     </div>
 
     <div id="list_title">
         <?python from turbogears import identity ?>
-        All Venues
+        Venues with upcoming events
         <span py:if="'admin' in identity.current.groups">
             ${tg_ButtonWidget(action="/venues/edit", label="Add a new venue")}
         </span>

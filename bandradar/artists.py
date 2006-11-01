@@ -94,7 +94,7 @@ class Artists(controllers.Controller, util.RestAdapter):
             turbogears.flash("Artist ID not found")
             redirect(turbogears.url("/artists/list"))
         past_events = a.events.filter(Event.q.date < date.today()).orderBy(Event.q.date)[:5]
-        future_events = a.events.filter(Event.q.date >= date.today()).orderBy(Event.q.date)[:5]
+        future_events = a.events.filter(Event.q.date >= date.today()).orderBy(Event.q.date)
         return dict(artist=a, past_events=past_events, future_events=future_events,
             tracked_count=a.users.count(), is_tracked=is_tracked)
 

@@ -8,7 +8,7 @@
 
 <body>
     <div id="searchbox">
-        <h2>Search Events</h2>
+        <h2>Search all Events</h2>
         <?python from bandradar.events import event_search_form ?>
         ${event_search_form(action="/events/search")}
     </div>

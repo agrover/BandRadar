@@ -41,12 +41,19 @@ class Venues(controllers.Controller, util.RestAdapter):
 
     @expose(template=".templates.venue.list")
     def list(self):
+        conn = hub.getConnection()
+        results = conn.queryAll("""
+            select venue.id, venue.name, count(event.id)
+            from venue, event
+            where venue.id = event.venue_id
+                and event.date >  NOW()
+            group by venue.id, venue.name
+            order by venue.name
+            """)
+
         venue_list = []
-        venues = Venue.select(Venue.q.approved != None, orderBy=Venue.q.name)
-        for v in venues:
-            eventcount = Event.select(AND(Event.q.venueID == v.id,
-                Event.q.date >= date.today())).count()
-            venue_list.append(dict(name=v.name, id=v.id, eventcount=eventcount))
+        for id, name, count in results:
+            venue_list.append(dict(name=name, id=id, eventcount=count))
         return dict(venues=venue_list, count=len(venue_list),
             venue_search_form=venue_search_form)
 
