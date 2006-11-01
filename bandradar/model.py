@@ -59,8 +59,8 @@ class Venue(BRSQLObject):
 class Artist(BRSQLObject):
     name = UnicodeCol(alternateID=True, length=100)
     url = UnicodeCol(length=256, default=None)
-    events = RelatedJoin('Event')
-    users = RelatedJoin('UserAcct')
+    events = SQLRelatedJoin('Event')
+    users = SQLRelatedJoin('UserAcct')
     added_by = ForeignKey('UserAcct')
 
     def destroySelf(self):
@@ -78,13 +78,13 @@ class Artist(BRSQLObject):
 
 class Event(BRSQLObject):
     name = UnicodeCol(length=400)
-    time = UnicodeCol(length=20, default=None)
+    time = UnicodeCol(length=40, default=None)
     date = DateCol()
     cost = UnicodeCol(length=120, default=None)
-    ages = UnicodeCol(length=20, default=None)
+    ages = UnicodeCol(length=40, default=None)
     url = UnicodeCol(length=256, default=None)
     venue = ForeignKey('Venue')
-    artists = RelatedJoin('Artist')
+    artists = SQLRelatedJoin('Artist')
     added_by = ForeignKey('UserAcct')
     event_index = DatabaseIndex('date', 'time', 'venue', unique=True)
     date_index = DatabaseIndex('date')
@@ -145,10 +145,10 @@ class Group(SQLObject):
     created = DateTimeCol( default=datetime.now )
 
     # collection of all users belonging to this group
-    users = RelatedJoin( "UserAcct")
+    users = SQLRelatedJoin( "UserAcct")
 
     # collection of all permissions for this group
-    permissions = RelatedJoin( "Permission")
+    permissions = SQLRelatedJoin( "Permission")
 
     def __cmp__(self, other):
         if isinstance(other, basestring):
@@ -165,12 +165,12 @@ class UserAcct(BRSQLObject):
     # site-specific fields
     zip_code = UnicodeCol(length=10, default=None)
     url = UnicodeCol(length=256, default=None)
-    artists = RelatedJoin('Artist')
+    artists = SQLRelatedJoin('Artist')
     last_emailed = DateTimeCol(default=None)
     event_email = BoolCol(default=True)
     other_email = BoolCol(default=False)
     # groups this user belongs to
-    groups = RelatedJoin( "Group")
+    groups = SQLRelatedJoin( "Group")
 
     def destroySelf(self):
         for a in self.artists:
@@ -200,4 +200,4 @@ class Permission(SQLObject):
                                  alternateMethodName="by_permission_name")
     description = UnicodeCol(length=255)
     
-    groups = RelatedJoin("Group")
+    groups = SQLRelatedJoin("Group")
