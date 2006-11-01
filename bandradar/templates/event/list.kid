@@ -14,7 +14,7 @@
     </div>
 
     <div id="list_title">
-        Events ${listby} (${count})
+        Events: ${listby} (${count})
         ${tg_ButtonWidget(action="/events/edit", label="Add a new event")}
     </div>
 

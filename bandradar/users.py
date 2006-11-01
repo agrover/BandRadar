@@ -50,18 +50,18 @@ class PassMatches(formencode.FancyValidator):
 class NewUserForm(w.WidgetsList):
 #    forward_url = w.HiddenField()
     user_name = w.TextField(label="Login", help_text="letters, numbers, '_' or '-'",
-        attrs={'size':16, 'maxlength':16},
+        attrs=dict(size=16, maxlength=16),
         validator=v.All(UniqueUsername, v.PlainText(strip=True), v.NotEmpty))
     email = w.TextField(label="Email",
         validator=v.All(UniqueEmail, v.NotEmpty, v.Email(strip=True)))
     zip = w.TextField(label="Zip Code",
-        attrs={'size':10, 'maxlength':10},
+        attrs=dict(size=10, maxlength=10),
         validator=v.PostalCode(strip=True))
     pass1 = w.PasswordField(label="Password", help_text="Length 6-40 chars",
-        attrs={'maxlength':40},
+        attrs=dict(maxlength=40),
         validator=v.All(v.MinLength(6), v.NotEmpty))
     pass2 = w.PasswordField(label="Password again",
-        attrs={'maxlength':40},
+        attrs=dict(maxlength=40),
         validator=v.NotEmpty)
 
 class NewUserSchema(v.Schema):
@@ -74,9 +74,9 @@ class UserForm(w.WidgetsList):
     user_name = w.HiddenField()
     email_address = w.TextField(label="Email", validator=v.Email(strip=True))
     zip_code = w.TextField(label="Zip Code",
-        attrs={'size':10, 'maxlength':10},
+        attrs=dict(size=10, maxlength=10),
         validator=v.PostalCode(strip=True))
-    url = w.TextField(label="Website", attrs={'size':60},
+    url = w.TextField(label="Website", attrs=dict(size=60),
         validator=v.Any(v.URL, v.Empty))
     description = w.TextArea(label="About Me", rows=3, cols=60)
     event_email = w.CheckBox(label="Upcoming Events Email",
@@ -94,18 +94,6 @@ class UserSchema(v.Schema):
 
 user_form = w.TableForm(fields=UserForm(), name="user", submit_text="Save",
                         validator=UserSchema())
-
-class SearchBox(w.WidgetsList):
-    search = w.AutoCompleteField(label="Search",
-        search_controller="users/dosearch",
-        search_param="name",
-        result_name="results",
-        only_suggest=True,
-        validator=v.Schema(text=v.NotEmpty(strip=True)),
-        attrs={'size':20})
-
-user_search_form = w.ListForm(fields=SearchBox(), name="search",
-    submit_text="Search!")
 
 class LostPasswdForm(w.WidgetsList):
     email = w.TextField(label="Email",

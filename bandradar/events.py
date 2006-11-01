@@ -17,11 +17,11 @@ class EventForm(w.WidgetsList):
     artists = w.TextArea(help_text="Enter artists, one per line", validator=v.NotEmpty(strip=True), rows=3, cols=30)
     venue = util.BRAutoCompleteField("/venues/dynsearch", label="Venue")
     date = w.CalendarDatePicker(not_empty=True)
-    time = w.TextField()
-    cost = w.TextField()
-    ages = w.TextField()
+    time = w.TextField(attrs=dict(maxlength=40))
+    cost = w.TextField(attrs=dict(maxlength=120))
+    ages = w.TextField(attrs=dict(maxlength=40))
     description = w.TextArea(rows=3)
-    url = w.TextField(label="Website", attrs=dict(size=50),
+    url = w.TextField(label="Website", attrs=dict(size=50, maxlength=256),
         validator=v.Any(v.URL, v.Empty))
 
 event_form = w.TableForm(fields=EventForm(), name="event", submit_text="Save")
@@ -76,7 +76,7 @@ class Events(controllers.Controller, util.RestAdapter):
     def show(self, id):
         try:
             e = Event.get(id)
-            if not len(e.artists):
+            if not e.artists.count():
                 artisthtml = "<strong>None</strong>"
             else:
                 htmlstr = "<a href=\"/artists/%s\">%s</a>"

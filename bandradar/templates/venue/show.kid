@@ -13,7 +13,7 @@
             <p py:if="venue.description">Description: ${venue.description}</p>
             <p py:if="venue.address">Address: ${venue.address}</p>
             <p py:if="venue.phone">Phone: ${venue.phone}</p>
-            <p py:if="venue.url">URL: ${venue.url}</p>
+            <p py:if="venue.url"><a href="${venue.url}">URL: ${venue.url}</a></p>
             <p py:if="not 'admin' in venue.added_by.groups">
             Added by: <a href="/users/${venue.added_by.user_name}">
                 ${venue.added_by.user_name}</a></p>
@@ -23,7 +23,7 @@
         <h3>Past events</h3>
         <div class="event_list">
             <p py:for="e in past_events">
-                ${e.date.strftime("%x")}: <a href="/events/${e.id}">${e.name}</a>
+                ${e.get_fdate()}: <a href="/events/${e.id}">${e.name}</a>
             </p>
             <p py:if="not len(list(past_events))">None</p>
         </div>
@@ -31,7 +31,7 @@
         <h3>Upcoming events</h3>
         <div class="event_list">
             <p py:for="e in future_events">
-                ${e.date.strftime("%x")}: <a href="/events/${e.id}">${e.name}</a>
+                ${e.get_fdate()}: <a href="/events/${e.id}">${e.name}</a>
                 ${e.time} ${e.cost}
             </p>
             <p py:if="not len(list(future_events))">None</p>

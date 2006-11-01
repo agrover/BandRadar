@@ -14,7 +14,7 @@ class ArtistForm(w.WidgetsList):
     id = w.HiddenField()
     name = w.TextField(validator=v.NotEmpty)
     description = w.TextArea(label="Description", rows=4)
-    url = w.TextField(label="Website", attrs={'size':60},
+    url = w.TextField(label="Website", attrs=dict(size=60),
         validator=v.Any(v.URL, v.Empty))
 
 artist_form = w.TableForm(fields=ArtistForm(), name="artist", submit_text="Save")
@@ -93,8 +93,10 @@ class Artists(controllers.Controller, util.RestAdapter):
         except SQLObjectNotFound:
             turbogears.flash("Artist ID not found")
             redirect(turbogears.url("/artists/list"))
-        return dict(artist=a, events=a.events,
-            tracked_count=len(a.users), is_tracked=is_tracked)
+        past_events = a.events.filter(Event.q.date < date.today()).orderBy(Event.q.date)[:5]
+        future_events = a.events.filter(Event.q.date >= date.today()).orderBy(Event.q.date)[:5]
+        return dict(artist=a, past_events=past_events, future_events=future_events,
+            tracked_count=a.users.count(), is_tracked=is_tracked)
 
     @expose(template=".templates.artist.edit")
     @identity.require(identity.not_anonymous())

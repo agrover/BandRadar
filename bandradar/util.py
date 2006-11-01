@@ -94,7 +94,7 @@ class BRAutoCompleteField(w.AutoCompleteField):
             result_name="results",
             only_suggest=True,
             validator=AutoCompleteValidator(),
-            attrs={'size':20})
+            attrs=dict(size=20))
 
 class RestAdapter:
     @turbogears.expose()

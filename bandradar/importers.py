@@ -11,7 +11,7 @@ import MBL
 import WWBL
 
 class Merc(w.WidgetsList):
-    url = w.TextField(label="URL", attrs={'size':60},
+    url = w.TextField(label="URL", attrs=dict(size=60),
         validator=v.All(v.NotEmpty, v.URL))
 
 class WWeek(w.WidgetsList):
@@ -94,7 +94,7 @@ class Importers(controllers.Controller, identity.SecureResource):
 
     @expose(template="bandradar.templates.importreview")
     def review(self):
-        try_to_show = 25
+        try_to_show = 100
         result = Event.select(Event.q.approved == None, orderBy=Event.q.name)
         total = result.count()
         shown = min(total, try_to_show)

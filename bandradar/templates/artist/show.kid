@@ -11,6 +11,7 @@
     <div id="body">
         <p class="name">${artist.name}</p>
         <p>${artist.description}</p>
+        <p py:if="artist.url">URL: <a href="${artist.url}">${artist.url}</a></p>
         <p py:if="not 'admin' in artist.added_by.groups">
         Added by: <a href="/users/${event.added_by.user_name}">
             ${artist.added_by.user_name}</a></p>
@@ -32,11 +33,23 @@
                 ${tg_ButtonWidget(action="/events/edit?artist_prefill=%s" % artist.id, label="Add a new event")}
             </span>
         </div>
-        <p py:for="event in events">
-            ${event.get_fdate()}:
-            <a href="/events/${event.id}">${event.name}</a> @ 
-            <a href="/venues/${event.venue.id}">${event.venue.name}</a>
-        </p>
+
+        <h3>Past events</h3>
+        <div class="event_list">
+            <p py:for="e in past_events">
+                ${e.get_fdate()}: <a href="/events/${e.id}">${e.name}</a>
+            </p>
+            <p py:if="not len(list(past_events))">None</p>
+        </div>
+
+        <h3>Upcoming events</h3>
+        <div class="event_list">
+            <p py:for="e in future_events">
+                ${e.get_fdate()}: <a href="/events/${e.id}">${e.name}</a>
+                ${e.time} ${e.cost}
+            </p>
+            <p py:if="not len(list(future_events))">None</p>
+        </div>
 
         <div py:replace="edit_links(artist)" />
     </div>
