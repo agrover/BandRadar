@@ -66,7 +66,8 @@ class Venues(controllers.Controller, util.RestAdapter):
             redirect(turbogears.url("/venues/list"))
 
         past_events = Event.select(AND(Event.q.venueID == v.id,
-            Event.q.date < date.today()),orderBy=Event.q.date)[:5]
+            Event.q.date < date.today()),orderBy=Event.q.date).reversed()[:5]
+        past_events = list(reversed(list(past_events)))
         future_events = Event.select(AND(Event.q.venueID == v.id,
             Event.q.date >= date.today()),orderBy=Event.q.date)
         return dict(venue=v, past_events=past_events, future_events=future_events)
