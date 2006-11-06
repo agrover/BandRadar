@@ -11,7 +11,7 @@ import util
 
 class VenueForm(w.WidgetsList):
     id = w.HiddenField(validator=v.Int)
-    name = w.TextField(validator=v.NotEmpty)
+    name = w.TextField(validator=v.All(v.NotEmpty, util.UniqueName(Venue)))
     description = w.TextArea(rows=3)
     address = w.TextField()
     phone = w.TextField()
@@ -98,7 +98,7 @@ class Venues(controllers.Controller, util.RestAdapter):
             except SQLObjectNotFound:
                 turbogears.flash("Update Error")
         else:
-            v = Venue(added_by=identity.current.user, **v.clean_dict(kw))
+            v = Venue(added_by=identity.current.user, **Venue.clean_dict(kw))
             turbogears.flash("Added")
         redirect(turbogears.url("/venues/%s" % v.id))
 

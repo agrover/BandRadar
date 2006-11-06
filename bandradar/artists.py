@@ -12,7 +12,7 @@ import util
 
 class ArtistForm(w.WidgetsList):
     id = w.HiddenField()
-    name = w.TextField(validator=v.NotEmpty)
+    name = w.TextField(validator=v.All(v.NotEmpty, util.UniqueName(Artist)))
     description = w.TextArea(label="Description", rows=4)
     url = w.TextField(label="Website", attrs=dict(size=60),
         validator=v.Any(v.URL, v.Empty))
@@ -124,7 +124,7 @@ class Artists(controllers.Controller, util.RestAdapter):
             except SQLObjectNotFound:
                 turbogears.flash("Update Error")
         else:
-            a = Artist(added_by=identity.current.user, **a.clean_dict(kw))
+            a = Artist(added_by=identity.current.user, **Artist.clean_dict(kw))
             if not "admin" in identity.current.groups:
                 identity.current.user.addArtist(a)
             turbogears.flash("Artist added")

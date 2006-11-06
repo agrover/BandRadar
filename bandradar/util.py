@@ -1,5 +1,6 @@
 import turbogears
 import cherrypy
+import formencode
 from turbogears import identity
 from turbogears import widgets as w
 from turbogears import validators as v
@@ -27,12 +28,12 @@ def search(model, name, tg_errors=None):
     name_str = "%s%%" % str(name).lower()
     result = model.select(LIKE(func.LOWER(model.q.name), name_str),
         orderBy=model.q.name)
-    result_cnt = len(list(result))
+    result_cnt = result.count()
     if not result_cnt:
         name_str = "%%%s%%" % str(name).lower()
         result = model.select(LIKE(func.LOWER(model.q.name), name_str),
             orderBy=model.q.name)
-        result_cnt = len(list(result))
+        result_cnt = result.count()
 
     if not result_cnt:
         turbogears.flash("Not Found")
@@ -66,6 +67,17 @@ def can_delete(object):
     if 'admin' in identity.current.groups:
         return True
     return False
+
+class UniqueName(formencode.FancyValidator):
+
+    def __init__(self, sqlmodel):
+        self.model = sqlmodel
+
+    def validate_python(self, value, state):
+        rows = self.model.select(func.LOWER(self.model.q.name) == unicode.lower(value)).count()
+        if rows:
+            raise formencode.Invalid('Sorry, that name exists', value, state)
+
 
 class ButtonWidget(w.Widget):
     params=['label', 'action']

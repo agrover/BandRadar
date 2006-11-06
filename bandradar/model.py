@@ -39,6 +39,7 @@ class BRSQLObject(SQLObject):
     def get_fcreated(self):
         return self._fdate(self.created)
 
+    @classmethod
     def clean_dict(self, dirty_dict):
         clean = {}
         valid_attributes = self.sqlmeta.columns.keys()
