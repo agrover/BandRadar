@@ -93,9 +93,9 @@ class WWBL:
         return venues
 
     def parse_preview_moreinfo(self, text):
-        m = re.search(r'([\d:&]+\ ?[ap]m)\.?(.*?)\.(.*?)\.', text)
+        m = re.search(r'([\d:&]+\ ?[ap]m)\.? (.*?)\. (.*?)\.', text)
         if not m:
-            return ("UNK", "UNK", "UNK")
+            return (None, None, None)
         time = m.group(1)
         cost = m.group(2).strip()
         ages = m.group(3).strip()
@@ -118,7 +118,7 @@ class WWBL:
 if __name__ == "__main__":
     wwbl = WWBL()
     #wwbl.parse_day(datetime.date.today())
-    print wwbl.parse_day(datetime.date(2006, 9, 28))
+    wwbl.parse_day(datetime.date(2006, 11, 3))
 
 #find named anchors
 # if a.parent = div class preview
