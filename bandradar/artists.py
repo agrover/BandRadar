@@ -11,13 +11,17 @@ from datetime import date, timedelta
 import util
 
 class ArtistForm(w.WidgetsList):
-    id = w.HiddenField()
-    name = w.TextField(validator=v.All(v.NotEmpty, util.UniqueName(Artist)))
+    id = w.HiddenField(validator=v.Int)
+    name = w.TextField(validator=v.NotEmpty(strip=True))
     description = w.TextArea(label="Description", rows=4)
     url = w.TextField(label="Website", attrs=dict(size=60),
         validator=v.Any(v.URL, v.Empty))
 
-artist_form = w.TableForm(fields=ArtistForm(), name="artist", submit_text="Save")
+class ArtistSchema(v.Schema):
+    chained_validators = [util.UniqueName(Artist)]
+
+artist_form = w.TableForm(fields=ArtistForm(), name="artist", submit_text="Save",
+                            validator=ArtistSchema())
 
 class SearchBox(w.WidgetsList):
     search = util.BRAutoCompleteField("/artists/dynsearch")
@@ -93,7 +97,9 @@ class Artists(controllers.Controller, util.RestAdapter):
         except SQLObjectNotFound:
             turbogears.flash("Artist ID not found")
             redirect(turbogears.url("/artists/list"))
-        past_events = a.events.filter(Event.q.date < date.today()).orderBy(Event.q.date)[:5]
+
+        past_events = a.events.filter(Event.q.date < date.today()).orderBy(Event.q.date).reversed()[:5]
+        past_events = list(reversed(list(past_events)))
         future_events = a.events.filter(Event.q.date >= date.today()).orderBy(Event.q.date)
         return dict(artist=a, past_events=past_events, future_events=future_events,
             tracked_count=a.users.count(), is_tracked=is_tracked)
@@ -161,6 +167,7 @@ class Artists(controllers.Controller, util.RestAdapter):
             util.redirect_previous()
         else:
             util.redirect("/artists/%s" % a.id)
+
 
     @expose()
     @identity.require(identity.in_group("admin"))

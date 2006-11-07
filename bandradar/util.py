@@ -25,7 +25,7 @@ def search(model, name, tg_errors=None):
     if tg_errors:
         redirect_previous()
 
-    name_str = "%s%%" % str(name).lower()
+    name_str = "%s" % str(name).lower()
     result = model.select(LIKE(func.LOWER(model.q.name), name_str),
         orderBy=model.q.name)
     result_cnt = result.count()
@@ -70,13 +70,19 @@ def can_delete(object):
 
 class UniqueName(formencode.FancyValidator):
 
-    def __init__(self, sqlmodel):
+    def __init__(self, sqlmodel, **kwargs):
+        super(UniqueName, self).__init__(**kwargs)
         self.model = sqlmodel
 
-    def validate_python(self, value, state):
-        rows = self.model.select(func.LOWER(self.model.q.name) == unicode.lower(value)).count()
-        if rows:
-            raise formencode.Invalid('Sorry, that name exists', value, state)
+    def validate_python(self, field_dict, state):
+        try:
+            obj = self.model.byNameI(field_dict['name'])
+            obj_id = field_dict['id']
+            if obj.id != obj_id:
+                raise formencode.Invalid("", field_dict, state,
+                    error_dict = dict(name="Sorry, that name exists"))
+        except SQLObjectNotFound:
+            pass
 
 
 class ButtonWidget(w.Widget):

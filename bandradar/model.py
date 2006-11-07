@@ -21,10 +21,20 @@ class BRSQLObject(SQLObject):
         if name in self.sqlmeta.columns.keys():
             super(BRSQLObject, self).__setattr__('last_updated', datetime.now())
 
+    @classmethod
+    def byNameI(self, name):
+        results = self.select(LIKE(func.LOWER(self.q.name), name.lower()))
+        if results.count() == 0:
+            raise SQLObjectNotFound
+        else:
+            return results[0]
+
     def _fdate(self, past_date):
         elapsed = datetime.now() - past_date
-        if elapsed.days:
+        if elapsed.days > 1:
             return "%s (%d days ago)" % (past_date.strftime("%x"), elapsed.days)
+        if elapsed.days == 1:
+            return "%s (%d day ago)" % (past_date.strftime("%x"), elapsed.days)
         if elapsed.seconds / 7200:
             return "%s (%d hours ago)" % (past_date.strftime("%H:%M"),
                 elapsed.seconds / 3600)
@@ -45,6 +55,8 @@ class BRSQLObject(SQLObject):
         valid_attributes = self.sqlmeta.columns.keys()
         for attr, value in dirty_dict.iteritems():
             if attr in valid_attributes:
+                if isinstance(value, basestring):
+                    value = value.strip()
                 clean[attr] = value
         return clean
 
@@ -72,7 +84,7 @@ class Artist(BRSQLObject):
         super(Artist, self).destroySelf()
 
     def destroy_if_unused(self):
-        if self.events or self.users:
+        if self.events.count() or self.users.count():
             return
         self.destroySelf()
 

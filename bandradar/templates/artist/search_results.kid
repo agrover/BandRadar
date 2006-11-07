@@ -19,7 +19,7 @@
     </p>
 
     <p>
-        <a href="/artists/edit">Add a new Band</a>
+        ${tg_ButtonWidget(action="/artists/edit", label="Add a new Band")}
     </p>
 </body>
 </html>

@@ -26,7 +26,7 @@
             <td>
                 <input py:attrs="type='hidden', name='eid' + str(e_counter), value=e.id" />
                 <a href="/events/${e.id}/edit"><b py:strip="e.approved">${e.name}</b></a>
-                <br />${e.date} ${e.time} ${e.cost} ${e.ages}
+                <br />${e.date} ${e.time} <b>${e.cost}</b> ${e.ages}
             </td>
             <td>
                 <div py:for="artist in e.artists">

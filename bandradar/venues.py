@@ -11,14 +11,18 @@ import util
 
 class VenueForm(w.WidgetsList):
     id = w.HiddenField(validator=v.Int)
-    name = w.TextField(validator=v.All(v.NotEmpty, util.UniqueName(Venue)))
+    name = w.TextField(validator=v.NotEmpty(strip=True))
     description = w.TextArea(rows=3)
     address = w.TextField()
     phone = w.TextField()
     url = w.TextField(label="Website", attrs=dict(size=50),
         validator=v.Any(v.URL, v.Empty))
 
-venue_form = w.TableForm(fields=VenueForm(), name="venue", submit_text="Save")
+class VenueSchema(v.Schema):
+    chained_validators = [util.UniqueName(Venue)]
+
+venue_form = w.TableForm(fields=VenueForm(), name="venue", submit_text="Save",
+                            validator=VenueSchema())
 
 class SearchBox(w.WidgetsList):
     search = util.BRAutoCompleteField("/venues/dynsearch")
@@ -46,7 +50,7 @@ class Venues(controllers.Controller, util.RestAdapter):
             select venue.id, venue.name, count(event.id)
             from venue, event
             where venue.id = event.venue_id
-                and event.date >  NOW()
+                and event.date >= CURRENT_DATE
             group by venue.id, venue.name
             order by venue.name
             """)

@@ -13,7 +13,7 @@ from venues import Venues
 from events import Events
 from users import Users
 from importers import Importers
-from model import Event, Comment
+from model import Event, Comment, hub
 import batch
 import saved_visit
 import util
@@ -53,7 +53,22 @@ class Root(controllers.RootController):
             Event.q.approved != None),
             orderBy=Event.q.name)#[:10]
 
-        return dict(user=user, search_form=artist_search_form, events=events)
+        conn = hub.getConnection()
+        top_tracked_results = conn.queryAll("""
+            select artist.name, artist.id, COUNT(artist_user_acct.user_acct_id) as count
+            from artist
+            left join artist_user_acct on artist.id = artist_user_acct.artist_id
+            group by artist.name, artist.id
+            order by count desc, name
+            limit 20
+            """)
+
+        top_tracked = []
+        for name, id, count in top_tracked_results:
+            top_tracked.append(dict(name=name, id=id, count=count))
+
+        return dict(user=user, search_form=artist_search_form, events=events,
+            top_tracked=top_tracked)
 
     artists = Artists()
 

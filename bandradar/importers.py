@@ -59,7 +59,7 @@ class Importers(controllers.Controller, identity.SecureResource):
         for venue in venues:
 
             try:
-                v = Venue.byName(venue['name'])
+                v = Venue.byNameI(venue['name'])
             except SQLObjectNotFound:
                 v = Venue(name=venue['name'], added_by=identity.current.user)
 
@@ -72,8 +72,6 @@ class Importers(controllers.Controller, identity.SecureResource):
 
             for event in venue["events"]:
                 time = event.get("time")
-                cost = event.get("cost")
-
                 db_events = Event.selectBy(date=event["date"],
                     time=time, venue=v)
                 # must be unique
@@ -81,12 +79,19 @@ class Importers(controllers.Controller, identity.SecureResource):
                     e = list(db_events)[0]
                 else:
                     e = Event(venue=v, name=event["name"],
-                        date=event["date"], time=time, cost=cost,
+                        date=event["date"], time=time,
                         added_by=identity.current.user)
+
+                optional_fields = ("cost", "ages")
+                for field in optional_fields:
+                    try:
+                        e.set(**{field:event[field]})
+                    except KeyError:
+                        pass
 
                 for artist in event["artists"]:
                     try:
-                        a = Artist.byName(artist)
+                        a = Artist.byNameI(artist)
                     except SQLObjectNotFound:
                         a = Artist(name=artist, added_by=identity.current.user)
                     if not e.id in [existing.id for existing in a.events]:
@@ -95,7 +100,7 @@ class Importers(controllers.Controller, identity.SecureResource):
     @expose(template="bandradar.templates.importreview")
     def review(self):
         try_to_show = 100
-        result = Event.select(Event.q.approved == None, orderBy=Event.q.name)
+        result = Event.select(Event.q.approved == None, orderBy=(Event.q.cost, Event.q.name))
         total = result.count()
         shown = min(total, try_to_show)
         events = result[:shown]
