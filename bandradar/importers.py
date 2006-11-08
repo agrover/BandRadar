@@ -52,6 +52,16 @@ class Importers(controllers.Controller, identity.SecureResource):
         turbogears.flash("WWeek Imported")
         redirect(turbogears.url("/importers/review"))
 
+    def _set_optional_fields(self, obj, in_dict, field_list):
+        model = obj.__class__
+        for field in field_list:
+            try:
+                # truncate if too long
+                field_len = getattr(model.q, field).column.length
+                in_dict[field] = in_dict[field][:field_len]
+                obj.set(**{field:in_dict[field]})
+            except KeyError:
+                pass
 
     def import_to_db(self, venues):
         e_counter = 0
@@ -63,12 +73,7 @@ class Importers(controllers.Controller, identity.SecureResource):
             except SQLObjectNotFound:
                 v = Venue(name=venue['name'], added_by=identity.current.user)
 
-                optional_fields = ("address", "phone")
-                for field in optional_fields:
-                    try:
-                        v.set(**{field:venue[field]})
-                    except KeyError:
-                        pass
+            self._set_optional_fields(v, venue, ("address", "phone"))
 
             for event in venue["events"]:
                 time = event.get("time")
@@ -82,12 +87,7 @@ class Importers(controllers.Controller, identity.SecureResource):
                         date=event["date"], time=time,
                         added_by=identity.current.user)
 
-                optional_fields = ("cost", "ages")
-                for field in optional_fields:
-                    try:
-                        e.set(**{field:event[field]})
-                    except KeyError:
-                        pass
+                self._set_optional_fields(e, event, ("cost", "ages"))
 
                 for artist in event["artists"]:
                     try:
