@@ -53,7 +53,7 @@
     <div id="main_column">
 
         <div id="logo">
-            <a href="/"><img src="/static/images/logo3md.png"/></a>
+            <a href="/"><img src="/static/images/logo3md.png" alt="BandRadar logo" /></a>
         </div>
 
         <div py:replace="header()" />
