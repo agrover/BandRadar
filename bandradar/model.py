@@ -10,6 +10,38 @@ __connection__ = hub
 soClasses = ('UserAcct', 'Group', 'Permission', 'Venue', 'Artist', 'Event',
              'BatchRecord', 'Attendance', 'Comment')
 
+def artist_clean(bad_snippet, good_snippet=""):
+    """
+    Rename artists with accidental crap in their name.
+    If there is already a clean version, copy over links and remove the bad one.
+    """
+    artists = Artist.select(Artist.q.name.startswith(bad_snippet))
+    for bad_artist in artists:
+        # is there another artist with the name? move links over
+        good_name = bad_artist.name.replace(bad_snippet, "")
+        try:
+            good_artist = Artist.byNameI(good_name)
+            for event in bad_artist.events:
+                good_artist.addEvent(event)
+                bad_artist.removeEvent(event)
+            for user in bad_artist.users:
+                good_artist.addUser(user)
+                bad_artist.removeUser(user)
+            bad_artist.destroySelf()
+        except SQLObjectNotFound:
+            bad_artist.name = good_name
+
+def artist_move(old_id, new_id):
+    old = Artist.get(old_id)
+    new = Artist.get(new_id)
+    for event in old.events:
+        new.addEvent(event)
+        old.removeEvent(event)
+    for user in old.users:
+        new.addUser(user)
+        old.removeUser(user)
+    old.destroySelf()
+
 class BRSQLObject(SQLObject):
     created = DateTimeCol(default=datetime.now())
     approved = DateTimeCol(default=None)
@@ -23,7 +55,7 @@ class BRSQLObject(SQLObject):
 
     @classmethod
     def byNameI(self, name):
-        results = self.select(LIKE(func.LOWER(self.q.name), name.lower()))
+        results = self.select(func.LOWER(self.q.name) == name.lower())
         if results.count() == 0:
             raise SQLObjectNotFound
         else:
