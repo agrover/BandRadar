@@ -35,7 +35,7 @@ class Importers(controllers.Controller, identity.SecureResource):
     @turbogears.error_handler(webimport)
     def importmercury(self, url):
 
-        venues = MBL.MBL().parse_week(url)
+        venues = MBL.parse_week(url)
         self.import_to_db(venues)
         turbogears.flash("Mercury Imported")
         redirect(turbogears.url("/importers/review"))
@@ -45,9 +45,9 @@ class Importers(controllers.Controller, identity.SecureResource):
     @turbogears.error_handler(webimport)
     def importwweek(self, thedate, do_week=False):
         if not do_week:
-            venues = WWBL.WWBL().parse_day(thedate)
+            venues = WWBL.parse_day(thedate)
         else:
-            venues = WWBL.WWBL().parse_week(thedate)
+            venues = WWBL.parse_week(thedate)
         self.import_to_db(venues)
         turbogears.flash("WWeek Imported")
         redirect(turbogears.url("/importers/review"))
@@ -60,7 +60,7 @@ class Importers(controllers.Controller, identity.SecureResource):
                 field_len = getattr(model.q, field).column.length
                 in_dict[field] = in_dict[field][:field_len]
                 obj.set(**{field:in_dict[field]})
-            except KeyError:
+            except (KeyError, TypeError):
                 pass
 
     def import_to_db(self, venues):

@@ -130,13 +130,12 @@ class MercuryBandParser(SGMLParser):
                 and not data.startswith("DJ LISTINGS"):
                 self.current_event += data
             
-class MBL:
-    def parse_week(self, url):
-        usock = urllib.urlopen(url)
-        parser = MercuryBandParser()
-        parser.feed(usock.read())
-        usock.close()
-        return parser.venues
+def parse_week(url):
+    usock = urllib.urlopen(url)
+    parser = MercuryBandParser()
+    parser.feed(usock.read())
+    usock.close()
+    return parser.venues
 
 if __name__ == "__main__":
     usock = urllib.urlopen("http://www.portlandmercury.com/portland/Content?oid=37590&category=22185")
