@@ -72,8 +72,7 @@ class Importers(controllers.Controller, identity.SecureResource):
                 v = Venue.byNameI(venue['name'])
             except SQLObjectNotFound:
                 v = Venue(name=venue['name'], added_by=identity.current.user)
-
-            self._set_optional_fields(v, venue, ("address", "phone"))
+                self._set_optional_fields(v, venue, ("address", "phone"))
 
             for event in venue["events"]:
                 time = event.get("time")
@@ -86,8 +85,7 @@ class Importers(controllers.Controller, identity.SecureResource):
                     e = Event(venue=v, name=event["name"],
                         date=event["date"], time=time,
                         added_by=identity.current.user)
-
-                self._set_optional_fields(e, event, ("cost", "ages"))
+                    self._set_optional_fields(e, event, ("cost", "ages"))
 
                 for artist in event["artists"]:
                     try:
