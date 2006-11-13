@@ -20,7 +20,7 @@ def clean(string):
     return " ".join(temp.split())
 
 fixup_dict = {
-    "Abou Karim":"Abu Karim Restaurant",
+    "Abou Karim":"Abou Karim Restaurant",
     "Abu Karim Restaurant":"Abou Karim Restaurant",
     "Arlene Schnitzer Hall":"Arlene Schnitzer Concert Hall",
     "Doug Fir Lounge":"Doug Fir",
