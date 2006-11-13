@@ -7,13 +7,19 @@
 </head>
 
 <body>
-    <h3>Import Mercury from web?</h3>
+    <h3>Import Mercury?</h3>
 
     ${merc_form(action="/importers/importmercury")}
 
-    <h3>Import WWeek from web?</h3>
+    <h3>Import WWeek?</h3>
 
     ${wweek_form(action="/importers/importwweek")}
+
+    <h3>Import Pollstar?</h3>
+
+    <form action="/importers/importpollstar" method="post" class="tableform" name="pollstar">        
+        <input type="submit" class="submitbutton" value="Go" />
+    </form>
 
 </body>
 </html>

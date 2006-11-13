@@ -9,6 +9,7 @@ from sqlobject import SQLObjectNotFound, AND, OR
 from datetime import date, datetime
 import MBL
 import WWBL
+import pollstar
 
 class Merc(w.WidgetsList):
     url = w.TextField(label="URL", attrs=dict(size=60),
@@ -18,8 +19,8 @@ class WWeek(w.WidgetsList):
     thedate = w.CalendarDatePicker(label="Date")
     do_week = w.CheckBox(label="Import whole week")
 
-merc = w.TableForm(fields=Merc(), name="merc", submit_text="Go")
-wweek = w.TableForm(fields=WWeek(), name="wweek", submit_text="Go")
+merc_form = w.TableForm(fields=Merc(), name="merc", submit_text="Go")
+wweek_form = w.TableForm(fields=WWeek(), name="wweek", submit_text="Go")
 
 class Importers(controllers.Controller, identity.SecureResource):
     require = identity.in_group("admin")
@@ -28,10 +29,9 @@ class Importers(controllers.Controller, identity.SecureResource):
     def webimport(self, tg_errors=None):
         if tg_errors:
             turbogears.flash("Entry error")
-        return dict(merc_form=merc, wweek_form=wweek)
-
+        return dict(merc_form=merc_form, wweek_form=wweek_form)
     @expose()
-    @turbogears.validate(form=merc)
+    @turbogears.validate(form=merc_form)
     @turbogears.error_handler(webimport)
     def importmercury(self, url):
 
@@ -41,7 +41,7 @@ class Importers(controllers.Controller, identity.SecureResource):
         redirect(turbogears.url("/importers/review"))
 
     @expose()
-    @turbogears.validate(form=wweek)
+    @turbogears.validate(form=wweek_form)
     @turbogears.error_handler(webimport)
     def importwweek(self, thedate, do_week=False):
         if not do_week:
@@ -50,6 +50,13 @@ class Importers(controllers.Controller, identity.SecureResource):
             venues = WWBL.parse_week(thedate)
         self.import_to_db(venues)
         turbogears.flash("WWeek Imported")
+        redirect(turbogears.url("/importers/review"))
+
+    @expose()
+    def importpollstar(self):
+        venues = pollstar.parse_all()
+        self.import_to_db(venues)
+        turbogears.flash("Pollstar Imported")
         redirect(turbogears.url("/importers/review"))
 
     def _set_optional_fields(self, obj, in_dict, field_list):
