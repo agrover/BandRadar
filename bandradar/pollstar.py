@@ -16,28 +16,28 @@ def get_url_base():
     return url_base % future.strftime("%m-%d-%Y")
 
 def clean(string):
-    return string.strip().replace("&amp;", "")
+    temp = string.strip().replace("&amp;", "")
+    return " ".join(temp.split())
+
+fixup_dict = {
+    "Abou Karim":"Abu Karim Restaurant",
+    "Abu Karim Restaurant":"Abou Karim Restaurant",
+    "Arlene Schnitzer Hall":"Arlene Schnitzer Concert Hall",
+    "Doug Fir Lounge":"Doug Fir",
+    "Jimmy Macks":"Jimmy Mak's",
+    "Koji's":"Koji Osakaya",
+    "Marriott Hotel":"Marriott-Waterfront",
+    "Memorial Auditorium":"Memorial Coliseum",
+    "Outlaws Bar Grill":"Outlaws Bar & Grill",
+    "Rock N Roll Pizza":"Rock 'N' Roll Pizza",
+    "Rose Garden Arena":"Rose Garden",
+    "Roseland Theater":"Roseland",
+    "Sabala's at Mt. Tabor":"Sabala's at Mount Tabor",
+    "The Satyricon":"Satyricon",
+}
 
 def venue_name_fix(venue_name):
-    if venue_name == "Roseland Theater":
-        return "Roseland"
-    if venue_name == "Doug Fir Lounge":
-        return "Doug Fir"
-    if venue_name == "Memorial Auditorium":
-        return "Memorial Coliseum"
-    if venue_name == "Arlene Schnitzer Hall":
-        return "Arlene Schnitzer Concert Hall"
-    if venue_name == "The Satyricon":
-        return "Satyricon"
-    if venue_name == "Rock N Roll Pizza":
-        return "Rock 'N' Roll Pizza"
-    if venue_name == "Jimmy Macks":
-        return "Jimmy Mak's"
-    if venue_name == "Abou Karim":
-        return "Abu Karim Restaurant"
-    if venue_name == "Rose Garden Arena":
-        return "Rose Garden"
-    return venue_name
+    return fixup_dict.get(venue_name, venue_name)
 
 def parse_page(num):
     usock = urllib.urlopen(get_url_base()+str(num))
@@ -66,7 +66,7 @@ def parse_all():
     content = soup.body.find('table', {'class':"content"})
     a = content.findAll("tr", limit=3)[-1].find(text="Last &raquo;").parent['href']
     page_count = int(re.search(r'Page=(\d*)$', a).group(1))
-    for page in [1]:#xrange(1, page_count+1):
+    for page in xrange(1, page_count+1):
         partial_events = parse_page(page)
         for key, artists in partial_events.iteritems():
             event_artists = events.get(key, list())
