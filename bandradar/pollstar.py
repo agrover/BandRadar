@@ -16,7 +16,7 @@ def get_url_base():
     return url_base % future.strftime("%m-%d-%Y")
 
 def clean(string):
-    temp = string.strip().replace("&amp;", "")
+    temp = string.strip().replace("&amp;", "&")
     return " ".join(temp.split())
 
 fixup_dict = {
@@ -24,6 +24,7 @@ fixup_dict = {
     "Abu Karim Restaurant":"Abou Karim Restaurant",
     "Arlene Schnitzer Hall":"Arlene Schnitzer Concert Hall",
     "Doug Fir Lounge":"Doug Fir",
+    "Jax Bar":"Jax",
     "Jimmy Macks":"Jimmy Mak's",
     "Koji's":"Koji Osakaya",
     "Marriott Hotel":"Marriott-Waterfront",
