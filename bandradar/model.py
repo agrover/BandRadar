@@ -8,7 +8,7 @@ hub = PackageHub("bandradar")
 __connection__ = hub
 
 soClasses = ('UserAcct', 'Group', 'Permission', 'Venue', 'Artist', 'Event',
-             'BatchRecord', 'Attendance', 'Comment')
+             'BatchRecord', 'Attendance', 'Comment', 'UpdateLog')
 
 def artist_clean(bad_snippet, good_snippet=""):
     """
@@ -49,9 +49,28 @@ class BRSQLObject(SQLObject):
     description = UnicodeCol(default=None)
 
     def __setattr__(self, name, value):
-        super(BRSQLObject, self).__setattr__(name, value)
+        """When an attribute changes, update last_updated, and if the change is to
+        an approved object, log it.
+        """
         if name in self.sqlmeta.columns.keys():
-            super(BRSQLObject, self).__setattr__('last_updated', datetime.now())
+            old_value = str(getattr(self, name, None))
+            new_value = str(value)
+            if old_value != new_value:
+                super(BRSQLObject, self).__setattr__('last_updated', datetime.now())
+                if self.approved:
+                    try:
+                        current_user = identity.current.user
+                    except:
+                        current_user = None
+                    u = UpdateLog(
+                        changed_by=current_user,
+                        table_name=self.__class__.__name__,
+                        table_id=self.id,
+                        attrib_name=name,
+                        attrib_old_value=old_value,
+                        attrib_new_value=new_value
+                        )
+        super(BRSQLObject, self).__setattr__(name, value)
 
     @classmethod
     def byNameI(self, name):
@@ -92,6 +111,14 @@ class BRSQLObject(SQLObject):
                 clean[attr] = value
         return clean
 
+class UpdateLog(SQLObject):
+    created = DateTimeCol(default=datetime.now())
+    changed_by = IntCol()
+    table_name = UnicodeCol(length=12)
+    table_id = IntCol()
+    attrib_name = UnicodeCol(length=20)
+    attrib_old_value = UnicodeCol()
+    attrib_new_value = UnicodeCol()
 
 class Venue(BRSQLObject):
     name = UnicodeCol(alternateID=True, length=100)
