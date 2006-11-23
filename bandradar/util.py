@@ -59,7 +59,9 @@ def redirect(where):
 def can_edit(object):
     if 'admin' in identity.current.groups:
         return True
-    if object.added_by == identity.current.user:
+#    if object.added_by == identity.current.user:
+#        return True
+    if identity.current.user:
         return True
     return False
 
@@ -113,6 +115,13 @@ class BRAutoCompleteField(w.AutoCompleteField):
             only_suggest=True,
             validator=AutoCompleteValidator(),
             attrs=dict(size=20))
+
+# Fix TG CalendarDatePicker, which returns a datetime, not a date
+class BRCalendarDatePicker(w.CalendarDatePicker):
+    def __init__(self, **kw):
+        super(BRCalendarDatePicker, self).__init__(**kw)
+        self.validator = v.DateConverter(format=self.format,
+            not_empty=self.not_empty)    
 
 class RestAdapter:
     @turbogears.expose()

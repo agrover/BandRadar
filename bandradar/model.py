@@ -43,34 +43,48 @@ def artist_move(old_id, new_id):
     old.destroySelf()
 
 class BRSQLObject(SQLObject):
-    created = DateTimeCol(default=datetime.now())
+    created = DateTimeCol(default=datetime.now)
     approved = DateTimeCol(default=None)
-    last_updated = DateTimeCol(default=datetime.now())
+    last_updated = DateTimeCol(default=datetime.now)
     description = UnicodeCol(default=None)
 
     def __setattr__(self, name, value):
-        """When an attribute changes, update last_updated, and if the change is to
-        an approved object, log it.
-        """
         if name in self.sqlmeta.columns.keys():
-            old_value = str(getattr(self, name, None))
-            new_value = str(value)
-            if old_value != new_value:
-                super(BRSQLObject, self).__setattr__('last_updated', datetime.now())
-                if self.approved:
-                    try:
-                        current_user = identity.current.user
-                    except:
-                        current_user = None
-                    u = UpdateLog(
-                        changed_by=current_user,
-                        table_name=self.__class__.__name__,
-                        table_id=self.id,
-                        attrib_name=name,
-                        attrib_old_value=old_value,
-                        attrib_new_value=new_value
-                        )
+            self._record_update({name:value})
+            super(BRSQLObject, self).__setattr__('last_updated', datetime.now())
         super(BRSQLObject, self).__setattr__(name, value)
+
+    def set(self, **kw):
+        self._record_update(kw)
+        kw['last_updated'] = datetime.now()
+        super(BRSQLObject, self).set(**kw)
+
+    def _record_update(self, updates):
+        # don't log changes until approved
+        if not getattr(self, "approved", None):
+            return
+        # don't log last_updated
+        updates.pop('last_updated', None)
+        for name, value in updates.iteritems():
+            old_value = getattr(self, name, None)
+            if old_value != value:
+                try:
+                    current_user = identity.current.user.id
+                except:
+                    current_user = None
+                u = UpdateLog(
+                    changed_by=current_user,
+                    table_name=self.sqlmeta.table,
+                    table_id=self.id,
+                    attrib_name=name,
+                    attrib_old_value=unicode(old_value),
+                    attrib_new_value=unicode(value)
+                    )
+            # this records all vals to UpdateLog
+            # super.set() can call our setattr() (overridden to update last_updated)
+            # if we don't update the value here to its new value,
+            #   the second call to _record_update will insert a duplicate row.
+            super(BRSQLObject, self).__setattr__(name, value)
 
     @classmethod
     def byNameI(self, name):
@@ -92,7 +106,9 @@ class BRSQLObject(SQLObject):
         if elapsed.seconds / 120:
             return "%s (%d minutes ago)" % (past_date.strftime("%H:%M"),
                 elapsed.seconds / 60)
-        return "%d seconds ago" % elapsed.seconds
+        if elapsed.seconds != 1:
+            return "%d seconds ago" % elapsed.seconds
+        return "1 second ago"
 
     def get_fupdated(self):
         return self._fdate(self.last_updated)
@@ -112,7 +128,7 @@ class BRSQLObject(SQLObject):
         return clean
 
 class UpdateLog(SQLObject):
-    created = DateTimeCol(default=datetime.now())
+    created = DateTimeCol(default=datetime.now)
     changed_by = IntCol()
     table_name = UnicodeCol(length=12)
     table_id = IntCol()
@@ -211,16 +227,16 @@ class Group(SQLObject):
     class sqlmeta:
         table="tg_group"
     
-    group_name = UnicodeCol( length=16, alternateID=True,
-                            alternateMethodName="by_group_name" )
-    display_name = UnicodeCol( length=255 )
-    created = DateTimeCol( default=datetime.now )
+    group_name = UnicodeCol(length=16, alternateID=True,
+                            alternateMethodName="by_group_name")
+    display_name = UnicodeCol(length=255)
+    created = DateTimeCol(default=datetime.now)
 
     # collection of all users belonging to this group
-    users = SQLRelatedJoin( "UserAcct")
+    users = SQLRelatedJoin("UserAcct")
 
     # collection of all permissions for this group
-    permissions = SQLRelatedJoin( "Permission")
+    permissions = SQLRelatedJoin("Permission")
 
     def __cmp__(self, other):
         if isinstance(other, basestring):
@@ -242,7 +258,7 @@ class UserAcct(BRSQLObject):
     event_email = BoolCol(default=True)
     other_email = BoolCol(default=False)
     # groups this user belongs to
-    groups = SQLRelatedJoin( "Group")
+    groups = SQLRelatedJoin("Group")
 
     def destroySelf(self):
         for a in self.artists:
@@ -251,18 +267,18 @@ class UserAcct(BRSQLObject):
             self.removeGroup(g)        
         super(UserAcct, self).destroySelf()
 
-    def _get_permissions( self ):
+    def _get_permissions(self):
         perms = set()
         for g in self.groups:
             perms = perms | set(g.permissions)
         return perms
         
-    def _set_password( self, cleartext_password ):
+    def _set_password(self, cleartext_password):
         "Runs cleartext_password through the hash algorithm before saving."
         hash = identity.encrypt_password(cleartext_password)
         self._SO_set_password(hash)
         
-    def set_password_raw( self, password ):
+    def set_password_raw(self, password):
         "Saves the password as-is to the database."
         self._SO_set_password(password)
 

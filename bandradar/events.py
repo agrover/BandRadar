@@ -5,7 +5,7 @@ from turbogears import database
 from turbogears import widgets as w
 from turbogears import validators as v
 
-from model import Event, Venue, Artist, hub
+from model import Event, Venue, Artist, UpdateLog
 from sqlobject import SQLObjectNotFound, LIKE, func, AND
 from datetime import date, datetime, timedelta
 import util
@@ -16,7 +16,7 @@ class EventForm(w.WidgetsList):
     name = w.TextField(label="Event Name", help_text="If different from artists' names")
     artists = w.TextArea(help_text="Enter artists, one per line", validator=v.NotEmpty(strip=True), rows=3, cols=30)
     venue = util.BRAutoCompleteField("/venues/dynsearch", label="Venue")
-    date = w.CalendarDatePicker(not_empty=True)
+    date = util.BRCalendarDatePicker(not_empty=True)
     time = w.TextField(attrs=dict(maxlength=40))
     cost = w.TextField(attrs=dict(maxlength=120))
     ages = w.TextField(attrs=dict(maxlength=40))
@@ -146,6 +146,7 @@ class Events(controllers.Controller, util.RestAdapter):
         e.set(**e.clean_dict(kw))
         e.name = name
         e.venue = v
+        old_artists = set([a.id for a in e.artists])
         # add new artists
         for artist in artist_list:
             try:
@@ -160,6 +161,16 @@ class Events(controllers.Controller, util.RestAdapter):
             if artist.name not in artist_list:
                 e.removeArtist(artist)
                 artist.destroy_if_unused()
+        new_artists = set([a.id for a in e.artists])
+        if old_artists != new_artists:
+            u = UpdateLog(
+                changed_by=identity.current.user.id,
+                table_name="artist_event",
+                table_id=e.id,
+                attrib_name="artists",
+                attrib_old_value=unicode(old_artists),
+                attrib_new_value=unicode(new_artists)
+                )
         turbogears.flash("Event %s" % flash_msg)
         redirect(turbogears.url("/events/%s" % e.id))
 
