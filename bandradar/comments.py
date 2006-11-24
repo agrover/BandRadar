@@ -28,6 +28,7 @@ datagrid = w.DataGrid(fields=[("Added", lambda row: row.created.strftime("%x")),
 class Comments(controllers.Controller, util.RestAdapter):
 
     @expose(template=".templates.datagrid")
+    @identity.require(identity.in_group("admin"))
     def list(self):
         results = Comment.select(orderBy=Comment.q.created).reversed()
         return dict(title="hello", grid=datagrid, data=results)

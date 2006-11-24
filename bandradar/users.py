@@ -152,10 +152,9 @@ class Users(controllers.Controller, util.RestAdapter, identity.SecureResource):
         redirect("/")
 
     @expose(template=".templates.user.list")
+    @identity.require(identity.in_group("admin"))
     def list(self):
-        u = None
-        if 'admin' in identity.current.groups:
-            u = UserAcct.select(orderBy=UserAcct.q.user_name)
+        u = UserAcct.select(orderBy=UserAcct.q.created).reversed()
         return dict(users=u)
 
     @expose(template=".templates.user.show")
