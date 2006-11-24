@@ -76,8 +76,10 @@ class UserForm(w.WidgetsList):
     zip_code = w.TextField(label="Zip Code",
         attrs=dict(size=10, maxlength=10),
         validator=v.PostalCode(strip=True))
-    url = w.TextField(label="Website", attrs=dict(size=60),
-        validator=v.Any(v.URL, v.Empty))
+    url = w.TextField(label="Website", attrs=dict(size=50),
+        validator=v.URL)
+    myspace = w.TextField(label="MySpace", attrs=dict(maxlength=40),
+        help_text="e.g. myspace.com/abc, enter abc")
     description = w.TextArea(label="About Me", rows=3, cols=60)
     event_email = w.CheckBox(label="Upcoming Events Email",
         help_text="email about upcoming events for tracked artists", default=False)

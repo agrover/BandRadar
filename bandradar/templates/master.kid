@@ -13,25 +13,28 @@
     </p>
 </div>
 
-<div py:def="header()" id="header">
-    <?python from turbogears import identity ?>
-    <span py:if="not identity.current.user">
-        <a href="/users/login">Login/Register</a>
-    </span>
-    <span py:if="identity.current.user">
-        <a href="/users/${identity.current.user.user_name}">${identity.current.user.user_name}'s bands</a>
-    </span>
-    <a href="/artists/list">Bands</a>
-    <a href="/events/list">Events</a>
-    <a href="/venues/list">Venues</a>
-    <a href="/comment">Comments?</a>
-    <span py:if="identity.current.user">
-        <a href="/users/logout">Logout</a>
-    </span>
-    <span py:if="'admin' in identity.current.groups">
+<div py:def="header()">
+    <div id="header">
+        <?python from turbogears import identity ?>
+        <span py:if="not identity.current.user">
+            <a href="/users/login">Login/Register</a>
+        </span>
+        <span py:if="identity.current.user">
+            <a href="/users/${identity.current.user.user_name}">${identity.current.user.user_name}'s bands</a>
+        </span>
+        <a href="/artists/list">Bands</a>
+        <a href="/events/list">Events</a>
+        <a href="/venues/list">Venues</a>
+        <a href="/comments/add">Comments?</a>
+        <span py:if="identity.current.user">
+            <a href="/users/logout">Logout</a>
+        </span>
+    </div>
+    <div id="admin_header" py:if="'admin' in identity.current.groups">
         <a href="/importers/webimport">Import Events</a>
         <a href="/importers/review">Review Events</a>
-    </span>
+        <a href="/comments/">View comments</a>
+    </div>
 </div>
 
 

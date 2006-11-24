@@ -12,6 +12,11 @@
         <p class="name">${artist.name}</p>
         <p>${artist.description}</p>
         <p py:if="artist.url">Website: <a href="${artist.url}">${artist.url}</a></p>
+        <p py:if="artist.myspace">MySpace:
+            <a href="http://myspace.com/${artist.myspace}">
+                http://myspace.com/${artist.myspace}</a>
+        </p>
+
         <p py:if="not 'admin' in artist.added_by.groups">
         Added by: <a href="/users/${artist.added_by.user_name}">
             ${artist.added_by.user_name}</a></p>

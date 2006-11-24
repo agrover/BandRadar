@@ -13,6 +13,7 @@ from venues import Venues
 from events import Events
 from users import Users
 from importers import Importers
+from comments import Comments
 from model import Event, Comment, hub
 import batch
 import saved_visit
@@ -21,11 +22,6 @@ import util
 import datetime
 
 log = logging.getLogger("bandradar.controllers")
-
-class CommentForm(w.WidgetsList):
-    comment = w.TextArea(label="Comments?", rows=4, validator=v.NotEmpty(strip=True))
-
-comment_form = w.TableForm(fields=CommentForm(), name="comment", submit_text="Send")
 
 
 def br_startup():
@@ -80,6 +76,8 @@ class Root(controllers.RootController):
 
     importers = Importers()
 
+    comments = Comments()
+
     @expose(template=".templates.output")
     def test(self):
         return dict(output="hello")
@@ -100,17 +98,3 @@ class Root(controllers.RootController):
     @expose(template=".templates.notimplemented")
     def feeds(self):
         return dict()
-
-    @expose(template=".templates.comment")
-    def comment(self):
-        return dict(comment_form=comment_form)
-
-    @expose()
-    @turbogears.validate(form=comment_form)
-    @turbogears.error_handler(comment)
-    def commentsave(self, comment):
-        c = Comment(comment=comment)
-        if identity.current.user:
-            c.comment_by = identity.current.user.id
-        turbogears.flash("Comment saved, thanks!")
-        util.redirect("/")

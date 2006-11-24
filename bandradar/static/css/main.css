@@ -89,13 +89,16 @@ h4 { margin: 0 0 .5em 0; }
     margin-bottom: 1em;
 }
 
-#header {
+#header, #admin_header {
     text-align: center;
     padding: .5em;
     margin-bottom: .5em;
     border: 1px solid black;
 }
-#header a { padding: 0 .3em 0 .3em; }
+
+#admin_header { border: 2px dashed red }
+
+#header a, #admin_header a { padding: 0 .3em 0 .3em; }
 
 #tagline {
     border: 2px solid green;

@@ -140,6 +140,7 @@ class Venue(BRSQLObject):
     name = UnicodeCol(alternateID=True, length=100)
     address = UnicodeCol(default=None)
     url = UnicodeCol(length=256, default=None)
+    myspace = UnicodeCol(length=50, default=None)
     phone = UnicodeCol(length=32, default=None)
     added_by = ForeignKey('UserAcct')
 
@@ -147,6 +148,7 @@ class Venue(BRSQLObject):
 class Artist(BRSQLObject):
     name = UnicodeCol(alternateID=True, length=100)
     url = UnicodeCol(length=256, default=None)
+    myspace = UnicodeCol(length=50, default=None)
     events = SQLRelatedJoin('Event')
     users = SQLRelatedJoin('UserAcct')
     added_by = ForeignKey('UserAcct')
@@ -211,7 +213,7 @@ class BatchRecord(SQLObject):
 class Comment(SQLObject):
     created = DateTimeCol(default=datetime.now)
     comment = UnicodeCol()
-    comment_by = IntCol(default=None)
+    comment_by = ForeignKey('UserAcct', default=None, dbName="comment_by") # fix this
 
 class VisitIdentity(SQLObject):
     visit_key = StringCol(length=40, alternateID=True,
@@ -253,6 +255,7 @@ class UserAcct(BRSQLObject):
     # site-specific fields
     zip_code = UnicodeCol(length=10, default=None)
     url = UnicodeCol(length=256, default=None)
+    myspace = UnicodeCol(length=50, default=None)
     artists = SQLRelatedJoin('Artist')
     last_emailed = DateTimeCol(default=None)
     event_email = BoolCol(default=True)

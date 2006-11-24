@@ -12,6 +12,10 @@
         <p>Since: ${user.created.strftime("%x")}</p>
         <p>Zip Code: ${user.zip_code}</p>
         <p>Website: <a href="${user.url}">${user.url}</a></p>
+        <p>MySpace: <a py:if="user.myspace" href="http://myspace.com/${user.myspace}">
+                http://myspace.com/${user.myspace}</a>
+        </p>
+
         <p>More info: ${user.description}</p>
 
         <div py:if="viewing_self">

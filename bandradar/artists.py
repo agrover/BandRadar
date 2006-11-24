@@ -16,6 +16,8 @@ class ArtistForm(w.WidgetsList):
     description = w.TextArea(label="Description", rows=4)
     url = w.TextField(label="Website", attrs=dict(size=60),
         validator=v.Any(v.URL, v.Empty))
+    myspace = w.TextField(label="MySpace", attrs=dict(maxlength=40),
+        help_text="e.g. myspace.com/abc, enter abc")
 
 class ArtistSchema(v.Schema):
     chained_validators = [util.UniqueName(Artist)]

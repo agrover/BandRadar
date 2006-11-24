@@ -17,6 +17,8 @@ class VenueForm(w.WidgetsList):
     phone = w.TextField()
     url = w.TextField(label="Website", attrs=dict(size=50),
         validator=v.Any(v.URL, v.Empty))
+    myspace = w.TextField(label="MySpace", attrs=dict(maxlength=40),
+        help_text="e.g. myspace.com/abc, enter abc")
 
 class VenueSchema(v.Schema):
     chained_validators = [util.UniqueName(Venue)]

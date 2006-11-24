@@ -13,7 +13,11 @@
             <p py:if="venue.description">Description: ${venue.description}</p>
             <p py:if="venue.address">Address: ${venue.address}</p>
             <p py:if="venue.phone">Phone: ${venue.phone}</p>
-            <p py:if="venue.url"><a href="${venue.url}">Website: ${venue.url}</a></p>
+            <p py:if="venue.url">Website: <a href="${venue.url}">${venue.url}</a></p>
+            <p py:if="venue.myspace">MySpace:
+                <a href="http://myspace.com/${venue.myspace}">
+                    http://myspace.com/${venue.myspace}</a>
+            </p>
             <p py:if="not 'admin' in venue.added_by.groups">
             Added by: <a href="/users/${venue.added_by.user_name}">
                 ${venue.added_by.user_name}</a></p>

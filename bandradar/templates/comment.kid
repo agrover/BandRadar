@@ -11,7 +11,7 @@
     you found, or anything else you think of. If you're logged in, we can even
     get back to you! Thanks -- BR Staff</h3>
 
-    ${comment_form(action="/commentsave")}
+    ${comment_form(action="/comments/save")}
 
 </body>
 </html>
