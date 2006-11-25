@@ -3,6 +3,7 @@ from turbogears import controllers, expose, redirect
 from turbogears import identity
 from turbogears import widgets as w
 from turbogears import validators as v
+from turbogears import paginate
 
 from elementtree import ElementTree
 
@@ -21,17 +22,20 @@ def get_by(row):
     link.text = row.comment_by.user_name
     return link
 
-datagrid = w.DataGrid(fields=[("Added", lambda row: row.created.strftime("%x")),
-                              ("Comment", "comment"),
-                              ("By", get_by)])
+datagrid = w.PaginateDataGrid(fields=[
+                w.DataGrid.Column("created", lambda row: row.created.strftime("%x"),
+                    options=dict(sortable=True)),
+                w.DataGrid.Column("comment", options=dict(sortable=True)),
+                w.DataGrid.Column("By", get_by)])
 
-class Comments(controllers.Controller, util.RestAdapter):
+class Comments(controllers.Controller):
 
     @expose(template=".templates.datagrid")
     @identity.require(identity.in_group("admin"))
+    @paginate("data", default_order="created")
     def list(self):
-        results = Comment.select(orderBy=Comment.q.created).reversed()
-        return dict(title="hello", grid=datagrid, data=results)
+        results = Comment.select(Comment.q.handled == False).reversed()
+        return dict(title="BandRadar Comments", grid=datagrid, data=results)
 
     @expose(template=".templates.comment")
     def add(self):

@@ -214,6 +214,7 @@ class Comment(SQLObject):
     created = DateTimeCol(default=datetime.now)
     comment = UnicodeCol()
     comment_by = ForeignKey('UserAcct', default=None, dbName="comment_by") # fix this
+    handled = BoolCol(default=False)
 
 class VisitIdentity(SQLObject):
     visit_key = StringCol(length=40, alternateID=True,
