@@ -19,13 +19,15 @@ import saved_visit
 
 class UniqueUsername(formencode.FancyValidator):
     def validate_python(self, value, state):
-        rows = UserAcct.select(UserAcct.q.user_name == value).count()
-        if rows:
+        try:
+            user = UserAcct.byNameI(value)
             raise formencode.Invalid('Sorry, that username exists', value, state)
+        except SQLObjectNotFound:
+            pass
 
 class UniqueEmail(formencode.FancyValidator):
     def validate_python(self, value, state):
-        rows = UserAcct.select(UserAcct.q.email_address == value).count()
+        rows = UserAcct.select(func.LOWER(UserAcct.q.email_address) == value.lower()).count()
         if rows:
             raise formencode.Invalid('Sorry, that email exists', value, state)
 

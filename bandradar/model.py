@@ -88,7 +88,11 @@ class BRSQLObject(SQLObject):
 
     @classmethod
     def byNameI(self, name):
-        results = self.select(func.LOWER(self.q.name) == name.lower())
+        try:
+            name_col = self.q.name
+        except AttributeError:
+            name_col = self.q.user_name
+        results = self.select(func.LOWER(name_col) == name.lower())
         if results.count() == 0:
             raise SQLObjectNotFound
         else:
