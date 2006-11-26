@@ -45,8 +45,6 @@ class Comments(controllers.Controller):
     @turbogears.validate(form=comment_form)
     @turbogears.error_handler(add)
     def save(self, comment):
-        c = Comment(comment=comment)
-        if identity.current.user:
-            c.comment_by = identity.current.user
+        c = Comment(comment=comment, comment_by=identity.current.user)
         turbogears.flash("Comment saved, thanks!")
         util.redirect("/")
