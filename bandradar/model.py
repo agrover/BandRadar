@@ -4,43 +4,14 @@ from sqlobject import *
 from turbogears.database import PackageHub
 from turbogears import identity
 
+import pickle
+
 hub = PackageHub("bandradar")
 __connection__ = hub
 
 soClasses = ('UserAcct', 'Group', 'Permission', 'Venue', 'Artist', 'Event',
              'BatchRecord', 'Attendance', 'Comment', 'UpdateLog')
 
-def artist_clean(bad_snippet, good_snippet=""):
-    """
-    Rename artists with accidental crap in their name.
-    If there is already a clean version, copy over links and remove the bad one.
-    """
-    artists = Artist.select(Artist.q.name.startswith(bad_snippet))
-    for bad_artist in artists:
-        # is there another artist with the name? move links over
-        good_name = bad_artist.name.replace(bad_snippet, "")
-        try:
-            good_artist = Artist.byNameI(good_name)
-            for event in bad_artist.events:
-                good_artist.addEvent(event)
-                bad_artist.removeEvent(event)
-            for user in bad_artist.users:
-                good_artist.addUser(user)
-                bad_artist.removeUser(user)
-            bad_artist.destroySelf()
-        except SQLObjectNotFound:
-            bad_artist.name = good_name
-
-def artist_move(old_id, new_id):
-    old = Artist.get(old_id)
-    new = Artist.get(new_id)
-    for event in old.events:
-        new.addEvent(event)
-        old.removeEvent(event)
-    for user in old.users:
-        new.addUser(user)
-        old.removeUser(user)
-    old.destroySelf()
 
 class BRSQLObject(SQLObject):
     created = DateTimeCol(default=datetime.now)
@@ -100,8 +71,8 @@ class BRSQLObject(SQLObject):
                     table_name=self.sqlmeta.table,
                     table_id=self.id,
                     attrib_name=name,
-                    attrib_old_value=unicode(old_value),
-                    attrib_new_value=unicode(value)
+                    attrib_old_value=pickle.dumps(old_value),
+                    attrib_new_value=pickle.dumps(value)
                     )
             # this records all vals to UpdateLog
             # super.set() can call our setattr() (overridden to update last_updated)
@@ -168,6 +139,44 @@ class Artist(BRSQLObject):
     events = SQLRelatedJoin('Event')
     users = SQLRelatedJoin('UserAcct')
     added_by = ForeignKey('UserAcct')
+
+    @classmethod
+    def clean(cls, bad_snippet, good_snippet=""):
+        """
+        Rename artists with accidental crap in their name.
+        If there is already a clean version, copy over links and
+        remove the bad one.
+        """
+        artists = Artist.select(Artist.q.name.startswith(bad_snippet))
+        for bad_artist in artists:
+            # is there another artist with the name? move links over
+            good_name = bad_artist.name.replace(bad_snippet, good_snippet)
+            try:
+                good_artist = Artist.byNameI(good_name)
+                for event in bad_artist.events:
+                    good_artist.addEvent(event)
+                    bad_artist.removeEvent(event)
+                for user in bad_artist.users:
+                    good_artist.addUser(user)
+                    bad_artist.removeUser(user)
+                bad_artist.destroySelf()
+            except SQLObjectNotFound:
+                bad_artist.name = good_name
+
+    @classmethod
+    def move(cls, old_id, new_id):
+        """Move relations from a duplicate entry to the real one, and
+        remove the duplicate.
+        """
+        old = cls.get(old_id)
+        new = cls.get(new_id)
+        for event in old.events:
+            new.addEvent(event)
+            old.removeEvent(event)
+        for user in old.users:
+            new.addUser(user)
+            old.removeUser(user)
+        old.destroySelf()
 
     def destroySelf(self):
         for e in self.events:

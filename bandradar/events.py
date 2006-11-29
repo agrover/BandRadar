@@ -10,6 +10,7 @@ from sqlobject import SQLObjectNotFound, LIKE, func, AND
 from datetime import date, datetime, timedelta
 import util
 from cgi import escape
+import pickle
 
 class EventForm(w.WidgetsList):
     id = w.HiddenField(validator=v.Int)
@@ -146,7 +147,7 @@ class Events(controllers.Controller, util.RestAdapter):
         e.set(**e.clean_dict(kw))
         e.name = name
         e.venue = v
-        old_artists = set([a.id for a in e.artists])
+        old_artists = set([a.name for a in e.artists])
         # add new artists
         for artist in artist_list:
             try:
@@ -161,15 +162,15 @@ class Events(controllers.Controller, util.RestAdapter):
             if artist.name not in artist_list:
                 e.removeArtist(artist)
                 artist.destroy_if_unused()
-        new_artists = set([a.id for a in e.artists])
+        new_artists = set([a.name for a in e.artists])
         if old_artists != new_artists:
             u = UpdateLog(
                 changed_by=identity.current.user.id,
                 table_name="artist_event",
                 table_id=e.id,
                 attrib_name="artists",
-                attrib_old_value=unicode(old_artists),
-                attrib_new_value=unicode(new_artists)
+                attrib_old_value=pickle.dumps(old_artists),
+                attrib_new_value=pickle.dumps(new_artists)
                 )
         turbogears.flash("Event %s" % flash_msg)
         redirect(turbogears.url("/events/%s" % e.id))
