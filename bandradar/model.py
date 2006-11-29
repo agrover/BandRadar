@@ -48,6 +48,29 @@ class BRSQLObject(SQLObject):
     last_updated = DateTimeCol(default=datetime.now)
     description = UnicodeCol(default=None)
 
+    @classmethod
+    def clean_dict(self, dirty_dict):
+        clean = {}
+        valid_attributes = self.sqlmeta.columns.keys()
+        for attr, value in dirty_dict.iteritems():
+            if attr in valid_attributes:
+                if isinstance(value, basestring):
+                    value = value.strip()
+                clean[attr] = value
+        return clean
+
+    @classmethod
+    def byNameI(self, name):
+        try:
+            name_col = self.q.name
+        except AttributeError:
+            name_col = self.q.user_name
+        results = self.select(func.LOWER(name_col) == name.lower())
+        if results.count() == 0:
+            raise SQLObjectNotFound
+        else:
+            return results[0]
+
     def __setattr__(self, name, value):
         if name in self.sqlmeta.columns.keys():
             self._record_update({name:value})
@@ -86,18 +109,6 @@ class BRSQLObject(SQLObject):
             #   the second call to _record_update will insert a duplicate row.
             super(BRSQLObject, self).__setattr__(name, value)
 
-    @classmethod
-    def byNameI(self, name):
-        try:
-            name_col = self.q.name
-        except AttributeError:
-            name_col = self.q.user_name
-        results = self.select(func.LOWER(name_col) == name.lower())
-        if results.count() == 0:
-            raise SQLObjectNotFound
-        else:
-            return results[0]
-
     def _fdate(self, past_date):
         elapsed = datetime.now() - past_date
         if elapsed.days > 1:
@@ -120,16 +131,6 @@ class BRSQLObject(SQLObject):
     def get_fcreated(self):
         return self._fdate(self.created)
 
-    @classmethod
-    def clean_dict(self, dirty_dict):
-        clean = {}
-        valid_attributes = self.sqlmeta.columns.keys()
-        for attr, value in dirty_dict.iteritems():
-            if attr in valid_attributes:
-                if isinstance(value, basestring):
-                    value = value.strip()
-                clean[attr] = value
-        return clean
 
 class UpdateLog(SQLObject):
     created = DateTimeCol(default=datetime.now)
@@ -140,6 +141,7 @@ class UpdateLog(SQLObject):
     attrib_old_value = UnicodeCol()
     attrib_new_value = UnicodeCol()
 
+
 class Venue(BRSQLObject):
     name = UnicodeCol(alternateID=True, length=100)
     address = UnicodeCol(default=None)
@@ -147,6 +149,7 @@ class Venue(BRSQLObject):
     myspace = UnicodeCol(length=50, default=None)
     phone = UnicodeCol(length=32, default=None)
     added_by = ForeignKey('UserAcct')
+    events = SQLMultipleJoin('Event')
 
 
 class Artist(BRSQLObject):
@@ -214,11 +217,13 @@ class BatchRecord(SQLObject):
     last_handled = DateTimeCol(default=None)
     email_sent = IntCol(default=0)
 
+
 class Comment(SQLObject):
     created = DateTimeCol(default=datetime.now)
     comment = UnicodeCol()
     comment_by = ForeignKey('UserAcct', default=None, dbName="comment_by") # fix this
     handled = BoolCol(default=False)
+
 
 class VisitIdentity(SQLObject):
     visit_key = StringCol(length=40, alternateID=True,
