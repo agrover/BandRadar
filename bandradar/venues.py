@@ -71,11 +71,9 @@ class Venues(controllers.Controller, util.RestAdapter):
             turbogears.flash("Venue ID not found")
             redirect(turbogears.url("/venues/list"))
 
-        past_events = Event.select(AND(Event.q.venueID == v.id,
-            Event.q.date < date.today()),orderBy=Event.q.date).reversed()[:5]
+        past_events = v.events.filter(Event.q.date < date.today()).orderBy('-date')[:5]
         past_events = list(reversed(list(past_events)))
-        future_events = Event.select(AND(Event.q.venueID == v.id,
-            Event.q.date >= date.today()),orderBy=Event.q.date)
+        future_events = v.events.filter(Event.q.date >= date.today()).orderBy('date')
         return dict(venue=v, past_events=past_events, future_events=future_events)
 
     @expose(template=".templates.venue.edit")
@@ -111,9 +109,10 @@ class Venues(controllers.Controller, util.RestAdapter):
     @expose()
     @identity.require(identity.in_group("admin"))
     def delete(self, id):
-        if Event.select(Event.q.venueID == id).count():
-            turbogears.flash("Delete failed")
-        else:
-            Venue.delete(id)
+        try:
+            v = Venue.get(id)
+            v.destroySelf()
             turbogears.flash("Deleted")
+        except SQLObjectNotFound:
+            turbogears.flash("Delete failed")
         redirect(turbogears.url("/venues/list"))

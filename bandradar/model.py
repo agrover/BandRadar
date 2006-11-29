@@ -151,6 +151,15 @@ class Venue(BRSQLObject):
     added_by = ForeignKey('UserAcct')
     events = SQLMultipleJoin('Event')
 
+    def destroySelf(self):
+        # no m:m's to clean up (yet)
+        super(Venue, self).destroySelf()
+
+    def destroy_if_unused(self):
+        if self.events.count():
+            return
+        self.destroySelf()
+
 
 class Artist(BRSQLObject):
     name = UnicodeCol(alternateID=True, length=100)

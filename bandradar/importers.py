@@ -143,9 +143,7 @@ class Importers(controllers.Controller, identity.SecureResource):
         for a in event.artists:
             event.removeArtist(a)
             a.destroy_if_unused()
-        v = event.venue
-        if not Event.select(Event.q.venueID == v.id).count():
-            v.destroySelf()
+        v.destroy_if_unused()
         event.destroySelf()
 
     def review_delete(self, **kw):
