@@ -239,7 +239,7 @@ class BatchRecord(SQLObject):
 class Comment(SQLObject):
     created = DateTimeCol(default=datetime.now)
     comment = UnicodeCol()
-    comment_by = ForeignKey('UserAcct', default=None, dbName="comment_by") # fix this
+    comment_by = ForeignKey('UserAcct', default=None)
     handled = BoolCol(default=False)
 
 
