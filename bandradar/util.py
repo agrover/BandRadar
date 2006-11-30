@@ -81,8 +81,8 @@ class UniqueName(formencode.FancyValidator):
             obj = self.model.byNameI(field_dict['name'])
             obj_id = field_dict['id']
             if obj.id != obj_id:
-                raise formencode.Invalid("", field_dict, state,
-                    error_dict = dict(name="Sorry, that name exists"))
+                turbogears.flash("Name already exists, now editing existing entry")                
+                redirect("/%ss/%d/edit" % (obj.__class__.__name__.lower(), obj.id))
         except SQLObjectNotFound:
             pass
 
