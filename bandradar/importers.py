@@ -25,7 +25,7 @@ wweek_form = w.TableForm(fields=WWeek(), name="wweek", submit_text="Go")
 class Importers(controllers.Controller, identity.SecureResource):
     require = identity.in_group("admin")
 
-    @expose(template="bandradar.templates.webimport")
+    @expose(template=".templates.webimport")
     def webimport(self, tg_errors=None):
         if tg_errors:
             turbogears.flash("Entry error")
@@ -71,10 +71,7 @@ class Importers(controllers.Controller, identity.SecureResource):
                 pass
 
     def import_to_db(self, venues):
-        e_counter = 0
-
         for venue in venues:
-
             try:
                 v = Venue.byNameI(venue['name'])
             except SQLObjectNotFound:
@@ -85,9 +82,9 @@ class Importers(controllers.Controller, identity.SecureResource):
                 time = event.get("time")
                 db_events = Event.selectBy(date=event["date"],
                     time=time, venue=v)
-                # must be unique
+                # must be unique, due to db constraint
                 if db_events.count():
-                    e = list(db_events)[0]
+                    e = db_events[0]
                 else:
                     e = Event(venue=v, name=event["name"],
                         date=event["date"], time=time,
@@ -102,7 +99,7 @@ class Importers(controllers.Controller, identity.SecureResource):
                     if not e.id in [existing.id for existing in a.events]:
                         a.addEvent(e)
 
-    @expose(template="bandradar.templates.importreview")
+    @expose(template=".templates.importreview")
     def review(self):
         try_to_show = 100
         result = Event.select(Event.q.approved == None, orderBy=(Event.q.cost, Event.q.name))
@@ -166,3 +163,17 @@ class Importers(controllers.Controller, identity.SecureResource):
         for event in new_events:
             self.delete_event(event)
         redirect(turbogears.url("/importers/review"))
+
+    @expose(template=".templates.reviewdupes")
+    def reviewdupes(self):
+        conn = hub.getConnection()
+        dupe_results = conn.queryAll("""
+            select name, date, venue_id, count(*)
+            from event
+            group by venue_id, date, name
+            having count(*) > 1
+            """)
+        dupes = []
+        for name, date, venue_id, count in dupe_results:
+            dupes.extend(list(Event.selectBy(date=date, venueID=venue_id)))
+        return dict(events=dupes)

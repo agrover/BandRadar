@@ -67,15 +67,10 @@ class Root(controllers.RootController):
             top_tracked=top_tracked)
 
     artists = Artists()
-
     venues = Venues()
-
     events = Events()
-
     users = Users()
-
     importers = Importers()
-
     comments = Comments()
 
     @expose(template=".templates.output")

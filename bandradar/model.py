@@ -36,7 +36,7 @@ class BRSQLObject(SQLObject):
             name_col = self.q.name
         except AttributeError:
             name_col = self.q.user_name
-        results = self.select(func.LOWER(name_col) == name.lower())
+        results = self.select(func.LOWER(name_col) == name.lower().strip())
         if results.count() == 0:
             raise SQLObjectNotFound
         else:
