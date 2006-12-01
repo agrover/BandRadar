@@ -117,7 +117,10 @@ class Importers(controllers.Controller, identity.SecureResource):
 
     def artist_name_fix(self, artist_name):
         artist_name = artist_name.replace("with guest", "")
+        artist_name = artist_name.replace("and guests", "")
         artist_name = artist_name.replace("and guest", "")
+        artist_name = artist_name.replace("and Friends", "")
+        artist_name = artist_name.replace("and friends", "")
         artist_name = artist_name.replace("& more", "")
         artist_name = artist_name.replace("(noon)", "")
         artist_name = artist_name.replace("(CD release)", "")
