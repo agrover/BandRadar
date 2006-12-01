@@ -98,6 +98,9 @@ class Importers(controllers.Controller, identity.SecureResource):
         "Tamara J. Brown Open Mic":"Tamara J. Brown",
         "Professor Stone":"DJ Professor Stone",
         "DJ My Friend Andy":"My Friend Andy",
+        "DJ Moisti loves Mr. E":"DJ Moisti",
+        "Mr. Roboto":"DJ Mr. Roboto",
+        "DJ Mr Roboto":"DJ Mr. Roboto",
     }
 
     def name_fix(self, name):
@@ -114,6 +117,8 @@ class Importers(controllers.Controller, identity.SecureResource):
 
     def artist_name_fix(self, artist_name):
         artist_name = artist_name.replace("with guest", "")
+        artist_name = artist_name.replace("and guest", "")
+        artist_name = artist_name.replace("& more", "")
         artist_name = artist_name.replace("(noon)", "")
         artist_name = artist_name.replace("(CD release)", "")
         artist_name = artist_name.replace("(Red Cap Garage)", "")
@@ -121,6 +126,7 @@ class Importers(controllers.Controller, identity.SecureResource):
         artist_name = artist_name.replace("(Taverna)", "")
         artist_name = artist_name.replace("(Minoan Ballroom)", "")
         artist_name = artist_name.replace("(Saganaki Lounge)", "")
+        artist_name = artist_name.replace("(Sideshow Lounge)", "")
         artist_name = self.name_fix(artist_name)
         artist_name = self.artist_fixup_dict.get(artist_name, artist_name)
         return artist_name
