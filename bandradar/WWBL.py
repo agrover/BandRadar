@@ -89,6 +89,8 @@ def parse_day(date):
                 continue
             venue['name'] = b1.string.strip()
             b2 = b1.findNext('b')
+            if not b2.string:
+                continue
             events = b2.string.strip().split(";")
             for event in events:
                 event_dict = {}
