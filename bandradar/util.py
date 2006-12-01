@@ -7,15 +7,15 @@ from turbogears import validators as v
 from sqlobject import SQLObjectNotFound, LIKE, func, AND
 
 def dynsearch(model, name):
+    result_cnt = 8
     def my_search(like_str):
-        result_cnt = 6
         return model.select(LIKE(func.LOWER(model.q.name), like_str),
             orderBy=model.q.name)[:result_cnt]
 
     # check startswith first
     like_str = "%s%%" % str(name).lower()
     names = set([a.name for a in my_search(like_str)])
-    if not len(names):
+    if not len(names) > result_cnt / 2:
         # then go all out
         like_str = "%%%s%%" % str(name).lower()
         names = set([a.name for a in my_search(like_str)])
@@ -59,8 +59,6 @@ def redirect(where):
 def can_edit(object):
     if 'admin' in identity.current.groups:
         return True
-#    if object.added_by == identity.current.user:
-#        return True
     if identity.current.user:
         return True
     return False
