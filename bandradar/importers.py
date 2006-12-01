@@ -97,6 +97,7 @@ class Importers(controllers.Controller, identity.SecureResource):
         "hosted by Cory":"Cory",
         "Tamara J. Brown Open Mic":"Tamara J. Brown",
         "Professor Stone":"DJ Professor Stone",
+        "DJ My Friend Andy":"My Friend Andy",
     }
 
     def name_fix(self, name):
