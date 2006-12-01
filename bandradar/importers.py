@@ -238,26 +238,29 @@ class Importers(controllers.Controller, identity.SecureResource):
             self.delete_event(event)
         redirect(turbogears.url("/importers/review"))
 
+    def events_likely_dupes(self, events):
+        temp_set = set()
+        for event in events:
+            for artist in event.artists:
+                if artist.name in temp_set:
+                    return True
+                else:
+                    temp_set.add(artist.name)
+        return False
+
     @expose(template=".templates.reviewdupes")
     def reviewdupes(self):
         conn = hub.getConnection()
         dupe_results = conn.queryAll("""
             select date, venue_id, count(*)
             from event
+            where date >= CURRENT_DATE
             group by venue_id, date
             having count(*) > 1
             """)
         dupes = []
         for date, venue_id, count in dupe_results:
-            temp_set = set()
             possible_dupes = Event.selectBy(date=date, venueID=venue_id)
-            actual_dupe = False
-            for event in possible_dupes:
-                for artist in event.artists:
-                    if artist.name in temp_set:
-                        actual_dupe = True
-                    else:
-                        temp_set.add(artist.name)
-            if actual_dupe:
+            if self.events_likely_dupes(possible_dupes):
                 dupes.extend(list(Event.selectBy(date=date, venueID=venue_id)))
         return dict(events=dupes)
