@@ -19,27 +19,6 @@ def clean(string):
     temp = string.strip().replace("&amp;", "&")
     return " ".join(temp.split())
 
-fixup_dict = {
-    "Abou Karim":"Abou Karim Restaurant",
-    "Abu Karim Restaurant":"Abou Karim Restaurant",
-    "Arlene Schnitzer Hall":"Arlene Schnitzer Concert Hall",
-    "Doug Fir Lounge":"Doug Fir",
-    "Jax Bar":"Jax",
-    "Jimmy Macks":"Jimmy Mak's",
-    "Koji's":"Koji Osakaya",
-    "Marriott Hotel":"Marriott-Waterfront",
-    "Memorial Auditorium":"Memorial Coliseum",
-    "Outlaws Bar Grill":"Outlaws Bar & Grill",
-    "Rock N Roll Pizza":"Rock 'N' Roll Pizza",
-    "Rose Garden Arena":"Rose Garden",
-    "Roseland Theater":"Roseland",
-    "Sabala's at Mt. Tabor":"Sabala's at Mount Tabor",
-    "The Satyricon":"Satyricon",
-}
-
-def venue_name_fix(venue_name):
-    return fixup_dict.get(venue_name, venue_name)
-
 def parse_page(num):
     usock = urllib.urlopen(get_url_base()+str(num))
     soup = BeautifulSoup(usock.read(), convertEntities=BeautifulSoup.HTML_ENTITIES)
@@ -55,7 +34,7 @@ def parse_page(num):
 
             event_artists = events.get((venue, date), list())
             event_artists.append(artist)
-            events[(venue_name_fix(venue), date)] = event_artists
+            events[(venue, date)] = event_artists
         except IndexError:
             pass
     return events

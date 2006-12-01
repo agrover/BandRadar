@@ -22,6 +22,7 @@ class WWeek(w.WidgetsList):
 merc_form = w.TableForm(fields=Merc(), name="merc", submit_text="Go")
 wweek_form = w.TableForm(fields=WWeek(), name="wweek", submit_text="Go")
 
+
 class Importers(controllers.Controller, identity.SecureResource):
     require = identity.in_group("admin")
 
@@ -66,32 +67,95 @@ class Importers(controllers.Controller, identity.SecureResource):
                 # truncate if too long
                 field_len = getattr(model.q, field).column.length
                 in_dict[field] = in_dict[field][:field_len]
-                obj.set(**{field:in_dict[field]})
+                # only set if not set already
+                if not getattr(obj, field, None):
+                    obj.set(**{field:in_dict[field]})
             except (KeyError, TypeError):
                 pass
 
+    venue_fixup_dict = {
+        "Abou Karim":"Abou Karim Restaurant",
+        "Abu Karim Restaurant":"Abou Karim Restaurant",
+        "Arlene Schnitzer Hall":"Arlene Schnitzer Concert Hall",
+        "Doug Fir Lounge":"Doug Fir",
+        "Jax Bar":"Jax",
+        "Jimmy Macks":"Jimmy Mak's",
+        "Koji's":"Koji Osakaya",
+        "Marriott Hotel":"Marriott-Waterfront",
+        "Memorial Auditorium":"Memorial Coliseum",
+        "Outlaws Bar Grill":"Outlaws Bar & Grill",
+        "Rock N Roll Pizza":"Rock 'N' Roll Pizza",
+        "Rose Garden Arena":"Rose Garden",
+        "Roseland Theater":"Roseland",
+        "Sabala's at Mt. Tabor":"Sabala's at Mount Tabor",
+        "The Satyricon":"Satyricon",
+    }
+
+    artist_fixup_dict = {
+        "DJ Van Gloryus":"DJ Van Glorious",
+        "Van Gloryious":"DJ Van Glorious",
+        "hosted by Cory":"Cory",
+        "Tamara J. Brown Open Mic":"Tamara J. Brown",
+        "Professor Stone":"DJ Professor Stone",
+    }
+
+    def name_fix(self, name):
+        return " ".join(name.strip().split())
+
+    def venue_name_fix(self, venue_name):
+        venue_name = self.name_fix(venue_name)
+        return self.venue_fixup_dict.get(venue_name, venue_name)
+
+    def event_name_fix(self, event_name):
+        event_name = event_name.replace("(Boxxes)", "")
+        event_name = self.name_fix(event_name)
+        return event_name
+
+    def artist_name_fix(self, artist_name):
+        artist_name = artist_name.replace("with guest", "")
+        artist_name = artist_name.replace("(noon)", "")
+        artist_name = artist_name.replace("(CD release)", "")
+        artist_name = artist_name.replace("(Red Cap Garage)", "")
+        artist_name = artist_name.replace("(Boxxes)", "")
+        artist_name = artist_name.replace("(Taverna)", "")
+        artist_name = artist_name.replace("(Minoan Ballroom)", "")
+        artist_name = artist_name.replace("(Saganaki Lounge)", "")
+        artist_name = self.name_fix(artist_name)
+        artist_name = self.artist_fixup_dict.get(artist_name, artist_name)
+        return artist_name
+
+    def artists_clean(self, artists):
+        artists = [a for a in artists if a != "with guests"]
+        artists = [a for a in artists if a != "and guests"]
+        artists = [self.artist_name_fix(a) for a in artists]
+        return artists
+
     def import_to_db(self, venues):
         for venue in venues:
+            venue_name = self.venue_name_fix(venue['name'])
             try:
-                v = Venue.byNameI(venue['name'])
+                v = Venue.byNameI(venue_name)
             except SQLObjectNotFound:
-                v = Venue(name=venue['name'], added_by=identity.current.user)
-                self._set_optional_fields(v, venue, ("address", "phone"))
+                v = Venue(name=venue_name, added_by=identity.current.user)
+            self._set_optional_fields(v, venue, ("address", "phone"))
 
             for event in venue["events"]:
-                time = event.get("time")
-                db_events = Event.selectBy(date=event["date"],
-                    time=time, venue=v)
+                event_name = self.event_name_fix(event['name'])
+                event_date = event["date"]
+                event_time = event.get("time")
+                db_events = Event.selectBy(date=event_date,
+                    time=event_time, venue=v)
                 # must be unique, due to db constraint
                 if db_events.count():
                     e = db_events[0]
                 else:
-                    e = Event(venue=v, name=event["name"],
-                        date=event["date"], time=time,
+                    e = Event(venue=v, name=event_name,
+                        date=event_date, time=event_time,
                         added_by=identity.current.user)
-                    self._set_optional_fields(e, event, ("cost", "ages"))
+                self._set_optional_fields(e, event, ("cost", "ages"))
 
-                for artist in event["artists"]:
+                artists = self.artists_clean(event['artists'])
+                for artist in artists:
                     try:
                         a = Artist.byNameI(artist)
                     except SQLObjectNotFound:
