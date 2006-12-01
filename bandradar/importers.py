@@ -112,6 +112,7 @@ class Importers(controllers.Controller, identity.SecureResource):
 
     def event_name_fix(self, event_name):
         event_name = event_name.replace("(Boxxes)", "")
+        event_name = event_name.replace('"', "")
         event_name = self.name_fix(event_name)
         return event_name
 
@@ -130,6 +131,7 @@ class Importers(controllers.Controller, identity.SecureResource):
         artist_name = artist_name.replace("(Minoan Ballroom)", "")
         artist_name = artist_name.replace("(Saganaki Lounge)", "")
         artist_name = artist_name.replace("(Sideshow Lounge)", "")
+        artist_name = artist_name.replace('"', "")
         artist_name = self.name_fix(artist_name)
         artist_name = self.artist_fixup_dict.get(artist_name, artist_name)
         return artist_name
