@@ -242,12 +242,22 @@ class Importers(controllers.Controller, identity.SecureResource):
     def reviewdupes(self):
         conn = hub.getConnection()
         dupe_results = conn.queryAll("""
-            select name, date, venue_id, count(*)
+            select date, venue_id, count(*)
             from event
-            group by venue_id, date, name
+            group by venue_id, date
             having count(*) > 1
             """)
         dupes = []
-        for name, date, venue_id, count in dupe_results:
-            dupes.extend(list(Event.selectBy(date=date, venueID=venue_id)))
+        for date, venue_id, count in dupe_results:
+            temp_set = set()
+            possible_dupes = Event.selectBy(date=date, venueID=venue_id)
+            actual_dupe = False
+            for event in possible_dupes:
+                for artist in event.artists:
+                    if artist.name in temp_set:
+                        actual_dupe = True
+                    else:
+                        temp_set.add(artist.name)
+            if actual_dupe:
+                dupes.extend(list(Event.selectBy(date=date, venueID=venue_id)))
         return dict(events=dupes)
