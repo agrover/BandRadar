@@ -22,10 +22,12 @@ def clean(string):
 def parse_page(num):
     usock = urllib.urlopen(get_url_base()+str(num))
     soup = BeautifulSoup(usock.read(), convertEntities=BeautifulSoup.HTML_ENTITIES)
-    content = soup.body.find('table', {'class':"content"})
-    trs = content.findAll("tr")[4:]
+    body = soup.find('body', dict(bgcolor='#FFFFFF'))
+    content = body.find('table', {'class':"content"})
+    prev_tr = content.find("tr", height="20", bgcolor="00036E")
+    start_tr = prev_tr.findNextSibling()
     events = {}
-    for tr in trs:
+    for tr in start_tr.findNextSiblings():
         tds = tr.findAll("td")
         try:
             date = datetime.date(*time.strptime(clean(tds[1].string), "%m/%d/%y")[:3])
@@ -43,9 +45,18 @@ def parse_all():
     events = {}
     usock = urllib.urlopen(get_url_base())
     soup = BeautifulSoup(usock.read())
-    content = soup.body.find('table', {'class':"content"})
-    a = content.findAll("tr", limit=3)[-1].find(text="Last &raquo;").parent['href']
-    page_count = int(re.search(r'Page=(\d*)$', a).group(1))
+    body = soup.find('body', dict(bgcolor='#FFFFFF'))
+    contents = body.findAll('b')
+    for content in contents:
+        if content.string == "1":
+            page_count = 1
+            break
+    while True:
+        next = content.findNextSibling()
+        if next.string == "&gt;":
+            break
+        page_count += 1
+        content = next
     for page in xrange(1, page_count+1):
         partial_events = parse_page(page)
         for key, artists in partial_events.iteritems():
@@ -67,4 +78,5 @@ def parse_all():
 
 if __name__ == "__main__":
     #parse_day(datetime.date.today())
-    parse_all()
+    result = parse_all()
+    print len(result)
