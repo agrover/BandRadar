@@ -33,8 +33,10 @@
     <div id="admin_header" py:if="'admin' in identity.current.groups">
         <a href="/importers/webimport">Import Events</a>
         <a href="/importers/review">Review Events</a>
-        <a href="/importers/reviewdupes">View possible dupes</a>
-        <a href="/comments/list">View comments</a>
+        <a href="/importers/reviewdupes">Possible dupes</a>
+        <a href="/comments/list">Comments</a>
+        <a href="/list_update_log">Updates</a>
+        <a href="/list_batch">Batches</a>
     </div>
 </div>
 

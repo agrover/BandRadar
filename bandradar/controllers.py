@@ -6,6 +6,7 @@ from turbogears import identity
 from turbogears import scheduler
 from turbogears import widgets as w
 from turbogears import validators as v
+from turbogears import paginate
 from sqlobject import AND
 
 from artists import Artists, artist_search_form
@@ -14,12 +15,15 @@ from events import Events
 from users import Users
 from importers import Importers
 from comments import Comments
-from model import Event, Comment, hub
+from model import Event, UpdateLog, UserAcct, BatchRecord, hub
 import batch
 import saved_visit
 import util
 
 import datetime
+
+from elementtree import ElementTree
+import pickle
 
 log = logging.getLogger("bandradar.controllers")
 
@@ -35,6 +39,31 @@ def br_shutdown():
 turbogears.startup.call_on_startup.append(br_startup)
 turbogears.startup.call_on_shutdown.append(br_shutdown)
 
+def get_by(row):
+    link = ElementTree.Element('a',href='/%ss/%d' % (row.table_name, row.table_id))
+    link.text = str(row.table_id)
+    return link
+
+udl_datagrid = w.PaginateDataGrid(fields=[
+                w.DataGrid.Column("created",
+                    lambda row: row.created.strftime("%x %X"),
+                    options=dict(sortable=True)),
+                w.DataGrid.Column("changed_by",
+                    lambda row: UserAcct.get(row.changed_by).user_name,
+                    title="By", options=dict(sortable=True)),
+                w.DataGrid.Column("table_name", title="Table",
+                    options=dict(sortable=True)),
+                w.DataGrid.Column("table_id", get_by, options=dict(sortable=True)),
+                w.DataGrid.Column("attrib_name", title="Prop"),
+                w.DataGrid.Column("old", lambda row: str(pickle.loads(str(row.attrib_old_value)))),
+                w.DataGrid.Column("new", lambda row: str(pickle.loads(str(row.attrib_new_value)))),
+                ])
+
+br_datagrid = w.PaginateDataGrid(fields=[
+                ("Started", "started"),
+                w.DataGrid.Column("Time", lambda row: row.finished - row.started),
+                ("Email sent", "email_sent"),
+                ])
 
 class Root(controllers.RootController):
 
@@ -93,3 +122,19 @@ class Root(controllers.RootController):
     @expose(template=".templates.notimplemented")
     def feeds(self):
         return dict()
+
+    @expose(template=".templates.datagrid")
+    @identity.require(identity.in_group("admin"))
+    @paginate("data", default_order="created", limit=25)
+    def list_update_log(self, filter_user=None):
+        results = UpdateLog.select().reversed()
+        if filter_user:
+            results = results.filter(UpdateLog.q.changed_by == int(filter_user))
+        return dict(title="BandRadar Update Log", grid=udl_datagrid, data=results)
+
+    @expose(template=".templates.datagrid")
+    @identity.require(identity.in_group("admin"))
+    @paginate("data", default_order="started", limit=25)
+    def list_batch(self):
+        results = BatchRecord.select().reversed()
+        return dict(title="BandRadar Batch Stats", grid=br_datagrid, data=results)
