@@ -27,6 +27,8 @@ class BRSQLObject(SQLObject):
             if attr in valid_attributes:
                 if isinstance(value, basestring):
                     value = value.strip()
+                if attr == "myspace" and value:
+                    value = value.split("/")[-1]
                 clean[attr] = value
         return clean
 
@@ -59,6 +61,7 @@ class BRSQLObject(SQLObject):
             return
         # don't log last_updated
         updates.pop('last_updated', None)
+        updates.pop('approved', None)
         for name, value in updates.iteritems():
             old_value = getattr(self, name, None)
             if old_value != value:
@@ -216,7 +219,7 @@ class Event(BRSQLObject):
             note = " (today)"
         if self.date == thedate + timedelta(1):
             note = " (tomorrow)"
-        return self.date.strftime("%a %m/%d") + note
+        return self.date.strftime("%a %m/%d/%y") + note
 
 
 class Attendance(BRSQLObject):
