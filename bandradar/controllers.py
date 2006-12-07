@@ -7,7 +7,7 @@ from turbogears import scheduler
 from turbogears import widgets as w
 from turbogears import validators as v
 from turbogears import paginate
-from sqlobject import AND
+from sqlobject import AND, SQLObjectNotFound
 
 from artists import Artists, artist_search_form
 from venues import Venues
@@ -40,8 +40,16 @@ turbogears.startup.call_on_startup.append(br_startup)
 turbogears.startup.call_on_shutdown.append(br_shutdown)
 
 def get_by(row):
-    link = ElementTree.Element('a',href='/%ss/%d' % (row.table_name, row.table_id))
-    link.text = str(row.table_id)
+    if row.table_name == "artist_event":
+        try:
+            e = Event.get(row.table_id)
+            link = ElementTree.Element('a', href='/events/%d' % e.id)
+            link.text = str(e.id)
+        except SQLObjectNotFound:
+            return "none"
+    else:
+        link = ElementTree.Element('a', href='/%ss/%d' % (row.table_name, row.table_id))
+        link.text = str(row.table_id)
     return link
 
 udl_datagrid = w.PaginateDataGrid(fields=[
@@ -69,11 +77,6 @@ class Root(controllers.RootController):
 
     @expose(template=".templates.main")
     def index(self):
-        if identity.current.user:
-            user = identity.current.user.user_name
-        else:
-            user = "unknown person"
-
         events = Event.select(AND(Event.q.date == datetime.date.today(),
             Event.q.approved != None),
             orderBy=Event.q.name)#[:10]
@@ -92,7 +95,7 @@ class Root(controllers.RootController):
         for name, id, count in top_tracked_results:
             top_tracked.append(dict(name=name, id=id, count=count))
 
-        return dict(user=user, search_form=artist_search_form, events=events,
+        return dict(search_form=artist_search_form, events=events,
             top_tracked=top_tracked)
 
     artists = Artists()
