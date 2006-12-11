@@ -163,7 +163,7 @@ class Events(controllers.Controller, util.RestAdapter):
                 e.removeArtist(artist)
                 artist.destroy_if_unused()
         new_artists = set([a.name for a in e.artists])
-        if old_artists != new_artists:
+        if old_artists != new_artists and e.approved:
             u = UpdateLog(
                 changed_by=identity.current.user.id,
                 table_name="artist_event",
