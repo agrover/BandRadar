@@ -36,7 +36,7 @@ def send_email():
     # date range includes start, doesn't include end instant
     # (next iteration will handle) 
     new_events = Event.select(AND(Event.q.approved >= from_when,
-        Event.q.approved < last_handled))
+        Event.q.approved < last_handled, Event.q.date > datetime.date.today()))
     for event in new_events:
         for artist in event.artists:
             for user in artist.users:
