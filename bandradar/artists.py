@@ -1,7 +1,6 @@
 import turbogears
 from turbogears import controllers, expose, redirect
 from turbogears import identity
-from turbogears import database
 from turbogears import widgets as w
 from turbogears import validators as v
 
@@ -104,7 +103,8 @@ class Artists(controllers.Controller, util.RestAdapter):
         past_events = list(reversed(list(past_events)))
         future_events = a.events.filter(Event.q.date >= date.today()).orderBy(Event.q.date)
         return dict(artist=a, past_events=past_events, future_events=future_events,
-            tracked_count=a.users.count(), is_tracked=is_tracked)
+            tracked_count=a.users.count(), is_tracked=is_tracked,
+            description=util.desc_format(a.description))
 
     @expose(template=".templates.artist.edit")
     @identity.require(identity.not_anonymous())
@@ -113,7 +113,7 @@ class Artists(controllers.Controller, util.RestAdapter):
         if id:
             try:
                 a = Artist.get(id)
-                form_vals = database.so_to_dict(a)
+                form_vals = util.so_to_dict(a)
             except SQLObjectNotFound:
                 pass
         form_vals.update(kw)

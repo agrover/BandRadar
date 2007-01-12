@@ -74,7 +74,8 @@ class Venues(controllers.Controller, util.RestAdapter):
         past_events = v.events.filter(Event.q.date < date.today()).orderBy('-date')[:5]
         past_events = list(reversed(list(past_events)))
         future_events = v.events.filter(Event.q.date >= date.today()).orderBy('date')
-        return dict(venue=v, past_events=past_events, future_events=future_events)
+        return dict(venue=v, past_events=past_events, future_events=future_events,
+            description=util.desc_format(v.description))
 
     @expose(template=".templates.venue.edit")
     @identity.require(identity.in_group("admin"))

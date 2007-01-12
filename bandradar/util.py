@@ -4,6 +4,7 @@ import formencode
 from turbogears import identity
 from turbogears import widgets as w
 from turbogears import validators as v
+from turbogears import database
 from sqlobject import SQLObjectNotFound, LIKE, func, AND
 
 def dynsearch(model, name):
@@ -67,6 +68,17 @@ def can_delete(object):
     if 'admin' in identity.current.groups:
         return True
     return False
+
+def desc_format(in_text):
+    if not in_text:
+        return ""
+    import cgi
+    out_text = cgi.escape(in_text)
+    out_text = out_text.replace("\n", "<br />")
+    return out_text
+
+def so_to_dict(sqlobj):
+    return database.so_to_dict(sqlobj)
 
 class UniqueName(formencode.FancyValidator):
 

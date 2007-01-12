@@ -10,7 +10,7 @@
     <?python from turbogears import identity ?>
     <div id="body">
         <p class="name">${artist.name}</p>
-        <p>${artist.description}</p>
+        <p id="description" py:if="description">${XML(description)}</p>
         <p py:if="artist.url">Website: <a href="${artist.url}">${artist.url}</a></p>
         <p py:if="artist.myspace">MySpace:
             <a href="http://myspace.com/${artist.myspace}">

@@ -1,7 +1,6 @@
 import turbogears
 from turbogears import controllers, expose, redirect
 from turbogears import identity
-from turbogears import database
 from turbogears import widgets as w
 from turbogears import validators as v
 
@@ -86,7 +85,8 @@ class Events(controllers.Controller, util.RestAdapter):
         except SQLObjectNotFound:
             turbogears.flash("Event not found")
             redirect(turbogears.url("/events/list"))
-        return dict(event=e, artisthtml=artisthtml)
+        return dict(event=e, artisthtml=artisthtml,
+            description=util.desc_format(e.description))
 
     @expose()
     @identity.require(identity.not_anonymous())
@@ -96,7 +96,7 @@ class Events(controllers.Controller, util.RestAdapter):
         if id:
             try:
                 e = Event.get(id)
-                form_vals = database.so_to_dict(e)
+                form_vals = util.so_to_dict(e)
                 form_vals['artists'] = "\n".join([a.name for a in e.artists])
                 form_vals['venue'] = dict(text=e.venue.name)
                 template = ".templates.event.edit"

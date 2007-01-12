@@ -183,32 +183,27 @@ class Users(controllers.Controller, util.RestAdapter, identity.SecureResource):
 
         art_list.sort()
 
-        return dict(user=u, art_list=art_list, viewing_self=viewing_self)
+        return dict(user=u, art_list=art_list, viewing_self=viewing_self,
+            description=util.desc_format(u.description))
 
     @expose(template=".templates.user.edit")
-    def edit(self, user_name, **kw):
+    def edit(self, user_name):
         if not ((identity.current.user
                 and identity.current.user.user_name == user_name)
                 or "admin" in identity.current.groups):
             raise identity.IdentityFailure("Not authorized")
-        form_vals = {}
         try:
             u = UserAcct.by_user_name(user_name)
-            form_vals = dict(user_name=u.user_name,
-                email_address=u.email_address, zip_code=u.zip_code, url=u.url,
-                event_email=u.event_email, other_email=u.other_email)
         except SQLObjectNotFound:
-            pass
-        form_vals.update(kw)
+            turbogears.flash("Invalid username")
+            redirect(turbogears.url("/"))
         return dict(user_name=user_name, user_form=user_form,
-            form_vals=form_vals)
+            form_vals=u)
 
     @expose()
     @turbogears.validate(form=user_form)
     @turbogears.error_handler(edit)
-    def save(self, user_name, email_address, zip_code=None, url=None,
-            description=None, event_email=False, other_email=False,
-            old_pass=None, pass1=None, pass2=None):
+    def save(self, user_name, old_pass, pass1, **kw):
         if not ((identity.current.user
                 and identity.current.user.user_name == user_name)
                 or "admin" in identity.current.groups):
@@ -216,12 +211,7 @@ class Users(controllers.Controller, util.RestAdapter, identity.SecureResource):
 
         try:
             u = UserAcct.by_user_name(user_name)
-            u.email_address = email_address
-            u.zip_code = zip_code
-            u.url = url
-            u.description = description
-            u.event_email = event_email
-            u.other_email = other_email
+            u.set(**u.clean_dict(kw))
             # old pw checked by validator, if present
             if (old_pass or "admin" in identity.current.groups) and pass1:
                 # model does hash, not us

@@ -16,7 +16,7 @@
                 http://myspace.com/${user.myspace}</a>
         </p>
 
-        <p>More info: ${user.description}</p>
+        <p id="description" py:if="description">${XML(description)}</p>
 
         <div py:if="viewing_self">
             ${tg_ButtonWidget(action="/users/%s/edit" % user.user_name, label="Edit")}
@@ -41,6 +41,5 @@
             </td>
         </tr>
     </table>
-
 </body>
 </html>

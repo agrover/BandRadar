@@ -10,7 +10,7 @@
     <div id="body">
         <h2>Event: ${event.name}</h2>
         <div id="details">
-            <p py:if="event.description">Description: ${event.description}</p>
+            <p id="description" py:if="description">${XML(description)}</p>
             <p>Date: ${event.date.strftime("%x")}</p>
             <p py:if="event.time">Time: ${event.time}</p>
             <p py:if="event.cost">Cost: ${event.cost}</p>

@@ -10,7 +10,7 @@
     <div id="body">
         <h2>Venue: ${venue.name}</h2>
         <div id="details">
-            <p py:if="venue.description">Description: ${venue.description}</p>
+            <p id="description" py:if="description">${XML(description)}</p>
             <p py:if="venue.address">Address: ${venue.address}</p>
             <p py:if="venue.phone">Phone: ${venue.phone}</p>
             <p py:if="venue.url">Website: <a href="${venue.url}">${venue.url}</a></p>
