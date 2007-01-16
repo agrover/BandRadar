@@ -1,8 +1,11 @@
 import turbogears
 import logging
 from sqlobject.util.threadinglocal import local as threading_local
-from model import hub, BatchRecord, Event, AND, SQLObjectNotFound
+from model import (hub, BatchRecord, UserAcct, Event,
+                  Artist, SimilarArtist, AND, SQLObjectNotFound)
 import datetime
+import lastfm
+import time
 
 log = logging.getLogger("bandradar.batch")
 
@@ -13,6 +16,7 @@ def task():
 
     try:
         send_email()
+        build_similars()
         cleanup_db()
 
     finally:
@@ -40,9 +44,10 @@ def send_email():
     for event in new_events:
         for artist in event.artists:
             for user in artist.users:
-                user_events = send_to.get(user, set())
-                user_events.add(event)
-                send_to[user] = user_events
+                if user.event_email:
+                    user_events = send_to.get(user, set())
+                    user_events.add(event)
+                    send_to[user] = user_events
 
     email_sent = 0
     for u, events in send_to.iteritems():
@@ -79,6 +84,29 @@ def send_email():
 
     current.email_sent = email_sent;
     current.finished = datetime.datetime.now()
+    hub.commit()
+
+def build_similars():
+    admin = UserAcct.get(1)
+    # Do 100 artists at a time
+    artists = Artist.select(
+        AND(Event.q.approved != None, Artist.q.sims_updated == None))[:100]
+    for artist in artists:
+        sims_objs = []
+        sims_names = lastfm.similar_artists(artist.name)
+        for artist_name in sims_names:
+            try:
+                sim_artist = Artist.byNameI(artist_name)
+            except SQLObjectNotFound:
+                sim_artist = Artist(name=artist_name, added_by=admin)
+                # Artists added this way are *not* approved. This keeps them from
+                # also having sims generated (when they could be non-local bands
+                # that we really don't care much about.
+                # If they have events approved, then of course they are, too.
+            sims_objs.append(sim_artist)
+        artist.similars = sims_objs
+        artist.sims_updated = datetime.datetime.now()
+        time.sleep(1)
     hub.commit()
 
 def cleanup_db():

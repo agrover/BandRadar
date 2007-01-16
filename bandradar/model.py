@@ -9,8 +9,9 @@ import pickle
 hub = PackageHub("bandradar")
 __connection__ = hub
 
-soClasses = ('UserAcct', 'Group', 'Permission', 'Venue', 'Artist', 'Event',
-             'BatchRecord', 'Attendance', 'Comment', 'UpdateLog')
+soClasses = ('UserAcct', 'Group', 'Permission', 'Venue', 'Artist',
+             'SimilarArtist', 'Event', 'BatchRecord', 'Attendance',
+             'Comment', 'UpdateLog')
 
 
 class BRSQLObject(SQLObject):
@@ -142,6 +143,22 @@ class Artist(BRSQLObject):
     events = SQLRelatedJoin('Event')
     users = SQLRelatedJoin('UserAcct')
     added_by = ForeignKey('UserAcct')
+    sims_updated = DateTimeCol(default=None)
+
+
+    def _get_similars(self):
+        return (s.similar_artist for s in SimilarArtist.selectBy(artist=self))
+
+    def _set_similars(self, artists):
+        new_artists = set(artists)
+        old_artists = set(s.similar_artist for s in SimilarArtist.selectBy(artist=self))
+        to_remove = old_artists.difference(new_artists)
+        to_add = new_artists.difference(old_artists)
+        for artist in to_remove:
+            sim = SimilarArtist.selectBy(artist=self, similar_artist=artist)[0]
+            sim.destroySelf()
+        for artist in to_add:
+            sim = SimilarArtist(artist=self, similar_artist=artist)
 
     @classmethod
     def clean(cls, bad_snippet, good_snippet=""):
@@ -185,13 +202,21 @@ class Artist(BRSQLObject):
         for e in self.events:
             self.removeEvent(e)
         for u in self.users:
-            self.removeUserAcct(u)        
+            self.removeUserAcct(u)
+        sims = SimilarArtist.selectBy(artist=self)
+        for sim in sims:
+            sim.destroySelf()
         super(Artist, self).destroySelf()
 
     def destroy_if_unused(self):
         if self.events.count() or self.users.count():
             return
         self.destroySelf()
+
+
+class SimilarArtist(SQLObject):
+    artist = ForeignKey('Artist')
+    similar_artist = ForeignKey('Artist')
 
 
 class Event(BRSQLObject):
