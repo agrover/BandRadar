@@ -10,7 +10,8 @@ from sqlobject import SQLObjectNotFound, LIKE, func, AND
 def dynsearch(model, name):
     result_cnt = 8
     def my_search(like_str):
-        return model.select(LIKE(func.LOWER(model.q.name), like_str),
+        return model.select(
+            AND(LIKE(func.LOWER(model.q.name), like_str), model.q.approved != None),
             orderBy=model.q.name)[:result_cnt]
 
     # check startswith first
@@ -27,7 +28,8 @@ def search(model, name, tg_errors=None):
         redirect_previous()
 
     name_str = "%s" % str(name).lower()
-    result = model.select(LIKE(func.LOWER(model.q.name), name_str),
+    result = model.select(
+        AND(LIKE(func.LOWER(model.q.name), name_str), model.q.approved != None),
         orderBy=model.q.name)
     result_cnt = result.count()
     if not result_cnt:
