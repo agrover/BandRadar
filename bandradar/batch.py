@@ -88,9 +88,9 @@ def send_email():
 
 def build_similars():
     admin = UserAcct.get(1)
-    # Do 100 artists at a time
+    # Do 3600 artists at a time, only hitting last.fm for an hour...
     artists = Artist.select(
-        AND(Event.q.approved != None, Artist.q.sims_updated == None))[:100]
+        AND(Event.q.approved != None, Artist.q.sims_updated == None))[:3600]
     for artist in artists:
         sims_objs = []
         sims_names = lastfm.similar_artists(artist.name)
@@ -101,7 +101,7 @@ def build_similars():
                 sim_artist = Artist(name=artist_name, added_by=admin)
                 # Artists added this way are *not* approved. This keeps them from
                 # also having sims generated (when they could be non-local bands
-                # that we really don't care much about.
+                # that we really don't care much about.)
                 # If they have events approved, then of course they are, too.
             sims_objs.append(sim_artist)
         artist.similars = sims_objs
