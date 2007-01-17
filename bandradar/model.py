@@ -134,7 +134,7 @@ class Venue(BRSQLObject):
         super(Venue, self).destroySelf()
 
     def destroy_if_unused(self):
-        if self.events.count():
+        if self.events.count() or self.users.count():
             return
         self.destroySelf()
 
