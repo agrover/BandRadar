@@ -108,6 +108,38 @@ class Venues(controllers.Controller, util.RestAdapter):
         redirect(turbogears.url("/venues/%s" % v.id))
 
     @expose()
+    @identity.require(identity.not_anonymous())
+    def track(self, id, viewing="no"):
+        u = identity.current.user
+        try:
+            v = Venue.get(id)
+            if v not in u.venues:
+                u.addVenue(v)
+        except SQLObjectNotFound:
+            turbogears.flash("Venue not found")
+            redirect("/")
+        if viewing == "no":
+            util.redirect_previous()
+        else:
+            util.redirect("/venues/%s" % v.id)
+
+    @expose()
+    @identity.require(identity.not_anonymous())
+    def untrack(self, id, viewing="no"):
+        u = identity.current.user
+        try:
+            v = Artist.get(id)
+            if v in u.venues:
+                u.removeVenue(v)
+        except SQLObjectNotFound:
+            turbogears.flash("Artist not found")
+            redirect("/")
+        if viewing == "no":
+            util.redirect_previous()
+        else:
+            util.redirect("/venues/%s" % v.id)
+
+    @expose()
     @identity.require(identity.in_group("admin"))
     def delete(self, id):
         try:

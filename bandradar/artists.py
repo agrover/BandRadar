@@ -170,7 +170,6 @@ class Artists(controllers.Controller, util.RestAdapter):
         else:
             util.redirect("/artists/%s" % a.id)
 
-
     @expose()
     @identity.require(identity.in_group("admin"))
     def delete(self, id):

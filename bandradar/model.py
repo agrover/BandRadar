@@ -126,9 +126,11 @@ class Venue(BRSQLObject):
     phone = UnicodeCol(length=32, default=None)
     added_by = ForeignKey('UserAcct')
     events = SQLMultipleJoin('Event')
+    users = SQLRelatedJoin('UserAcct')
 
     def destroySelf(self):
-        # no m:m's to clean up (yet)
+        for u in self.users:
+            self.removeUserAcct(u)
         super(Venue, self).destroySelf()
 
     def destroy_if_unused(self):

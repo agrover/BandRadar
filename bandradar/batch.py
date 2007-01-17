@@ -86,11 +86,11 @@ def send_email():
     current.finished = datetime.datetime.now()
     hub.commit()
 
-def build_similars():
+def build_similars(count=3600):
     admin = UserAcct.get(1)
     # Do 3600 artists at a time, only hitting last.fm for an hour...
     artists = Artist.select(
-        AND(Artist.q.approved != None, Artist.q.sims_updated == None))[:3600]
+        AND(Artist.q.approved != None, Artist.q.sims_updated == None))[:count]
     for artist in artists:
         sims_objs = []
         sims_names = lastfm.similar_artists(artist.name)
