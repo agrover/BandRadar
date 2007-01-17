@@ -63,6 +63,7 @@ class BRSQLObject(SQLObject):
         # don't log last_updated
         updates.pop('last_updated', None)
         updates.pop('approved', None)
+        updates.pop('sims_updated', None)
         for name, value in updates.iteritems():
             old_value = getattr(self, name, None)
             if old_value != value:
@@ -313,6 +314,7 @@ class UserAcct(BRSQLObject):
     url = UnicodeCol(length=256, default=None)
     myspace = UnicodeCol(length=50, default=None)
     artists = SQLRelatedJoin('Artist')
+    venues = SQLRelatedJoin('Venue')
     last_emailed = DateTimeCol(default=None)
     event_email = BoolCol(default=True)
     other_email = BoolCol(default=False)
