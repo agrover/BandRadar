@@ -4,11 +4,6 @@ import datetime
 import time
 import re
 
-# venues = [venue]
-# venue = {name, addr, phone, [events]}
-# events = {name, [artists], date(date), str(time), str(cost)}
-# artists = [artist]
-
 def get_url_base():
     today = datetime.date.today()
     future = today.replace(year=today.year+1)
@@ -41,7 +36,7 @@ def parse_page(num):
             pass
     return events
 
-def parse_all():
+def events():
     events = {}
     usock = urllib.urlopen(get_url_base())
     soup = BeautifulSoup(usock.read())
@@ -68,15 +63,15 @@ def parse_all():
     venues = []
     for key, artists in events.iteritems():
         venue, date = key
-        event = {}
+        event = dict()
         event['artists'] = artists
         event['date'] = date
         event['name'] = ", ".join(artists)
-        venues.append(dict(name=venue, events=[event]))
-
-    return venues
+        event['venue'] = dict(name=venue)
+        # see importers.py import_to_db() for expected layout
+        yield event
 
 if __name__ == "__main__":
     #parse_day(datetime.date.today())
-    result = parse_all()
+    result = list(events())
     print len(result)

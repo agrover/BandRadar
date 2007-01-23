@@ -4,11 +4,6 @@ import datetime
 import time
 import re
 
-# venues = [venue]
-# venue = {name, addr, phone, [events]}
-# events = {name, [artists], date(date), str(time), str(cost)}
-# artists = [artist]
-
 def artist_clean(artist):
     artist = artist.replace("(taverna)", "")
     return " ".join.artist.split()
@@ -45,18 +40,15 @@ def parse_preview_moreinfo(text):
     ages = m.group(3).strip()
     return (time, cost, ages)
 
-def parse_day(date):
-    venues = []
+def day_events(date):
     usock = urllib.urlopen(date_to_url(date))
     soup = BeautifulSoup(usock.read())
     #find all anchors with e.g. name="42820"
     anchors = soup('a', {'name':re.compile("\d+")})
     for anchor in anchors:
-        venue = {}
-        venue['events'] = []
-
         if anchor.parent.name == "div":
             # handle wweek "preview" entries
+            venue = {}
             event_dict = {}
             div = anchor.parent
             event_dict['name'], event_dict['artists'] = \
@@ -73,8 +65,11 @@ def parse_day(date):
                     event_dict['time'], event_dict['cost'], event_dict['ages'] = \
                         parse_preview_moreinfo(i.string)
             event_dict['date'] = date
-            venue['events'].append(event_dict)
+            event_dict['venue'] = venue
+            # see importers.py import_to_db() for expected layout
+            yield event_dict
         elif anchor.parent.name == "p":
+            venue = {}
             # handle normal entries
             p = anchor.parent
             txt = p.findAll(text=re.compile("\|.*"), recursive=False)
@@ -94,34 +89,30 @@ def parse_day(date):
             events = b2.string.strip().split(";")
             for event in events:
                 event_dict = {}
+                event_dict['venue'] = venue
                 m = re.search(r'(.*?)\(([\d:&]+\ ?[ap]m)\)$', event)
                 if m:
                     event_dict['time'] = m.group(2)
                     event = m.group(1)
                 event_dict['name'], event_dict['artists'] = parse_event(event)
                 event_dict['date'] = date
-                venue['events'].append(event_dict)
-    
-        venues.append(venue)
-    return venues
+                yield event_dict
 
-def parse_week(start_date):
-    venues = []
+def week_events(start_date):
     for i in range(7):
-        venues.extend(parse_day(start_date + datetime.timedelta(i)))
-    return venues
+        for event in day_events(start_date + datetime.timedelta(i)):
+            yield event
 
-def parse_month(start_date):
-    venues = []
+def month_events(start_date):
     end_date = start_date.replace(month=start_date.month+1)
     end_date = end_date - datetime.timedelta(1)
     for i in xrange(end_date.day):
-        venues.extend(parse_day(start_date + datetime.timedelta(i)))
-    return venues
+        for event in day_events(start_date + datetime.timedelta(i)):
+            yield event
 
 if __name__ == "__main__":
     #parse_day(datetime.date.today())
-    parse_day(datetime.date(2006, 11, 3))
+    print len(list(parse_day(datetime.date(2006, 11, 3))))
 
 #find named anchors
 # if a.parent = div class preview

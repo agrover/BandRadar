@@ -124,6 +124,7 @@ class Venue(BRSQLObject):
     url = UnicodeCol(length=256, default=None)
     myspace = UnicodeCol(length=50, default=None)
     phone = UnicodeCol(length=32, default=None)
+    zip = UnicodeCol(length=10, default=None)
     added_by = ForeignKey('UserAcct')
     events = SQLMultipleJoin('Event')
     users = SQLRelatedJoin('UserAcct')

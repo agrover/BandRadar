@@ -10,6 +10,7 @@ from datetime import date, datetime
 import MBL
 import WWBL
 import pollstar
+import br_upcoming as br
 
 class Merc(w.WidgetsList):
     url = w.TextField(label="URL", attrs=dict(size=60),
@@ -31,6 +32,7 @@ class Importers(controllers.Controller, identity.SecureResource):
         if tg_errors:
             turbogears.flash("Entry error")
         return dict(merc_form=merc_form, wweek_form=wweek_form)
+
     @expose()
     @turbogears.validate(form=merc_form)
     @turbogears.error_handler(webimport)
@@ -46,18 +48,26 @@ class Importers(controllers.Controller, identity.SecureResource):
     @turbogears.error_handler(webimport)
     def importwweek(self, thedate, do_week=False):
         if not do_week:
-            venues = WWBL.parse_day(thedate)
+            gen = WWBL.day_events
         else:
-            venues = WWBL.parse_week(thedate)
-        self.import_to_db(venues)
+            gen = WWBL.week_events
+        for event in gen(thedate):
+            self.import_to_db(event)
         turbogears.flash("WWeek Imported")
         redirect(turbogears.url("/importers/review"))
 
     @expose()
     def importpollstar(self):
-        venues = pollstar.parse_all()
-        self.import_to_db(venues)
+        for event in pollstar.events():
+            self.import_to_db(event)
         turbogears.flash("Pollstar Imported")
+        redirect(turbogears.url("/importers/review"))
+
+    @expose()
+    def importupcoming(self):
+        for event in br.events():
+            self.import_to_db(event)
+        turbogears.flash("Upcoming Imported")
         redirect(turbogears.url("/importers/review"))
 
     def _set_optional_fields(self, obj, in_dict, field_list):
@@ -142,38 +152,56 @@ class Importers(controllers.Controller, identity.SecureResource):
         artists = [self.artist_name_fix(a) for a in artists]
         return artists
 
-    def import_to_db(self, venues):
-        for venue in venues:
-            venue_name = self.venue_name_fix(venue['name'])
+    # IMPORTERS MUST YIELD:
+    #
+    # event dict:
+    #   name (req'd)
+    #   date (req'd)
+    #   time
+    #   description
+    #   cost
+    #   ages
+    #   url
+    #   artists = list(unicode) (req'd)
+    #   venue = dict:
+    #       name (req'd)
+    #       url
+    #       zip
+    #       address
+    #       phone
+    #       description
+
+    def import_to_db(self, event):
+        venue_name = self.venue_name_fix(event['venue']['name'])
+        try:
+            v = Venue.byNameI(venue_name)
+        except SQLObjectNotFound:
+            v = Venue(name=venue_name, added_by=identity.current.user)
+        self._set_optional_fields(v, event['venue'], ("address", "phone", "zip",
+            "url", "description"))
+
+        event_name = self.event_name_fix(event['name'])
+        event_date = event["date"]
+        event_time = event.get("time")
+        db_events = Event.selectBy(date=event_date,
+            time=event_time, venue=v)
+        # must be unique, due to db constraint
+        if db_events.count():
+            e = db_events[0]
+        else:
+            e = Event(venue=v, name=event_name,
+                date=event_date, time=event_time,
+                added_by=identity.current.user)
+        self._set_optional_fields(e, event, ("cost", "ages", "url", "description"))
+
+        artists = self.artists_clean(event['artists'])
+        for artist in artists:
             try:
-                v = Venue.byNameI(venue_name)
+                a = Artist.byNameI(artist)
             except SQLObjectNotFound:
-                v = Venue(name=venue_name, added_by=identity.current.user)
-            self._set_optional_fields(v, venue, ("address", "phone"))
-
-            for event in venue["events"]:
-                event_name = self.event_name_fix(event['name'])
-                event_date = event["date"]
-                event_time = event.get("time")
-                db_events = Event.selectBy(date=event_date,
-                    time=event_time, venue=v)
-                # must be unique, due to db constraint
-                if db_events.count():
-                    e = db_events[0]
-                else:
-                    e = Event(venue=v, name=event_name,
-                        date=event_date, time=event_time,
-                        added_by=identity.current.user)
-                self._set_optional_fields(e, event, ("cost", "ages"))
-
-                artists = self.artists_clean(event['artists'])
-                for artist in artists:
-                    try:
-                        a = Artist.byNameI(artist)
-                    except SQLObjectNotFound:
-                        a = Artist(name=artist, added_by=identity.current.user)
-                    if not e.id in [existing.id for existing in a.events]:
-                        a.addEvent(e)
+                a = Artist(name=artist, added_by=identity.current.user)
+            if not e.id in [existing.id for existing in a.events]:
+                a.addEvent(e)
 
     @expose(template=".templates.importreview")
     def review(self):
