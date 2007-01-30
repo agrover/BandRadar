@@ -37,5 +37,5 @@ def events():
                 # see importers.py import_to_db() for expected layout
                 yield dict(name=clean(event.name), date=event_date, time=event_time,
                            description=clean(event.description),
-                           artists=event.name.split(','),
+                           artists=clean(event.name).split(','),
                            venue=venue)

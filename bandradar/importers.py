@@ -37,7 +37,6 @@ class Importers(controllers.Controller, identity.SecureResource):
     @turbogears.validate(form=merc_form)
     @turbogears.error_handler(webimport)
     def importmercury(self, url):
-
         venues = MBL.parse_week(url)
         self.import_to_db(venues)
         turbogears.flash("Mercury Imported")
@@ -84,6 +83,7 @@ class Importers(controllers.Controller, identity.SecureResource):
                 pass
 
     venue_fixup_dict = {
+        "Ash Street Saloon":"Ash Street",
         "Abou Karim":"Abou Karim Restaurant",
         "Abu Karim Restaurant":"Abou Karim Restaurant",
         "Arlene Schnitzer Hall":"Arlene Schnitzer Concert Hall",
@@ -109,8 +109,18 @@ class Importers(controllers.Controller, identity.SecureResource):
         "Professor Stone":"DJ Professor Stone",
         "DJ My Friend Andy":"My Friend Andy",
         "DJ Moisti loves Mr. E":"DJ Moisti",
+        "The Fabulous DJ Moisti":"DJ Moisti",
         "Mr. Roboto":"DJ Mr. Roboto",
         "DJ Mr Roboto":"DJ Mr. Roboto",
+        "Blues Jam with JR Sims":"JR Sims",
+        "DJ King Fader":"King Fader",
+        "Open Mic with Chuck Warda":"Chuck Warda",
+        "Suicide Club with DJ Nightschool":"DJ Nightschool",
+        "Beat Around the Bush with Paula B":"Paula B",
+        "Beat Around the Bush with Paula B.":"Paula B",
+        "Blues Jam with Suburban Slim":"Suburban Slim",
+        "Shut Up and Dance with DJ Gregarious":"DJ Gregarious",
+        "Sinferno Caberet with Polly Panic":"Polly Panic",
     }
 
     def name_fix(self, name):
@@ -199,7 +209,10 @@ class Importers(controllers.Controller, identity.SecureResource):
             try:
                 a = Artist.byNameI(artist)
             except SQLObjectNotFound:
-                a = Artist(name=artist, added_by=identity.current.user)
+                try:
+                    a = Artist.byNameI("DJ " + artist)
+                except SQLObjectNotFound:
+                    a = Artist(name=artist, added_by=identity.current.user)
             if not e.id in [existing.id for existing in a.events]:
                 a.addEvent(e)
 

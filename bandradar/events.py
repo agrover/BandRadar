@@ -122,12 +122,12 @@ class Events(controllers.Controller, util.RestAdapter):
             v = Venue(name=kw['venue']['text'], added_by=identity.current.user)
 
         artists = kw.pop('artists', None)
-        artist_list = [artist.strip() for artist in artists.split('\n')]
+        artist_name_list = [artist.strip() for artist in artists.split('\n')]
         # elim blank items in list
-        artist_list = [artist for artist in artist_list if artist]
+        artist_name_list = [artist for artist in artist_name_list if artist]
         name = kw.get('name', None)
         if not name:
-            name = ", ".join(artist_list)
+            name = ", ".join(artist_name_list)
 
         # updating
         if id:
@@ -149,17 +149,19 @@ class Events(controllers.Controller, util.RestAdapter):
         e.venue = v
         old_artists = set([a.name for a in e.artists])
         # add new artists
-        for artist in artist_list:
+        artist_list = []
+        for artist in artist_name_list:
             try:
-                a = Artist.byName(artist)
+                a = Artist.byNameI(artist)
                 if not a in e.artists:
                     e.addArtist(a)
             except SQLObjectNotFound:
                 a = Artist(name=artist, added_by=identity.current.user)
                 e.addArtist(a)
+            artist_list.append(a)
         # remove old artists
         for artist in e.artists:
-            if artist.name not in artist_list:
+            if artist not in artist_list:
                 e.removeArtist(artist)
                 artist.destroy_if_unused()
         new_artists = set([a.name for a in e.artists])
