@@ -77,8 +77,8 @@ class Importers(controllers.Controller, identity.SecureResource):
                 field_len = getattr(model.q, field).column.length
                 in_dict[field] = in_dict[field][:field_len]
                 # only set if not set already
-                if not getattr(obj, field, None):
-                    obj.set(**{field:in_dict[field]})
+                if not getattr(obj, field, None) and len(in_dict[field]):
+                    setattr(obj, field, in_dict[field])
             except (KeyError, TypeError):
                 pass
 
@@ -301,9 +301,21 @@ class Importers(controllers.Controller, identity.SecureResource):
             group by venue_id, date
             having count(*) > 1
             """)
-        dupes = []
+        dupe_groups = []
         for date, venue_id, count in dupe_results:
             possible_dupes = Event.selectBy(date=date, venueID=venue_id)
             if self.events_likely_dupes(possible_dupes):
-                dupes.extend(list(Event.selectBy(date=date, venueID=venue_id)))
-        return dict(events=dupes)
+                dupes = []
+                for dupe in possible_dupes:
+                    others = set(possible_dupes)
+                    others.remove(dupe)
+                    dupes.append((dupe, others))
+                dupe_groups.append(dupes)
+        return dict(dupes=dupe_groups)
+
+    @expose()
+    def merge_dupe(self, old_id, new_id):
+        old = Event.get(old_id)
+        new = Event.get(new_id)
+        Event.merge(old, new)
+        redirect(turbogears.url("/importers/reviewdupes"))

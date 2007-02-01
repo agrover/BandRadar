@@ -236,6 +236,22 @@ class Event(BRSQLObject):
     event_index = DatabaseIndex('date', 'time', 'venue', unique=True)
     date_index = DatabaseIndex('date')
 
+    @classmethod
+    def merge(cls, old, new):
+        for artist in old.artists:
+            if artist not in new.artists:
+                new.addArtist(artist)
+        # must delete old event here because duplicate events with same
+        # venue/date/time violates RE
+        old.destroySelf()
+        for field in old.sqlmeta.columns.keys():
+            # only set if not set already
+            if not getattr(new, field, None) and getattr(old, field, None):
+                value = getattr(old, field)
+                setattr(new, field, value)
+        if old.created < new.created:
+            new.created = old.created
+
     def destroySelf(self):
         for a in self.artists:
             self.removeArtist(a)

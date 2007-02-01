@@ -7,14 +7,16 @@
 </head>
 
 <body>
-    <table>
-    <tr py:for="e in events">
+    <table py:for="dupe_group in dupes">
+    <tr py:for="dupe, others in dupe_group">
         <td>
-            <a href="/events/${e.id}"><b py:strip="e.approved">${e.name}</b></a>
-            <br />${e.date} ${e.time} <b>${e.cost}</b> ${e.ages}
+            <a href="/events/${dupe.id}"><b py:strip="dupe.approved">${dupe.id} ${dupe.name}</b></a>
+            <br />${dupe.date} ${dupe.time} <b>${dupe.cost}</b> ${dupe.ages} Created: ${dupe.get_fcreated()}
         </td>
         <td>
-            ${tg_ButtonWidget(action="/events/%d/edit" % e.id, label="Edit this event")}
+            <p py:for="other in others">
+                ${tg_ButtonWidget(action="/importers/merge_dupe/%d/%d" % (other.id, dupe.id), label="Merge from %d" % other.id)}
+            </p>
         </td>
     </tr>
     </table>
