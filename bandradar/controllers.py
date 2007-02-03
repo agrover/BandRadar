@@ -79,9 +79,6 @@ class Root(controllers.RootController):
     def index(self):
         conn = hub.getConnection()
 
-        events = Event.select(AND(Event.q.date == datetime.date.today(),
-            Event.q.approved != None),
-            orderBy=Event.q.name)#[:10]
         events = conn.queryAll("""
             select event.id, event.name, venue.name
             from event, venue

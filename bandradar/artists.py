@@ -47,21 +47,31 @@ class Artists(controllers.Controller, util.RestAdapter):
     def list(self, listby="today", orderby="alpha"):
 
         def artists_with_shows(day_delta, day_count=1):
-            day_result = {}
+            conn = hub.getConnection()
+
             start_date = date.today() + timedelta(day_delta)
             where_clause = AND(Event.q.date >= start_date, Event.q.approved != None)
             if day_count != 0:
                 end_date = start_date + timedelta(day_count-1)
                 where_clause = AND(where_clause, Event.q.date <= end_date)
-            events = Event.select(where_clause)
-            for event in events:
-                for artist in event.artists:
-                    if identity.current.user:
-                        is_tracked = artist in identity.current.user.artists
-                    else:
-                        is_tracked = False
-                    art = dict(id=artist.id, name=artist.name)
-                    day_result[artist.name] = (artist.id, is_tracked)
+
+            artists = conn.queryAll("""
+                select artist.id, artist.name
+                from artist, event, artist_event
+                where artist.id = artist_event.artist_id and
+                    artist_event.event_id = event.id and
+                    %s
+                order by artist.name
+                """ % where_clause)
+
+            day_result = {}
+            if identity.current.user:
+                tracked_artist_ids = [a.id for a in identity.current.user.artists]
+            else:
+                tracked_artist_ids = []
+            for artist_id, artist_name in artists:
+                is_tracked = artist_id in tracked_artist_ids
+                day_result[artist_name] = (artist_id, is_tracked)
             return day_result
 
         if listby == "today":
