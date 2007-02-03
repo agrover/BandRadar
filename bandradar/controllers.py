@@ -91,8 +91,8 @@ class Root(controllers.RootController):
 
         top_tracked_results = conn.queryAll("""
             select artist.name, artist.id, COUNT(artist_user_acct.user_acct_id) as count
-            from artist
-            left join artist_user_acct on artist.id = artist_user_acct.artist_id
+            from artist, artist_user_acct
+            where artist.id = artist_user_acct.artist_id
             group by artist.name, artist.id
             order by count desc, name
             limit 20
