@@ -77,11 +77,18 @@ class Root(controllers.RootController):
 
     @expose(template=".templates.main")
     def index(self):
+        conn = hub.getConnection()
+
         events = Event.select(AND(Event.q.date == datetime.date.today(),
             Event.q.approved != None),
             orderBy=Event.q.name)#[:10]
+        events = conn.queryAll("""
+            select event.id, event.name, venue.name
+            from event, venue
+            where event.venue_id = venue.id and event.date = CURRENT_DATE
+            order by event.name
+            """)
 
-        conn = hub.getConnection()
         top_tracked_results = conn.queryAll("""
             select artist.name, artist.id, COUNT(artist_user_acct.user_acct_id) as count
             from artist

@@ -26,8 +26,8 @@
 
     <h4>Tonight's events</h4>
 
-    <p py:for="event in events">
-        <a href="/events/${event.id}">${event.name} @ ${event.venue.name}</a>
+    <p py:for="event_id, event_name, venue_name in events">
+        <a href="/events/${event_id}">${event_name} @ ${venue_name}</a>
     </p>
 
     <h4>Top Tracked</h4>
