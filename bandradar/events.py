@@ -4,7 +4,7 @@ from turbogears import identity
 from turbogears import widgets as w
 from turbogears import validators as v
 
-from model import Event, Venue, Artist, UpdateLog
+from model import Event, Venue, Artist, Attendance, UpdateLog
 from sqlobject import SQLObjectNotFound, LIKE, func, AND
 from datetime import date, datetime, timedelta
 import util
@@ -35,7 +35,7 @@ event_search_form = w.ListForm(fields=SearchBox(), name="search",
 
 class Events(controllers.Controller, util.RestAdapter):
 
-    @expose(allow_json=True)
+    @expose("json")
     def dynsearch(self, name):
         return util.dynsearch(Event, name)
 
@@ -176,6 +176,43 @@ class Events(controllers.Controller, util.RestAdapter):
                 )
         turbogears.flash("Event %s" % flash_msg)
         redirect(turbogears.url("/events/%s" % e.id))
+
+    @expose()
+    @identity.require(identity.not_anonymous())
+    def track(self, id, viewing="no", planning=False, went=False):
+        u = identity.current.user
+        try:
+            e = Event.get(id)
+            try:
+                att = Attendance.selectBy(user=u, event=e)[0]
+            except IndexError:
+                att = Attendance(user=u, event=e)
+            att.planning_to_go = planning
+            att.attended = went
+        except SQLObjectNotFound:
+            turbogears.flash("Event not found")
+            redirect("/")
+        if viewing == "no":
+            util.redirect_previous()
+        else:
+            util.redirect("/events/%s" % e.id)
+
+    @expose()
+    @identity.require(identity.not_anonymous())
+    def untrack(self, id, viewing="no"):
+        u = identity.current.user
+        try:
+            e = Event.get(id)
+            atts = Attendance.selectBy(user=u, event=e)
+            for att in atts:
+                att.destroySelf()
+        except SQLObjectNotFound:
+            turbogears.flash("Event not found")
+            redirect("/")
+        if viewing == "no":
+            util.redirect_previous()
+        else:
+            util.redirect("/events/%s" % e.id)
 
     @expose()
     @identity.require(identity.in_group("admin"))
