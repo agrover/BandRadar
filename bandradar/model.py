@@ -233,7 +233,6 @@ class Event(BRSQLObject):
     venue = ForeignKey('Venue')
     artists = SQLRelatedJoin('Artist')
     added_by = ForeignKey('UserAcct')
-    event_index = DatabaseIndex('date', 'time', 'venue', unique=True)
     date_index = DatabaseIndex('date')
 
     @classmethod

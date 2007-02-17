@@ -132,7 +132,7 @@ class Venues(controllers.Controller, util.RestAdapter):
             if v in u.venues:
                 u.removeVenue(v)
         except SQLObjectNotFound:
-            turbogears.flash("Artist not found")
+            turbogears.flash("Venue not found")
             redirect("/")
         if viewing == "no":
             util.redirect_previous()
