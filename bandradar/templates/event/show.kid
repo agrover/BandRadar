@@ -30,9 +30,6 @@
 
         <div py:replace="edit_links(event)" />
 
-        <div id="blah">${test.display("hello there", update="blah")}</div>
-        <div id="bla">hhh</div>
-
     </div>
 </body>
 </html>
