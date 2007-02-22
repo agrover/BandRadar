@@ -32,8 +32,13 @@ class SearchBox(w.WidgetsList):
 event_search_form = w.ListForm(fields=SearchBox(), name="search",
     submit_text="Search")
 
+test_wig = w.LinkRemoteFunction(name="test", action="/events/test", data=dict())
 
 class Events(controllers.Controller, util.RestAdapter):
+
+    @expose()
+    def test(self):
+        return "<b>YO MAMA</b>"
 
     @expose("json")
     def dynsearch(self, name):
@@ -86,7 +91,7 @@ class Events(controllers.Controller, util.RestAdapter):
             turbogears.flash("Event not found")
             redirect(turbogears.url("/events/list"))
         return dict(event=e, artisthtml=artisthtml,
-            description=util.desc_format(e.description))
+            description=util.desc_format(e.description), test=test_wig)
 
     @expose()
     @identity.require(identity.not_anonymous())

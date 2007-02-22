@@ -42,7 +42,7 @@ def parse_preview_moreinfo(text):
 
 def day_events(date):
     usock = urllib.urlopen(date_to_url(date))
-    soup = BeautifulSoup(usock.read())
+    soup = BeautifulSoup(usock.read(), fromEncoding="mac-roman")
     #find all anchors with e.g. name="42820"
     anchors = soup('a', {'name':re.compile("\d+")})
     for anchor in anchors:
@@ -69,8 +69,8 @@ def day_events(date):
             # see importers.py import_to_db() for expected layout
             yield event_dict
         elif anchor.parent.name == "p":
-            venue = {}
             # handle normal entries
+            venue = {}
             p = anchor.parent
             txt = p.findAll(text=re.compile("\|.*"), recursive=False)
             cleantxt = txt[0].strip().strip('[|').strip()
@@ -112,7 +112,7 @@ def month_events(start_date):
 
 if __name__ == "__main__":
     #parse_day(datetime.date.today())
-    print len(list(parse_day(datetime.date(2006, 11, 3))))
+    print len(list(day_events(datetime.date(2007, 2, 22))))
 
 #find named anchors
 # if a.parent = div class preview
