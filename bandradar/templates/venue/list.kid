@@ -14,9 +14,8 @@
     </div>
 
     <div id="list_title">
-        <?python from turbogears import identity ?>
         Venues with upcoming events
-        <span py:if="'admin' in identity.current.groups">
+        <span py:if="'admin' in tg.identity.groups">
             ${tg_ButtonWidget(action="/venues/edit", label="Add a new venue")}
         </span>
     </div>

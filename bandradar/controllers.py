@@ -7,6 +7,7 @@ from turbogears import scheduler
 from turbogears import widgets as w
 from turbogears import validators as v
 from turbogears import paginate
+from turbogears.view import root_variable_providers
 from sqlobject import AND, SQLObjectNotFound
 
 from artists import Artists, artist_search_form
@@ -27,11 +28,15 @@ import pickle
 
 log = logging.getLogger("bandradar.controllers")
 
+import webhelpers
+def add_root_vars(root_dict):
+    root_dict['wh'] = webhelpers
 
 def br_startup():
     #scheduler.add_interval_task(batch.task, 60)
     scheduler.add_weekday_task(batch.task, range(1,8), (3,0))
     saved_visit.start_extension()
+    root_variable_providers.append(add_root_vars)
 
 def br_shutdown():
     saved_visit.shutdown_extension()

@@ -7,7 +7,6 @@
 </head>
 
 <body>
-    <?python from turbogears import identity ?>
     <div id="body">
         <p class="name">${artist.name}</p>
         <p id="description" py:if="description">${XML(description)}</p>
@@ -34,7 +33,7 @@
 
         <div id="list_title">
             Events
-            <span py:if="identity.current.user">
+            <span py:if="tg.identity.user">
                 ${tg_ButtonWidget(action="/events/edit?artist_prefill=%s" % artist.id, label="Add a new event")}
             </span>
         </div>

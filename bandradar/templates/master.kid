@@ -15,22 +15,21 @@
 
 <div py:def="header()">
     <div id="header">
-        <?python from turbogears import identity ?>
-        <span py:if="not identity.current.user">
+        <span py:if="not tg.identity.user">
             <a href="/users/login">Login/Register</a>
         </span>
-        <span py:if="identity.current.user">
-            <a href="/users/${identity.current.user.user_name}">${identity.current.user.user_name}'s bands</a>
+        <span py:if="tg.identity.user">
+            <a href="/users/${tg.identity.user.user_name}">${tg.identity.user.user_name}'s bands</a>
         </span>
         <a href="/artists/list">Bands</a>
         <a href="/events/list">Events</a>
         <a href="/venues/list">Venues</a>
         <a href="/comments/add">Comments?</a>
-        <span py:if="identity.current.user">
+        <span py:if="tg.identity.user">
             <a href="/users/logout">Logout</a>
         </span>
     </div>
-    <div id="admin_header" py:if="'admin' in identity.current.groups">
+    <div id="admin_header" py:if="'admin' in tg.identity.groups">
         <a href="/importers/webimport">Import Events</a>
         <a href="/importers/review">Review Events</a>
         <a href="/importers/reviewdupes">Possible dupes</a>
@@ -54,7 +53,6 @@
 </head>
 
 <body py:match="item.tag=='{http://www.w3.org/1999/xhtml}body'">
-    <?python from turbogears import identity ?>
 
     <div id="main_column">
 
