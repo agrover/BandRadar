@@ -1,4 +1,4 @@
-import scrobxlib
+import imports.scrobxlib
 
 def user_top_artists(user_name, limit=10):
     return [artist['name'] for artist in scrobxlib.topArtists(user_name)[:limit]]

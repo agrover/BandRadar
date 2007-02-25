@@ -7,10 +7,10 @@ from turbogears import validators as v
 from model import Event, Venue, Artist, hub
 from sqlobject import SQLObjectNotFound, AND, OR
 from datetime import date, datetime
-import MBL
-import WWBL
-import pollstar
-import br_upcoming as br
+import bandradar.imports.MBL
+import bandradar.imports.WWBL
+import bandradar.imports.pollstar
+import bandradar.imports.br_upcoming as br
 
 class Merc(w.WidgetsList):
     url = w.TextField(label="URL", attrs=dict(size=60),
