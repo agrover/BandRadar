@@ -7,7 +7,8 @@ from turbogears import validators as v
 from model import Venue, Event, hub
 from sqlobject import SQLObjectNotFound, LIKE, func, AND
 from datetime import date
-import util
+from bandradar import util
+from bandradar.widgets import BRAutoCompleteField
 
 class VenueForm(w.WidgetsList):
     id = w.HiddenField(validator=v.Int)
@@ -27,7 +28,7 @@ venue_form = w.TableForm(fields=VenueForm(), name="venue", submit_text="Save",
                             validator=VenueSchema())
 
 class SearchBox(w.WidgetsList):
-    search = util.BRAutoCompleteField("/venues/dynsearch")
+    search = BRAutoCompleteField("/venues/dynsearch")
 
 venue_search_form = w.ListForm(fields=SearchBox(), name="search",
     submit_text="Search")

@@ -7,16 +7,18 @@ from turbogears import validators as v
 from model import Event, Venue, Artist, Attendance, UpdateLog
 from sqlobject import SQLObjectNotFound, LIKE, func, AND
 from datetime import date, datetime, timedelta
-import util
 from cgi import escape
 import pickle
+
+from bandradar import util
+from bandradar.widgets import BRAutoCompleteField, BRCalendarDatePicker
 
 class EventForm(w.WidgetsList):
     id = w.HiddenField(validator=v.Int)
     name = w.TextField(label="Event Name", help_text="If different from artists' names")
     artists = w.TextArea(help_text="Enter artists, one per line", validator=v.NotEmpty(strip=True), rows=3, cols=30)
-    venue = util.BRAutoCompleteField("/venues/dynsearch", label="Venue")
-    date = util.BRCalendarDatePicker(not_empty=True)
+    venue = BRAutoCompleteField("/venues/dynsearch", label="Venue")
+    date = BRCalendarDatePicker(not_empty=True)
     time = w.TextField(attrs=dict(maxlength=40))
     cost = w.TextField(attrs=dict(maxlength=120))
     ages = w.TextField(attrs=dict(maxlength=40))
@@ -27,7 +29,7 @@ class EventForm(w.WidgetsList):
 event_form = w.TableForm(fields=EventForm(), name="event", submit_text="Save")
 
 class SearchBox(w.WidgetsList):
-    search = util.BRAutoCompleteField("/events/dynsearch")
+    search = BRAutoCompleteField("/events/dynsearch")
 
 event_search_form = w.ListForm(fields=SearchBox(), name="search",
     submit_text="Search")
@@ -36,7 +38,7 @@ test_wig = w.LinkRemoteFunction(name="test", action="/events/test", data=dict())
 
 class Events(controllers.Controller, util.RestAdapter):
 
-    @expose()
+    @expose(fragment=True)
     def test(self):
         return "<b>YO MAMA</b>"
 

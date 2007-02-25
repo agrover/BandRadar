@@ -28,9 +28,10 @@ import pickle
 
 log = logging.getLogger("bandradar.controllers")
 
-import webhelpers
+#import webhelpers
 def add_root_vars(root_dict):
-    root_dict['wh'] = webhelpers
+    #root_dict['wh'] = webhelpers
+    pass
 
 def br_startup():
     #scheduler.add_interval_task(batch.task, 60)
