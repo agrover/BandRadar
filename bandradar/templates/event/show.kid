@@ -19,8 +19,7 @@
             <p>Where: <a href="/venues/${event.venue.id}">${event.venue.name}</a>
                 <span py:if="event.venue.address">(${event.venue.address})</span>
             </p>
-            With:
-            <span py:replace="XML(artisthtml)"></span>
+            With: ${artistlist(event=event)}
             <p py:if="not 'admin' in event.added_by.groups">
             Added by: <a href="/users/${event.added_by.user_name}">
                 ${event.added_by.user_name}</a></p>

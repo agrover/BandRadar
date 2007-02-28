@@ -81,18 +81,13 @@ class Events(controllers.Controller, util.RestAdapter):
 
     @expose(template=".templates.event.show")
     def show(self, id):
+        from bandradar.widgets import artistlist
         try:
             e = Event.get(id)
-            if not e.artists.count():
-                artisthtml = "<strong>None</strong>"
-            else:
-                htmlstr = "<a href=\"/artists/%s\">%s</a>"
-                artist_html_list = [ htmlstr % (a.id, escape(a.name)) for a in e.artists ]
-                artisthtml = ", ".join(artist_html_list)
         except SQLObjectNotFound:
             turbogears.flash("Event not found")
             redirect(turbogears.url("/events/list"))
-        return dict(event=e, artisthtml=artisthtml,
+        return dict(event=e, artistlist=artistlist,
             description=util.desc_format(e.description), test=test_wig)
 
     @expose()
