@@ -24,7 +24,6 @@ import util
 import datetime
 
 from elementtree import ElementTree
-import pickle
 
 log = logging.getLogger("bandradar.controllers")
 
@@ -69,8 +68,8 @@ udl_datagrid = w.PaginateDataGrid(fields=[
                     options=dict(sortable=True)),
                 w.DataGrid.Column("table_id", get_by, options=dict(sortable=True)),
                 w.DataGrid.Column("attrib_name", title="Prop"),
-                w.DataGrid.Column("old", lambda row: unicode(pickle.loads(str(row.attrib_old_value)))),
-                w.DataGrid.Column("new", lambda row: unicode(pickle.loads(str(row.attrib_new_value)))),
+                w.DataGrid.Column("old", lambda row: unicode(row.attrib_old_value)),
+                w.DataGrid.Column("new", lambda row: unicode(row.attrib_new_value)),
                 ])
 
 br_datagrid = w.PaginateDataGrid(fields=[

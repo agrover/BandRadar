@@ -76,8 +76,8 @@ class BRSQLObject(SQLObject):
                     table_name=self.sqlmeta.table,
                     table_id=self.id,
                     attrib_name=name,
-                    attrib_old_value=pickle.dumps(old_value),
-                    attrib_new_value=pickle.dumps(value)
+                    attrib_old_value=old_value,
+                    attrib_new_value=value
                     )
             # this records all vals to UpdateLog
             # super.set() can call our setattr() (overridden to update last_updated)
@@ -117,6 +117,17 @@ class UpdateLog(SQLObject):
     attrib_old_value = UnicodeCol()
     attrib_new_value = UnicodeCol()
 
+    def _get_attrib_old_value(self):
+        return pickle.loads(str(self._SO_get_attrib_old_value()))
+    
+    def _set_attrib_old_value(self, value):
+        self._SO_set_attrib_old_value(pickle.dumps(value))
+
+    def _get_attrib_new_value(self):
+        return pickle.loads(str(self._SO_get_attrib_new_value()))
+    
+    def _set_attrib_new_value(self, value):
+        self._SO_set_attrib_new_value(pickle.dumps(value))
 
 class Venue(BRSQLObject):
     name = UnicodeCol(alternateID=True, length=100)

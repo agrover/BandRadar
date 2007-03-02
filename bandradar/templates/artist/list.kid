@@ -31,9 +31,7 @@
 
     <table>
         <tr py:for="artist in artists">
-            <td>
-                <span py:if="not artist['is_tracked']">${tg_ButtonWidget(action="/artists/%s/track" % artist['id'], label="Track")}</span>
-                <span py:if="artist['is_tracked']">${tg_ButtonWidget(action="/artists/%s/untrack" % artist['id'], label="Untrack")}</span>
+            <td>${track_button(tracked=artist['is_tracked'], id=artist['id'], action="/artists/dyntrack")}
             </td>
             <td>
             <b py:strip="not artist['is_tracked']">

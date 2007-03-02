@@ -2,6 +2,8 @@ from turbogears import widgets as w
 from turbogears import validators as v
 from cgi import escape
 
+w.register_static_directory("br", "bandradar/widgets")
+
 class ButtonWidget(w.Widget):
     template = "bandradar.widgets.templates.button"
     params = ['label', 'action']
@@ -20,6 +22,18 @@ class ArtistListWidget(w.Widget):
         return artisthtml
 
 artistlist = ArtistListWidget()
+
+class TrackButtonWidget(w.Widget):
+    template = "bandradar.widgets.templates.trackbutton"
+    javascript = [w.mochikit, w.JSLink("br", 'javascript/trackbutton.js')] 
+    params = ["id", "action", "tracked"]
+
+    def track_str(self, tracked):
+        if tracked:
+            return "tracked"
+        return ""
+
+track_button = TrackButtonWidget()
 
 class AutoCompleteValidator(v.Schema):
     def _to_python(self, value, state):

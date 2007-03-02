@@ -8,7 +8,7 @@ from model import Artist, Event, hub
 from sqlobject import SQLObjectNotFound, LIKE, func, AND
 from datetime import date, timedelta
 from bandradar import util
-from bandradar.widgets import BRAutoCompleteField
+from bandradar.widgets import BRAutoCompleteField, track_button
 
 class ArtistForm(w.WidgetsList):
     id = w.HiddenField(validator=v.Int)
@@ -96,7 +96,7 @@ class Artists(controllers.Controller, util.RestAdapter):
             for key in keys]
 
         return dict(artists=result_list, count=len(result),
-            listby=listby, artist_search_form=artist_search_form)
+            listby=listby, artist_search_form=artist_search_form, track_button=track_button)
 
     @expose(template=".templates.artist.show")
     def show(self, id):
@@ -180,6 +180,23 @@ class Artists(controllers.Controller, util.RestAdapter):
             util.redirect_previous()
         else:
             util.redirect("/artists/%s" % a.id)
+
+    @expose("json", fragment=True)
+    @identity.require(identity.not_anonymous())
+    def dyntrack(self, id, tracked):
+        u = identity.current.user
+        ret = "Error"
+        try:
+            a = Artist.get(id)
+            if not tracked == "true" and a not in u.artists:
+                u.addArtist(a)
+                ret = "Tracked"
+            if tracked == "true" and a in u.artists:
+                u.removeArtist(a)
+                ret = "Untracked"
+        except SQLObjectNotFound:
+            pass
+        return ret
 
     @expose()
     @identity.require(identity.in_group("admin"))

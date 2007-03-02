@@ -8,10 +8,9 @@ from model import Event, Venue, Artist, Attendance, UpdateLog
 from sqlobject import SQLObjectNotFound, LIKE, func, AND
 from datetime import date, datetime, timedelta
 from cgi import escape
-import pickle
 
 from bandradar import util
-from bandradar.widgets import BRAutoCompleteField, BRCalendarDatePicker
+from bandradar.widgets import BRAutoCompleteField, BRCalendarDatePicker, artistlist
 
 class EventForm(w.WidgetsList):
     id = w.HiddenField(validator=v.Int)
@@ -34,13 +33,7 @@ class SearchBox(w.WidgetsList):
 event_search_form = w.ListForm(fields=SearchBox(), name="search",
     submit_text="Search")
 
-test_wig = w.LinkRemoteFunction(name="test", action="/events/test", data=dict())
-
 class Events(controllers.Controller, util.RestAdapter):
-
-    @expose(fragment=True)
-    def test(self):
-        return "<b>YO MAMA</b>"
 
     @expose("json")
     def dynsearch(self, name):
@@ -81,14 +74,13 @@ class Events(controllers.Controller, util.RestAdapter):
 
     @expose(template=".templates.event.show")
     def show(self, id):
-        from bandradar.widgets import artistlist
         try:
             e = Event.get(id)
         except SQLObjectNotFound:
             turbogears.flash("Event not found")
             redirect(turbogears.url("/events/list"))
         return dict(event=e, artistlist=artistlist,
-            description=util.desc_format(e.description), test=test_wig)
+            description=util.desc_format(e.description))
 
     @expose()
     @identity.require(identity.not_anonymous())
@@ -173,8 +165,8 @@ class Events(controllers.Controller, util.RestAdapter):
                 table_name="artist_event",
                 table_id=e.id,
                 attrib_name="artists",
-                attrib_old_value=pickle.dumps(old_artists),
-                attrib_new_value=pickle.dumps(new_artists)
+                attrib_old_value=old_artists,
+                attrib_new_value=new_artists
                 )
         turbogears.flash("Event %s" % flash_msg)
         redirect(turbogears.url("/events/%s" % e.id))
