@@ -14,7 +14,7 @@
         <input type="submit" name="submit" value="Delete Checked" />
         <?python e_counter = 0 ?>
         <table>
-        <?python from bandradar import WWBL ?>
+        <?python from bandradar.imports import WWBL ?>
         <tr py:for="e in events">
         
             <td>
