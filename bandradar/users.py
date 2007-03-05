@@ -6,7 +6,7 @@ from turbogears import identity
 from turbogears import widgets as w
 from turbogears import validators as v
 
-from model import UserAcct, Event, Artist, hub
+from model import UserAcct, Event, Artist, Attendance, Venue, hub
 from sqlobject import SQLObjectNotFound, LIKE, func
 from datetime import date
 import formencode
@@ -163,27 +163,20 @@ class Users(controllers.Controller, util.RestAdapter, identity.SecureResource):
     def show(self, user_name):
         try:
             u = UserAcct.by_user_name(user_name)
-            art_list = []
-            for a in u.artists:
-                old = 0
-                new = 0
-                for e in a.events:
-                    if e.date < date.today():
-                        old += 1
-                    else:
-                        new += 1
-                art_list.append((a.name, a.id, old, new))
+            artists = u.artists.orderBy(Artist.q.name)
+            venues = u.venues.orderBy(Venue.q.name)
+            attendances = Attendance.selectBy(user=u)
+
+            viewing_self = False
             if identity.current.user and identity.current.user.user_name == user_name:
                 viewing_self = True
-            else:
-                viewing_self = False
+
         except SQLObjectNotFound:
             turbogears.flash("User not found")
             redirect(turbogears.url("/"))
 
-        art_list.sort()
-
-        return dict(user=u, art_list=art_list, viewing_self=viewing_self,
+        return dict(user=u, artists=artists, venues=venues,
+            attendances=attendances, viewing_self=viewing_self,
             description=util.desc_format(u.description))
 
     @expose(template=".templates.user.edit")

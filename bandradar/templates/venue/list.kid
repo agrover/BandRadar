@@ -22,6 +22,7 @@
 
     <p py:for="v in venues">
         <p>
+            ${track_button(tracked=False, id=v['id'], action="/venues/dyntrack")}
             <a href="/venues/${v['id']}">${v['name']}</a>
             <span py:if="v['eventcount']"> (${v['eventcount']} upcoming)</span>
         </p>

@@ -8,7 +8,7 @@ from model import Venue, Event, hub
 from sqlobject import SQLObjectNotFound, LIKE, func, AND
 from datetime import date
 from bandradar import util
-from bandradar.widgets import BRAutoCompleteField
+from bandradar.widgets import BRAutoCompleteField, track_button
 
 class VenueForm(w.WidgetsList):
     id = w.HiddenField(validator=v.Int)
@@ -62,7 +62,7 @@ class Venues(controllers.Controller, util.RestAdapter):
         for id, name, count in results:
             venue_list.append(dict(name=name, id=id, eventcount=count))
         return dict(venues=venue_list, count=len(venue_list),
-            venue_search_form=venue_search_form)
+            venue_search_form=venue_search_form, track_button=track_button)
 
     @expose(template=".templates.venue.show")
     def show(self, id):
@@ -139,6 +139,23 @@ class Venues(controllers.Controller, util.RestAdapter):
             util.redirect_previous()
         else:
             util.redirect("/venues/%s" % v.id)
+
+    @expose("json", fragment=True)
+    @identity.require(identity.not_anonymous())
+    def dyntrack(self, id, tracked):
+        u = identity.current.user
+        ret = "Error"
+        try:
+            v = Venue.get(id)
+            if not tracked == "true" and v not in u.venues:
+                u.addVenue(v)
+                ret = "Tracked"
+            if tracked == "true" and v in u.venues:
+                u.removeVenue(v)
+                ret = "Untracked"
+        except SQLObjectNotFound:
+            pass
+        return ret
 
     @expose()
     @identity.require(identity.in_group("admin"))

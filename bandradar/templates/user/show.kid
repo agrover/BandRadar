@@ -24,22 +24,59 @@
 
     </div>
 
-    <h4>Bands Tracked: ${len(art_list)}</h4>
+    <h4>Bands Tracked: ${artists.count()}</h4>
     <table>
         <th>Band</th>
         <th>Events Performed</th>
         <th>Events Upcoming</th>
-        <tr py:for="name, id, old, new in art_list">
+        <tr py:for="artist in artists">
             <td>
-                <a href="/artists/${id}">${name}</a>
+                <a href="/artists/${artist.id}">${artist.name}</a>
             </td>
             <td>
-                ${old}
+                ${artist.past_events.count()}
             </td>
             <td>
-                ${new}
+                ${artist.future_events.count()}
             </td>
         </tr>
     </table>
+
+    <h4>Venues Tracked: ${venues.count()}</h4>
+    <table>
+        <th>Venue</th>
+        <th>Past Events</th>
+        <th>Upcoming Events</th>
+        <tr py:for="venue in venues">
+            <td>
+                <a href="/venues/${venue.id}">${venue.name}</a>
+            </td>
+            <td>
+                ${venue.past_events.count()}
+            </td>
+            <td>
+                ${venue.future_events.count()}
+            </td>
+        </tr>
+    </table>
+
+    <h4>Attendances: ${attendances.count()}</h4>
+    <table py:if="attendances.count()">
+        <th>Event Name</th>
+        <th>Date</th>
+        <th>Comments</th>
+        <tr py:for="att in attendances">
+            <td>
+                <a href="/events/${att.event.id}">${att.event.id}</a>
+            </td>
+            <td>
+                ${att.date}
+            </td>
+            <td>
+                ${att.comment}
+            </td>
+        </tr>
+    </table>
+
 </body>
 </html>
