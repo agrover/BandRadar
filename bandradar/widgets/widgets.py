@@ -4,6 +4,30 @@ from cgi import escape
 
 w.register_static_directory("br", "bandradar/widgets")
 
+class ExtJSLink(w.JSLink):
+    def update_params(self, d):
+        super(ExtJSLink, self).update_params(d)
+        d["link"] = self.name
+
+class GoogleMapWidget(w.Widget):
+    template = """<div id="map" style="width: ${width}px; height: ${height}px"></div>"""
+    javascript = [w.mochikit]
+    params = ["key", "width", "height"]
+
+    def __init__(self, width=500, height=350, **kw):
+        key = kw.pop("key", "abcdef")
+        js1 = ExtJSLink(None, "http://maps.google.com/maps?file=api&v=2&key=%s" % key)
+        js2 = w.JSLink("br", 'javascript/googlemap.js')
+        self.javascript.append(js1)
+        self.javascript.append(js2)
+        self.width = width
+        self.height = height
+
+localhost_key = "ABQIAAAAl6v2YpcT3a-0chb1euUaRRR4EqRj3RNZnoYuzojShxUjcPQKRRSqdkDEb-kjqUA2B3UAs66NGlvjOA" 
+real_key = "ABQIAAAAl6v2YpcT3a-0chb1euUaRRRIOcczJVkwMVJxSoSbKoEvbYERDxTrKIpffL5C_3zzzlk1QmARAtbL2A"
+
+googlemap = GoogleMapWidget(key=localhost_key, width=350, height=300)
+
 class ButtonWidget(w.Widget):
     template = "bandradar.widgets.templates.button"
     params = ['label', 'action']
@@ -25,7 +49,7 @@ artistlist = ArtistListWidget()
 
 class TrackButtonWidget(w.Widget):
     template = "bandradar.widgets.templates.trackbutton"
-    javascript = [w.mochikit, w.JSLink("br", 'javascript/trackbutton.js')] 
+    javascript = [w.mochikit, w.JSLink("br", 'javascript/trackbutton.js')]
     params = ["id", "action", "tracked"]
 
     def track_str(self, tracked):
