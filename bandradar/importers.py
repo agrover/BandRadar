@@ -5,7 +5,7 @@ from turbogears import identity
 from turbogears import widgets as w
 from turbogears import validators as v
 from model import Event, Venue, Artist, hub
-from sqlobject import SQLObjectNotFound, AND, OR
+from sqlobject import SQLObjectNotFound
 from datetime import date, datetime
 import bandradar.imports.MBL as MBL
 import bandradar.imports.WWBL as WWBL

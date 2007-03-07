@@ -8,7 +8,7 @@ from model import Artist, Event, hub
 from sqlobject import SQLObjectNotFound, LIKE, func, AND
 from datetime import date, timedelta
 from bandradar import util
-from bandradar.widgets import BRAutoCompleteField, track_button
+from bandradar.widgets import BRAutoCompleteField, track_button, artist_list
 
 class ArtistForm(w.WidgetsList):
     id = w.HiddenField(validator=v.Int)
@@ -115,7 +115,7 @@ class Artists(controllers.Controller, util.RestAdapter):
         future_events = a.events.filter(Event.q.date >= date.today()).orderBy(Event.q.date)
         return dict(artist=a, past_events=past_events, future_events=future_events,
             tracked_count=a.users.count(), is_tracked=is_tracked,
-            description=util.desc_format(a.description))
+            description=util.desc_format(a.description), artist_list=artist_list)
 
     @expose(template=".templates.artist.edit")
     @identity.require(identity.not_anonymous())

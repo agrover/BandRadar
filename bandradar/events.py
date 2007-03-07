@@ -10,7 +10,7 @@ from datetime import date, datetime, timedelta
 from cgi import escape
 
 from bandradar import util
-from bandradar.widgets import BRAutoCompleteField, BRCalendarDatePicker, artistlist
+from bandradar.widgets import BRAutoCompleteField, BRCalendarDatePicker, artist_list
 
 class EventForm(w.WidgetsList):
     id = w.HiddenField(validator=v.Int)
@@ -79,7 +79,7 @@ class Events(controllers.Controller, util.RestAdapter):
         except SQLObjectNotFound:
             turbogears.flash("Event not found")
             redirect(turbogears.url("/events/list"))
-        return dict(event=e, artistlist=artistlist,
+        return dict(event=e, artist_list=artist_list,
             description=util.desc_format(e.description))
 
     @expose()

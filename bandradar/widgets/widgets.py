@@ -34,18 +34,20 @@ class ButtonWidget(w.Widget):
 
 class ArtistListWidget(w.Widget):
     template = "bandradar.widgets.templates.artistlist"
-    params = ['event']
+    params = ['artists']
 
-    def get_list(self, event):
-        if not event or not event.artists.count():
+    def get_list(self, artists):
+        if not artists:
             artisthtml = "<strong>None</strong>"
         else:
             htmlstr = "<a href=\"/artists/%s\">%s</a>"
-            artist_html_list = [ htmlstr % (a.id, escape(a.name)) for a in event.artists ]
+            artist_html_list = []
+            artist_html_list.extend([ htmlstr % (a.id, escape(a.name)) for a in artists if a.approved])
+            artist_html_list.extend([escape(a.name) for a in artists if not a.approved])
             artisthtml = ", ".join(artist_html_list)
         return artisthtml
 
-artistlist = ArtistListWidget()
+artist_list = ArtistListWidget()
 
 class TrackButtonWidget(w.Widget):
     template = "bandradar.widgets.templates.trackbutton"

@@ -19,6 +19,7 @@
         <p py:if="not 'admin' in artist.added_by.groups">
         Added by: <a href="/users/${artist.added_by.user_name}">
             ${artist.added_by.user_name}</a></p>
+        <p>Similar Bands: ${artist_list(artists=artist.similars)}</p>
         <p>Added: ${artist.get_fcreated()}</p>
         <p>Changed: ${artist.get_fupdated()}</p>
         <p py:if="tracked_count">Users tracking: ${tracked_count}</p>

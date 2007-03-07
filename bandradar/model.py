@@ -136,9 +136,17 @@ class Venue(BRSQLObject):
     myspace = UnicodeCol(length=50, default=None)
     phone = UnicodeCol(length=32, default=None)
     zip = UnicodeCol(length=10, default=None)
+#   geocode_lat = DecimalCol(size=11, precision=8)
+#   geocode_lon = DecimalCol(size=11, precision=8)
     added_by = ForeignKey('UserAcct')
     events = SQLMultipleJoin('Event')
     users = SQLRelatedJoin('UserAcct')
+
+    def _get_future_events(self):
+        return self.events.filter(Event.q.date >= date.today())
+
+    def _get_past_events(self):
+        return self.events.filter(Event.q.date < date.today())
 
     def destroySelf(self):
         for u in self.users:
@@ -149,13 +157,6 @@ class Venue(BRSQLObject):
         if self.events.count() or self.users.count():
             return
         self.destroySelf()
-
-    def _get_future_events(self):
-        return self.events.filter(Event.q.date >= date.today())
-
-    def _get_past_events(self):
-        return self.events.filter(Event.q.date < date.today())
-
 
 class Artist(BRSQLObject):
     name = UnicodeCol(alternateID=True, length=100)
@@ -211,7 +212,10 @@ class Artist(BRSQLObject):
         return self.events.filter(Event.q.date < date.today())
 
     def _get_similars(self):
-        return (s.similar_artist for s in SimilarArtist.selectBy(artist=self))
+        similar_ids = [s.similar_artist.id for s in SimilarArtist.selectBy(artist=self)]
+        if not similar_ids:
+            return None
+        return Artist.select((IN(Artist.q.id, similar_ids)))
 
     def _set_similars(self, artists):
         new_artists = set(artists)
