@@ -76,6 +76,8 @@ br_datagrid = w.PaginateDataGrid(fields=[
                 ("Started", "started"),
                 w.DataGrid.Column("Time", lambda row: row.finished - row.started),
                 ("Email sent", "email_sent"),
+                ("Events Pinged", "event_pings"),
+                ("Venues Pinged", "venue_pings"),
                 ])
 
 class Root(controllers.RootController):
