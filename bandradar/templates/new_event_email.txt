@@ -1,8 +1,4 @@
-Newly added shows featuring artists you are tracking:
-
-%(event_info)s
-
-For more info, visit your page (%(user_url)s).
+%(text)sFor more info, visit your page (%(user_url)s).
 
 Regards -- bandradar.com
 

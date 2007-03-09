@@ -14,19 +14,8 @@ def task():
     hub.threadingLocal = threading_local()
     hub.begin()
 
-    try:
-        send_email()
-        build_similars()
-        cleanup_db()
-
-    finally:
-        log.info("batch finished")
-        hub.end()
-
-def send_email():
-
     last = BatchRecord.select(orderBy=BatchRecord.q.last_handled).reversed()[:1]
-    if len(list(last)):
+    if last.count():
         last_rec = last[0]
         from_when = last_rec.last_handled
     else:
@@ -36,37 +25,100 @@ def send_email():
     current = BatchRecord(first_handled=from_when, last_handled=last_handled)
     hub.commit()
 
-    send_to = {}
-    # date range includes start, doesn't include end instant
-    # (next iteration will handle) 
-    new_events = Event.select(AND(Event.q.approved >= from_when,
-        Event.q.approved < last_handled, Event.q.date > datetime.date.today()))
-    for event in new_events:
-        for artist in event.artists:
-            for user in artist.users:
-                if user.event_email:
-                    user_events = send_to.get(user, set())
-                    user_events.add(event)
-                    send_to[user] = user_events
+    try:
+        current.email_sent, current.event_pings, current.venue_pings = send_email()
+        build_similars()
+        cleanup_db()
 
-    email_sent = 0
-    for u, events in send_to.iteritems():
+        current.finished = datetime.datetime.now()
+        hub.commit()
+
+    finally:
+        log.info("batch finished")
+        hub.end()
+
+def send_email(start, finish):
+    conn = hub.getConnection()
+
+    users_to_email = set()
+    artist_email = {}
+    results = conn.queryAll("""
+        select u.id, e.name, e.date, v.name
+        from user_acct u, artist_user_acct au, artist a, artist_event ae, event e, venue v
+        where
+            u.event_email is true
+            and u.id = au.user_acct_id
+            and a.id = au.artist_id
+            and a.id = ae.artist_id
+            and ae.event_id = e.id
+            and e.venue_id = v.id
+            and e.date >= '%s'
+            and e.date < '%s'
+        """ % (start, finish))
+    for id, name, date, venue_name in results:
+        evt_list = artist_email.get(id, list())
+        evt_list.append((name, date, venue_name))
+        artist_email[id] = evt_list
+        users_to_email.add(id)
+
+    venue_email = {}
+    # do weekly processing (venues) on Thursday.
+    # why do this here, instead of having a separate scheduled function called?
+    # because we want to put both artist and venue notifications in the same email.
+    if last_handled.isoweekday() == 4:
+        results = conn.queryAll("""
+            select u.id, e.name, e.date, v.name
+            from user_acct u, venue v, event e, user_acct_venue uv
+            where
+                u.event_email is true
+                and e.venue_id = v.id
+                and u.id = uv.user_acct_id
+                and uv.venue_id = v.id
+                and e.date >= CURRENT_DATE
+                order by e.date
+            """)
+
+        for id, event_name, date, venue_name in results:
+            venue_dict = venue_email.get(id, dict())
+            venue = venue_dict.get(venue_name, list())
+            venue.append((event_name, date))
+            venue_dict[venue_name] = venue
+            venue_email[id] = venue_dict
+            users_to_email.add(id)
+
+    for id in users_to_email:
         import smtplib
         import pkg_resources
         from email.MIMEText import MIMEText
 
-        event_list = []
-        for event in events:
-            event_str = "%s, %s at %s" % (event.name, event.date, event.venue.name)
-            event_list.append(event_str)
-        event_info = "\n".join(event_list)
+        u = UserAcct.get(id)
+
+        event_text = ""
+        for event_name, date, venue_name in artist_email.get(id, list()):
+            event_text += "%s, %s at %s\n" % (event_name, date, venue_name)
+        if event_text:
+            hdr_txt = "Newly added shows featuring artists you are tracking:\n\n"
+            event_text = hdr_txt + event_text + "\n"
+
+        venue_text = ""
+        for venue_name, event_list in venue_email.get(id, dict()).iteritems():
+            venue_text += venue_name + "\n" + ("-"*len(venue_name)) + "\n"
+            for name, date in event_list:
+                venue_text += "%s: %s\n" % (date, name)
+        if venue_text:
+            hdr_txt = "Upcoming shows at the venues you are tracking:\n\n"
+            venue_text = hdr_txt + venue_text + "\n"
+
+        text = event_text + venue_text
+
         user_url = "http://bandradar.com/users/%s" % u.user_name
 
         msg_to = u.email_address
         msg_from = "BandRadar Events <events@bandradar.com>"
         body = pkg_resources.resource_string(__name__, 
                     'templates/new_event_email.txt')
-        body  = body % {'event_info': event_info, 'user_url': user_url}
+        body  = body % {'text': text, 'user_url': user_url}
+        print body
         msg = MIMEText(body)
         msg['Subject'] = "BandRadar upcoming events"
         msg['From'] = msg_from
@@ -76,15 +128,12 @@ def send_email():
         s.connect()
         try:
             s.sendmail(msg_from, [msg_to], msg.as_string())
-            email_sent += 1
         except smtplib.SMTPException, smtp:
             # todo: record bounces so a human can do something
             log.error("smtp error %s" % repr(smtp))
         s.close()
 
-    current.email_sent = email_sent;
-    current.finished = datetime.datetime.now()
-    hub.commit()
+    return (len(users_to_email), len(artist_email), len(venue_email))
 
 def build_similars(count=3600):
     admin = UserAcct.get(1)
@@ -107,7 +156,6 @@ def build_similars(count=3600):
         artist.similars = sims_objs
         artist.sims_updated = datetime.datetime.now()
         time.sleep(1)
-    hub.commit()
 
 def cleanup_db():
     from model import VisitIdentity
@@ -123,4 +171,4 @@ def cleanup_db():
         except SQLObjectNotFound:
             pass
         old_visit.destroySelf()
-    hub.commit()
+

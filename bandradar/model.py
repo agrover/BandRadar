@@ -307,6 +307,8 @@ class BatchRecord(SQLObject):
     first_handled = DateTimeCol(default=None)
     last_handled = DateTimeCol(default=None)
     email_sent = IntCol(default=0)
+    event_pings = IntCol(default=0)
+    venue_pings = IntCol(default=0)
 
 
 class Comment(SQLObject):
