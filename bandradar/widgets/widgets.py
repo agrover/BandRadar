@@ -10,7 +10,9 @@ class ExtJSLink(w.JSLink):
         d["link"] = self.name
 
 class GoogleMapWidget(w.Widget):
-    template = """<div id="map" style="width: ${width}px; height: ${height}px"></div>"""
+    template = """
+        <div id="map" style="width: ${width}px; height: ${height}px">
+    </div>"""
     javascript = [w.mochikit]
     params = ["key", "width", "height"]
 
@@ -83,4 +85,5 @@ class BRCalendarDatePicker(w.CalendarDatePicker):
     def __init__(self, **kw):
         super(BRCalendarDatePicker, self).__init__(**kw)
         self.validator = v.DateConverter(format=self.format,
-            not_empty=self.not_empty)    
+            not_empty=self.not_empty)
+

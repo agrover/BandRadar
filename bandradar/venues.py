@@ -8,7 +8,7 @@ from model import Venue, Event, hub
 from sqlobject import SQLObjectNotFound, LIKE, func, AND
 from datetime import date
 from bandradar import util
-from bandradar.widgets import BRAutoCompleteField, track_button
+from bandradar.widgets import BRAutoCompleteField, track_button, googlemap
 
 class VenueForm(w.WidgetsList):
     id = w.HiddenField(validator=v.Int)
@@ -58,16 +58,25 @@ class Venues(controllers.Controller, util.RestAdapter):
             order by venue.name
             """)
 
+        tracked_venues = []
+        if identity.current.user:
+            tracked_venues = [v.id for v in identity.current.user.venues]
+
         venue_list = []
         for id, name, count in results:
             venue_list.append(dict(name=name, id=id, eventcount=count))
         return dict(venues=venue_list, count=len(venue_list),
-            venue_search_form=venue_search_form, track_button=track_button)
+            venue_search_form=venue_search_form, track_button=track_button,
+            tracked_venues=tracked_venues)
 
     @expose(template=".templates.venue.show")
     def show(self, id):
         try:
             v = Venue.get(id)
+            if identity.current.user and v in identity.current.user.venues:
+                is_tracked = True
+            else:
+                is_tracked = False
         except SQLObjectNotFound:
             turbogears.flash("Venue ID not found")
             redirect(turbogears.url("/venues/list"))
@@ -76,10 +85,9 @@ class Venues(controllers.Controller, util.RestAdapter):
         past_events = list(reversed(list(past_events)))
         future_events = v.events.filter(Event.q.date >= date.today()).orderBy('date')
 
-        from bandradar.widgets import googlemap
-
         return dict(venue=v, past_events=past_events, future_events=future_events,
-            description=util.desc_format(v.description), googlemap=googlemap)
+            description=util.desc_format(v.description), googlemap=googlemap,
+            tracked_count=v.users.count(), is_tracked=is_tracked)
 
     @expose(template=".templates.venue.edit")
     @identity.require(identity.in_group("admin"))
@@ -132,7 +140,7 @@ class Venues(controllers.Controller, util.RestAdapter):
     def untrack(self, id, viewing="no"):
         u = identity.current.user
         try:
-            v = Artist.get(id)
+            v = Venue.get(id)
             if v in u.venues:
                 u.removeVenue(v)
         except SQLObjectNotFound:

@@ -9,7 +9,11 @@
 
 <body>
     <div id="body">
+
+        ${googlemap(width=250, height=200)}
+
         <h2>Event: ${event.name}</h2>
+
         <div id="details">
             <p id="description" py:if="description">${XML(description)}</p>
             <p>Date: ${event.date.strftime("%x")}</p>
@@ -18,7 +22,7 @@
             <p py:if="event.ages">Ages: ${event.ages}</p>
             <p py:if="event.url">Website: <a href="${event.url}">${event.url}</a></p>
             <p>Where: <a href="/venues/${event.venue.id}">${event.venue.name}</a>
-                <span py:if="event.venue.address">(${event.venue.address})</span>
+                <span id="address" py:if="event.venue.address">(${event.venue.address})</span>
             </p>
             With: ${artist_list(artists=event.artists)}
             <p py:if="not 'admin' in event.added_by.groups">

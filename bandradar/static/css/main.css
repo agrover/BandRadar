@@ -10,6 +10,7 @@ a:link { color: #060; }
 a:visited { color: #0A0; }
 a:hover { color: #0A0; text-decoration: underline; }
 
+#map {float:right}
 img { border-style: none; }
 p { margin: 0; }
 input { border: 1px solid black; }

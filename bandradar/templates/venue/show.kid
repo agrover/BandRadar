@@ -9,7 +9,7 @@
 <body>
     <div id="body">
 
-        ${googlemap()}
+        ${googlemap(width=250, height=200)}
 
         <h2>Venue: <span id="name">${venue.name}</span></h2>
         <div id="details">
@@ -26,6 +26,17 @@
                 ${venue.added_by.user_name}</a></p>
             <p>Added: ${venue.get_fcreated()}</p>
             <p>Changed: ${venue.get_fupdated()}</p>
+            <p py:if="tracked_count">Users tracking: ${tracked_count}</p>
+            <div py:if="is_tracked">
+                <i>Currently being tracked by you. You will receive weekly emails with
+                upcoming shows for this venue.</i>
+                ${tg_ButtonWidget(action="/venues/%s/untrack?viewing=yes" % venue.id, label="Untrack")}
+            </div>
+            <div py:if="not is_tracked">
+                <i>not currently tracked by you.</i>
+                ${tg_ButtonWidget(action="/venues/%s/track?viewing=yes" % venue.id, label="Track")}
+            </div>
+
         </div>
         <h3>Past events</h3>
         <div class="event_list">

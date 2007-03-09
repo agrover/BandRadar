@@ -2,7 +2,7 @@ function gmap_load() {
     if (GBrowserIsCompatible()) {
         map = new GMap2(document.getElementById("map"));
         map.addControl(new GSmallMapControl());
-        map.addControl(new GMapTypeControl());
+//        map.addControl(new GMapTypeControl());
         geocoder = new GClientGeocoder();
 
         function showAddress(address) {
@@ -14,7 +14,7 @@ function gmap_load() {
                 map.setCenter(point, 15);
                 var marker = new GMarker(point);
                 map.addOverlay(marker);
-                marker.openInfoWindowHtml("<b>"+scrapeText($('name'))+"</b><br/>"+address+"<br/>"+scrapeText($('phone')));
+//                marker.openInfoWindowHtml("<b>"+scrapeText($('name'))+"</b><br/>"+address+"<br/>"+scrapeText($('phone')));
               }
             }
 
