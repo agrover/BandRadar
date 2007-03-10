@@ -14,12 +14,16 @@
     </div>
 
     <div id="list_title">
-        Venues with upcoming events
+    </div>
+
+    <h3>Venues with upcoming events
         <span py:if="'admin' in tg.identity.groups">
             ${tg_ButtonWidget(action="/venues/edit", label="Add a new venue")}
         </span>
-    </div>
-
+    </h3>
+    <p><em>You will receive a weekly email for upcoming events at any tracked venues.</em>
+    </p>
+    <br />
     <p py:for="v in venues">
         <p>
             ${track_button(tracked=v['id'] in tracked_venues, id=v['id'], action="/venues/dyntrack")}

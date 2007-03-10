@@ -17,6 +17,9 @@
         Bands playing: ${listby} (${count})
         ${tg_ButtonWidget(action="/artists/edit", label="Add a new Band")}
     </div>
+    <p><em>You will receive email when any tracked bands have shows added.</em>
+    </p>
+    <br />
 
     <div id="list_heading">
     With shows:
