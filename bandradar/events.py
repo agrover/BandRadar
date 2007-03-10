@@ -1,5 +1,4 @@
-import turbogears
-from turbogears import controllers, expose, redirect
+from turbogears import controllers, expose, redirect, flash, validate, error_handler
 from turbogears import identity
 from turbogears import widgets as w
 from turbogears import validators as v
@@ -41,7 +40,7 @@ class Events(controllers.Controller, util.RestAdapter):
         return util.dynsearch(Event, name)
 
     @expose(template=".templates.event.search_results")
-    @turbogears.validate(form=event_search_form)
+    @validate(form=event_search_form)
     def search(self, search, tg_errors=None):
         results = util.search(Event, search['text'], tg_errors)
         return dict(events=results, event_search_form=event_search_form)
@@ -78,8 +77,8 @@ class Events(controllers.Controller, util.RestAdapter):
         try:
             e = Event.get(id)
         except SQLObjectNotFound:
-            turbogears.flash("Event not found")
-            redirect(turbogears.url("/events/list"))
+            flash("Event not found")
+            util.redirect("/events/list")
         return dict(event=e, artist_list=artist_list, googlemap=googlemap,
             description=util.desc_format(e.description))
 
@@ -104,11 +103,18 @@ class Events(controllers.Controller, util.RestAdapter):
             form_vals['artists'] = a.name
         except (SQLObjectNotFound, KeyError):
             pass
+        try:
+            v = Venue.get(int(kw['venue_prefill']))
+            flash(form_vals)
+            form_vals['venue'] = dict(text=v.name)
+        except (SQLObjectNotFound, KeyError):
+            pass
+
         return dict(tg_template=template, event_form=event_form, form_vals=form_vals)
 
     @expose()
-    @turbogears.validate(form=event_form)
-    @turbogears.error_handler(edit)
+    @validate(form=event_form)
+    @error_handler(edit)
     @identity.require(identity.not_anonymous())
     def save(self, id, **kw):
         try:
@@ -130,8 +136,8 @@ class Events(controllers.Controller, util.RestAdapter):
                 e = Event.get(id)
                 flash_msg = "updated"
             except SQLObjectNotFound:
-                turbogears.flash("Database error, please try again")
-                redirect(turbogears.url("/"))
+                flash("Database error, please try again")
+                redirect("/")
         # inserting
         else:
             e = Event(name=name, date=kw['date'], time=kw['time'], venue=v,
@@ -169,8 +175,8 @@ class Events(controllers.Controller, util.RestAdapter):
                 attrib_old_value=old_artists,
                 attrib_new_value=new_artists
                 )
-        turbogears.flash("Event %s" % flash_msg)
-        redirect(turbogears.url("/events/%s" % e.id))
+        flash("Event %s" % flash_msg)
+        util.redirect("/events/%s" % e.id)
 
     @expose()
     @identity.require(identity.not_anonymous())
@@ -185,7 +191,7 @@ class Events(controllers.Controller, util.RestAdapter):
             att.planning_to_go = planning
             att.attended = went
         except SQLObjectNotFound:
-            turbogears.flash("Event not found")
+            flash("Event not found")
             redirect("/")
         if viewing == "no":
             util.redirect_previous()
@@ -202,7 +208,7 @@ class Events(controllers.Controller, util.RestAdapter):
             for att in atts:
                 att.destroySelf()
         except SQLObjectNotFound:
-            turbogears.flash("Event not found")
+            flash("Event not found")
             redirect("/")
         if viewing == "no":
             util.redirect_previous()
@@ -215,7 +221,7 @@ class Events(controllers.Controller, util.RestAdapter):
         try:
             e = Event.get(id)
             e.destroySelf()
-            turbogears.flash("Deleted")
+            flash("Deleted")
         except SQLObjectNotFound:
-            turbogears.flash("Delete failed")
-        redirect(turbogears.url("/events/list"))
+            flash("Delete failed")
+        util.redirect("/events/list")
