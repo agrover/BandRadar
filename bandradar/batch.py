@@ -26,7 +26,8 @@ def task():
     hub.commit()
 
     try:
-        current.email_sent, current.event_pings, current.venue_pings = send_email()
+        current.email_sent, current.event_pings, current.venue_pings = \
+            send_email(from_when, last_handled)
         build_similars()
         cleanup_db()
 

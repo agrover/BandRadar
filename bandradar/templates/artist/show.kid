@@ -34,9 +34,6 @@
 
         <div id="list_title">
             Events
-            <span py:if="tg.identity.user">
-                ${tg_ButtonWidget(action="/events/edit?artist_prefill=%s" % artist.id, label="Add a new event")}
-            </span>
         </div>
 
         <h3>Past events</h3>
@@ -47,7 +44,9 @@
             <p py:if="not len(list(past_events))">None</p>
         </div>
 
-        <h3>Upcoming events</h3>
+        <h3>Upcoming events 
+            ${tg_ButtonWidget(action="/events/edit?artist_prefill=%s" % artist.id, label="Add a new event")}
+        </h3>
         <div class="event_list">
             <p py:for="e in future_events">
                 ${e.get_fdate()}: <a href="/events/${e.id}">${e.name}</a>
