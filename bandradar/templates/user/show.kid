@@ -23,14 +23,14 @@
         </div>
 
     </div>
-
+<!--
 upcoming shows
 tracked
 related shows
 bands
 venues by-venue
 venues by-date
-
+-->
     <h4>Bands Tracked: ${artists.count()}</h4>
     <table>
         <th>Band</th>

@@ -66,7 +66,7 @@ def send_email(start, finish):
     # do weekly processing (venues) on Thursday.
     # why do this here, instead of having a separate scheduled function called?
     # because we want to put both artist and venue notifications in the same email.
-    if last_handled.isoweekday() == 4:
+    if finish.isoweekday() == 4:
         results = conn.queryAll("""
             select u.id, e.name, e.date, v.name
             from user_acct u, venue v, event e, user_acct_venue uv
