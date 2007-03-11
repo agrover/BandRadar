@@ -18,7 +18,6 @@ class BRSQLObject(SQLObject):
     created = DateTimeCol(default=datetime.now)
     approved = DateTimeCol(default=None)
     last_updated = DateTimeCol(default=datetime.now)
-    description = UnicodeCol(default=None)
 
     @classmethod
     def clean_dict(self, dirty_dict):
@@ -131,6 +130,7 @@ class UpdateLog(SQLObject):
 
 class Venue(BRSQLObject):
     name = UnicodeCol(alternateID=True, length=100)
+    description = UnicodeCol(default=None)
     address = UnicodeCol(default=None)
     url = UnicodeCol(length=256, default=None)
     myspace = UnicodeCol(length=50, default=None)
@@ -160,6 +160,7 @@ class Venue(BRSQLObject):
 
 class Artist(BRSQLObject):
     name = UnicodeCol(alternateID=True, length=100)
+    description = UnicodeCol(default=None)
     url = UnicodeCol(length=256, default=None)
     myspace = UnicodeCol(length=50, default=None)
     events = SQLRelatedJoin('Event')
@@ -251,6 +252,7 @@ class SimilarArtist(SQLObject):
 
 class Event(BRSQLObject):
     name = UnicodeCol(length=400)
+    description = UnicodeCol(default=None)
     time = UnicodeCol(length=40, default=None)
     date = DateCol()
     cost = UnicodeCol(length=120, default=None)
@@ -297,6 +299,7 @@ class Attendance(BRSQLObject):
     user = ForeignKey('UserAcct')
     planning_to_go = BoolCol(default=False)
     attended = BoolCol(default=False)
+    comment = UnicodeCol(default=None)
 
 
 class BatchRecord(SQLObject):
