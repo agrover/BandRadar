@@ -180,7 +180,7 @@ class Events(controllers.Controller, util.RestAdapter):
 
     @expose()
     @identity.require(identity.not_anonymous())
-    def track(self, id, viewing="no", planning=False, went=False):
+    def track(self, id, viewing="no", planning=False, went=False, comment=None):
         u = identity.current.user
         try:
             e = Event.get(id)
@@ -190,6 +190,7 @@ class Events(controllers.Controller, util.RestAdapter):
                 att = Attendance(user=u, event=e)
             att.planning_to_go = planning
             att.attended = went
+            att.comment = comment
         except SQLObjectNotFound:
             flash("Event not found")
             redirect("/")
