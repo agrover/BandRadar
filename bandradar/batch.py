@@ -119,7 +119,6 @@ def send_email(start, finish):
         body = pkg_resources.resource_string(__name__, 
                     'templates/new_event_email.txt')
         body  = body % {'text': text, 'user_url': user_url}
-        print body
         msg = MIMEText(body)
         msg['Subject'] = "BandRadar upcoming events"
         msg['From'] = msg_from
