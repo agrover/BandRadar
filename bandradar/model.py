@@ -363,6 +363,7 @@ class UserAcct(BRSQLObject):
                                alternateMethodName="by_email_address")
     password = UnicodeCol(length=40)
     # site-specific fields
+    description = UnicodeCol(default=None)
     zip_code = UnicodeCol(length=10, default=None)
     url = UnicodeCol(length=256, default=None)
     myspace = UnicodeCol(length=50, default=None)
