@@ -268,16 +268,17 @@ class Event(BRSQLObject):
         for artist in old.artists:
             if artist not in new.artists:
                 new.addArtist(artist)
-        # must delete old event here because duplicate events with same
-        # venue/date/time violates RE
-        old.destroySelf()
         for field in old.sqlmeta.columns.keys():
             # only set if not set already
             if not getattr(new, field, None) and getattr(old, field, None):
                 value = getattr(old, field)
                 setattr(new, field, value)
+        # even if set, conditionally override some fields
         if old.created < new.created:
             new.created = old.created
+        if not "admin" in old.added_by.groups:
+            new.added_by = old.added_by
+        old.destroySelf()
 
     def destroySelf(self):
         for a in self.artists:
@@ -348,7 +349,10 @@ class Group(SQLObject):
 
     def __cmp__(self, other):
         if isinstance(other, basestring):
-            other = Group.by_group_name(other)
+            try:
+                other = Group.by_group_name(other)
+            except SQLObjectNotFound:
+                return 1
         return cmp(self.group_name, other.group_name)
 
 
