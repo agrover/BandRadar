@@ -10,7 +10,11 @@ def artist_clean(artist):
 
 def date_to_url(date):
     baseurl = "http://wweek.com/calendar/music/index.php?date="
-    datestr = str(int(time.mktime(date.timetuple())))
+    # they started having the pages be for 1 am on 2007-3-12
+    dt = datetime.datetime(*date.timetuple()[:3])
+    if dt >= datetime.datetime(2007, 3, 12):
+        dt = dt.replace(hour=1)
+    datestr = str(int(time.mktime(dt.timetuple())))
     return baseurl + datestr
 
 def parse_event(event):
@@ -112,7 +116,7 @@ def month_events(start_date):
 
 if __name__ == "__main__":
     #parse_day(datetime.date.today())
-    print len(list(day_events(datetime.date(2007, 2, 22))))
+    print len(list(day_events(datetime.date(2007, 3, 12))))
 
 #find named anchors
 # if a.parent = div class preview
