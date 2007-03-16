@@ -215,7 +215,8 @@ class Artist(BRSQLObject):
     def _get_similars(self):
         similar_ids = [s.similar_artist.id for s in SimilarArtist.selectBy(artist=self)]
         if not similar_ids:
-            return None
+            # return empty set, but we always have to return a SelectResults
+            return Artist.selectBy(id=None)
         return Artist.select((IN(Artist.q.id, similar_ids)))
 
     def _set_similars(self, artists):
