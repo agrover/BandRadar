@@ -9,7 +9,7 @@
 <body>
     <div id="body">
 
-        ${googlemap(width=250, height=200)}
+        ${googlemap(venue=venue, width=250, height=200)}
 
         <h2>Venue: <span id="name">${venue.name}</span></h2>
         <div id="details">

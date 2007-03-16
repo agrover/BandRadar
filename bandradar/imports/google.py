@@ -18,4 +18,5 @@ def get_geocode(address):
     soup = bs(usock.read())
     if soup.response.code.string != "200":
         raise IOError
-    return soup.response.placemark.point.coordinates.string.split(",")[:2]
+    # return reversed for [lat, lon] instead if [x, y] (which is lon, lat)
+    return list(reversed(soup.response.placemark.point.coordinates.string.split(",")[:2]))

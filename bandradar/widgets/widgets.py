@@ -12,10 +12,14 @@ class ExtJSLink(w.JSLink):
 
 class GoogleMapWidget(w.Widget):
     template = """
-        <div id="map" style="width: ${width}px; height: ${height}px">
+    <div id="map" style="width: ${width}px; height: ${height}px">
+        <script type="text/javascript">
+            var map_lat = ${venue.geocode_lon}
+            var map_lon = ${venue.geocode_lat}
+        </script>
     </div>"""
     javascript = [w.mochikit]
-    params = ["key", "width", "height"]
+    params = ["venue", "key", "width", "height"]
 
     def __init__(self, width=500, height=350, **kw):
         key = kw.pop("key", "abcdef")

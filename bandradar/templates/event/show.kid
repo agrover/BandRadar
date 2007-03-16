@@ -10,7 +10,7 @@
 <body>
     <div id="body">
 
-        ${googlemap(width=250, height=200)}
+        ${googlemap(venue=event.venue, width=250, height=200)}
 
         <h2>Event: ${event.name}</h2>
 
