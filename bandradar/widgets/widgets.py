@@ -37,7 +37,7 @@ class ArtistListWidget(w.Widget):
     params = ['artists']
 
     def get_list(self, artists):
-        if not artists:
+        if not artists.count():
             artisthtml = "<strong>None</strong>"
         else:
             htmlstr = "<a href=\"/artists/%s\">%s</a>"

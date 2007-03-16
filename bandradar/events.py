@@ -7,15 +7,25 @@ from model import Event, Venue, Artist, Attendance, UpdateLog
 from sqlobject import SQLObjectNotFound, LIKE, func, AND
 from datetime import date, datetime, timedelta
 from cgi import escape
+import formencode
 
 from bandradar import util
 from bandradar.widgets import (BRAutoCompleteField, BRCalendarDatePicker,
                                artist_list, googlemap)
 
+class EitherNameOrArtists(formencode.FancyValidator):
+    def validate_python(self, field_dict, state):
+        if not field_dict['name'] and not field_dict['artists']:
+            raise formencode.Invalid("", field_dict, state,
+                error_dict = {'name':"Please give either event name or artists"})
+
+
 class EventForm(w.WidgetsList):
     id = w.HiddenField(validator=v.Int)
-    name = w.TextField(label="Event Name", help_text="If different from artists' names")
-    artists = w.TextArea(help_text="Enter artists, one per line", validator=v.NotEmpty(strip=True), rows=3, cols=30)
+    name = w.TextField(label="Event Name", help_text="If different from artists' names",
+        validator=v.String(strip=True))
+    artists = w.TextArea(help_text="Enter artists, one per line", rows=3, cols=30,
+        validator=v.String(strip=True))
     venue = BRAutoCompleteField("/venues/dynsearch", label="Venue")
     date = BRCalendarDatePicker(not_empty=True)
     time = w.TextField(attrs=dict(maxlength=40))
@@ -25,7 +35,11 @@ class EventForm(w.WidgetsList):
     url = w.TextField(label="Website", attrs=dict(size=50, maxlength=256),
         validator=v.Any(v.URL, v.Empty))
 
-event_form = w.TableForm(fields=EventForm(), name="event", submit_text="Save")
+class EventSchema(v.Schema):
+    chained_validators = [EitherNameOrArtists(strip=True)]
+
+event_form = w.TableForm(fields=EventForm(), name="event", submit_text="Save",
+                         validator=EventSchema())
 
 class SearchBox(w.WidgetsList):
     search = BRAutoCompleteField("/events/dynsearch")
@@ -122,7 +136,9 @@ class Events(controllers.Controller, util.RestAdapter):
         except SQLObjectNotFound:
             v = Venue(name=kw['venue']['text'], added_by=identity.current.user)
 
-        artists = kw.pop('artists', None)
+        artists = kw.pop('artists')
+        if not artists:
+            artists = ""
         artist_name_list = [artist.strip() for artist in artists.split('\n')]
         # elim blank items in list
         artist_name_list = [artist for artist in artist_name_list if artist]
