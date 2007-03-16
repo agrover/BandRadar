@@ -12,10 +12,12 @@ class ExtJSLink(w.JSLink):
 
 class GoogleMapWidget(w.Widget):
     template = """
-    <div id="map" style="width: ${width}px; height: ${height}px">
+    <div xmlns:py="http://purl.org/kid/ns#" py:if="venue.geocode_lat" id="map" style="width: ${width}px; height: ${height}px">
         <script type="text/javascript">
-            var map_lat = ${venue.geocode_lon}
-            var map_lon = ${venue.geocode_lat}
+            var map_lat = ${venue.geocode_lat}
+            var map_lon = ${venue.geocode_lon}
+            addLoadEvent(gmap_load)
+            window.onunload = GUnload()
         </script>
     </div>"""
     javascript = [w.mochikit]

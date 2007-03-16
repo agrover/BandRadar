@@ -8,7 +8,3 @@ function gmap_load() {
         map.addOverlay(marker);
     }
 }
-
-addLoadEvent(gmap_load)
-
-window.onunload = GUnload()
