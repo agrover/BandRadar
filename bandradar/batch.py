@@ -1,11 +1,12 @@
 import turbogears
 import logging
 from sqlobject.util.threadinglocal import local as threading_local
-from model import (hub, BatchRecord, UserAcct, Event,
+from model import (hub, BatchRecord, UserAcct, Event, Venue,
                   Artist, SimilarArtist, AND, SQLObjectNotFound)
 import datetime
 import lastfm
 import time
+from imports import google
 
 log = logging.getLogger("bandradar.batch")
 
@@ -29,6 +30,7 @@ def task():
         current.email_sent, current.event_pings, current.venue_pings = \
             send_email(from_when, last_handled)
         build_similars()
+        build_geocodes()
         cleanup_db()
 
         current.finished = datetime.datetime.now()
@@ -156,6 +158,21 @@ def build_similars(count=3600):
         artist.similars = sims_objs
         artist.sims_updated = datetime.datetime.now()
         time.sleep(1)
+
+def build_geocodes():
+    venues = Venue.selectBy(geocode_lat=None)
+    for venue in venues:
+        if venue.zip:
+            area = ", " + venue.zip
+        else:
+            area = ", Portland, OR"
+        if venue.address:
+            try:
+                lat, lon = google.get_geocode(venue.address + area)
+                venue.geocode_lat = lat
+                venue.geocode_lon = lon
+            except IOError:
+                pass
 
 def cleanup_db():
     from model import VisitIdentity

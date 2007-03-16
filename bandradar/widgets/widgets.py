@@ -1,7 +1,7 @@
 from turbogears import widgets as w
 from turbogears import validators as v
-from turbogears import config
 from cgi import escape
+from bandradar.imports import google
 
 w.register_static_directory("br", "bandradar/widgets")
 
@@ -26,15 +26,7 @@ class GoogleMapWidget(w.Widget):
         self.width = width
         self.height = height
 
-localhost_key = "ABQIAAAAl6v2YpcT3a-0chb1euUaRRR4EqRj3RNZnoYuzojShxUjcPQKRRSqdkDEb-kjqUA2B3UAs66NGlvjOA" 
-real_key = "ABQIAAAAl6v2YpcT3a-0chb1euUaRRRIOcczJVkwMVJxSoSbKoEvbYERDxTrKIpffL5C_3zzzlk1QmARAtbL2A"
-
-if config.get("server.environment", "development") == "development":
-    key = localhost_key
-else:
-    key = real_key
-
-googlemap = GoogleMapWidget(key=key, width=350, height=300)
+googlemap = GoogleMapWidget(key=google.key, width=350, height=300)
 
 class ButtonWidget(w.Widget):
     template = "bandradar.widgets.templates.button"
