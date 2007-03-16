@@ -32,7 +32,7 @@
 
     <h4>Top Tracked</h4>
     <p py:for="item in top_tracked">
-        <a href="/artists/${item['id']}">${item['name']}</a> Tracked by: ${item['count']}
+        <a href="/artists/${item['id']}">${item['name']}</a>
     </p>
 
 </body>

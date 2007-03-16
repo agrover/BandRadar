@@ -104,7 +104,7 @@ class Root(controllers.RootController):
             where artist.id = artist_user_acct.artist_id
             group by artist.name, artist.id
             order by count desc, name
-            limit 20
+            limit 10
             """)
 
         top_tracked = []
