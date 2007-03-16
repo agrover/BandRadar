@@ -57,12 +57,17 @@ def get_by(row):
         link.text = str(row.table_id)
     return link
 
+def changed_by(row):
+    if not row.changed_by:
+        return "Nobody (batch)"
+    else:
+        return UserAcct.get(row.changed_by).user_name
+
 udl_datagrid = w.PaginateDataGrid(fields=[
                 w.DataGrid.Column("created",
                     lambda row: row.created.strftime("%x %X"),
                     options=dict(sortable=True)),
-                w.DataGrid.Column("changed_by",
-                    lambda row: UserAcct.get(row.changed_by).user_name,
+                w.DataGrid.Column("changed_by", changed_by,
                     title="By", options=dict(sortable=True)),
                 w.DataGrid.Column("table_name", title="Table",
                     options=dict(sortable=True)),
