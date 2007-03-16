@@ -135,7 +135,7 @@ class Venue(BRSQLObject):
     url = UnicodeCol(length=256, default=None)
     myspace = UnicodeCol(length=50, default=None)
     phone = UnicodeCol(length=32, default=None)
-    zip = UnicodeCol(length=10, default=None)
+    zip_code = UnicodeCol(length=10, default=None)
     geocode_lat = DecimalCol(size=11, precision=8, default=None)
     geocode_lon = DecimalCol(size=11, precision=8, default=None)
     added_by = ForeignKey('UserAcct')

@@ -162,8 +162,8 @@ def build_similars(count=3600):
 def build_geocodes():
     venues = Venue.selectBy(geocode_lat=None)
     for venue in venues:
-        if venue.zip:
-            area = ", " + venue.zip
+        if venue.zip_code:
+            area = ", " + venue.zip_code
         else:
             area = ", Portland, OR"
         if venue.address:

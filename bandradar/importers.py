@@ -176,7 +176,7 @@ class Importers(controllers.Controller, identity.SecureResource):
     #   venue = dict:
     #       name (req'd)
     #       url
-    #       zip
+    #       zip_code
     #       address
     #       phone
     #       description
@@ -187,7 +187,7 @@ class Importers(controllers.Controller, identity.SecureResource):
             v = Venue.byNameI(venue_name)
         except SQLObjectNotFound:
             v = Venue(name=venue_name, added_by=identity.current.user)
-        self._set_optional_fields(v, event['venue'], ("address", "phone", "zip",
+        self._set_optional_fields(v, event['venue'], ("address", "phone", "zip_code",
             "url", "description"))
 
         event_name = self.event_name_fix(event['name'])

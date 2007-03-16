@@ -39,7 +39,7 @@
                 <a href="/venues/${e.venue.id}/edit">
                     <b py:strip="e.venue.approved">${e.venue.name}</b><br />
                 </a>
-                ${e.venue.address} ${e.venue.phone} ${e.venue.zip}
+                ${e.venue.address} ${e.venue.phone} ${e.venue.zip_code}
             </td>
             <?python e_counter += 1 ?>
         </tr>

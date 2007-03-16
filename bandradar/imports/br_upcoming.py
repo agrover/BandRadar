@@ -34,7 +34,7 @@ def events():
                     ev = api.venue.getInfo(venue_id=int(event.venue_id))[0]
                 except IndexError:
                     continue
-                venue = dict(name=ev.name, url=ev.url, zip=ev.zip, address=ev.address,
+                venue = dict(name=ev.name, url=ev.url, zip_code=ev.zip, address=ev.address,
                              phone=ev.phone, description=ev.description)
                 # see importers.py import_to_db() for expected layout
                 yield dict(name=clean(event.name), date=event_date, time=event_time,

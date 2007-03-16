@@ -56,7 +56,7 @@ class NewUserForm(w.WidgetsList):
         validator=v.All(UniqueUsername, v.PlainText(strip=True), v.NotEmpty))
     email = w.TextField(label="Email",
         validator=v.All(UniqueEmail, v.NotEmpty, v.Email(strip=True)))
-    zip = w.TextField(label="Zip Code",
+    zip_code = w.TextField(label="Zip Code",
         attrs=dict(size=10, maxlength=10),
         validator=v.PostalCode(strip=True))
     pass1 = w.PasswordField(label="Password", help_text="Length 6-40 chars",
@@ -137,7 +137,7 @@ class Users(controllers.Controller, util.RestAdapter, identity.SecureResource):
     @expose()
     @turbogears.validate(form=newuser_form)
     @turbogears.error_handler(login)
-    def usercreate(self, user_name, email, zip, pass1, pass2,
+    def usercreate(self, user_name, email, zip_code, pass1, pass2,
              forward_url=None, previous_url=None):
         u = UserAcct(user_name=user_name, email_address=email,
             password=pass1)

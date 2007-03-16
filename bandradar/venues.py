@@ -15,6 +15,9 @@ class VenueForm(w.WidgetsList):
     name = w.TextField(validator=v.NotEmpty(strip=True))
     description = w.TextArea(rows=3)
     address = w.TextField()
+    zip_code = w.TextField(label="Zip Code",
+        attrs=dict(size=10, maxlength=10),
+        validator=v.PostalCode(strip=True))
     phone = w.TextField()
     url = w.TextField(label="Website", attrs=dict(size=50),
         validator=v.Any(v.URL, v.Empty))
