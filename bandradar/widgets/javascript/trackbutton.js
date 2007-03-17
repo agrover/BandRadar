@@ -11,9 +11,6 @@ function button_pushed(action, id) {
         else {
             removeElementClass(dom, "tracked")
         }
-        if (xmlhttp.status == 403) {
-            dom.innerHTML = "Please login"
-        }
     }
     
     function ajax_error(err) {
