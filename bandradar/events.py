@@ -3,7 +3,7 @@ from turbogears import identity
 from turbogears import widgets as w
 from turbogears import validators as v
 
-from model import Event, Venue, Artist, Attendance, UpdateLog
+from model import Event, Venue, Artist, Attendance, UpdateLog, hub
 from sqlobject import SQLObjectNotFound, LIKE, func, AND
 from datetime import date, datetime, timedelta
 from cgi import escape
@@ -11,7 +11,7 @@ import formencode
 
 from bandradar import util
 from bandradar.widgets import (BRAutoCompleteField, BRCalendarDatePicker,
-                               artist_list, googlemap)
+                               artist_list, googlemap, track_button)
 
 class EitherNameOrArtists(formencode.FancyValidator):
     def validate_python(self, field_dict, state):
@@ -63,14 +63,30 @@ class Events(controllers.Controller, util.RestAdapter):
     def list(self, listby="today", orderby="alpha"):
 
         def events_in_period(day_delta, day_count=1):
-            day_result = []
+            conn = hub.getConnection()
+
             start_date = date.today() + timedelta(day_delta)
             where_clause = AND(Event.q.date >= start_date, Event.q.approved != None)
             if day_count != 0:
                 end_date = start_date + timedelta(day_count-1)
                 where_clause = AND(where_clause, Event.q.date <= end_date)
-            events = Event.select(where_clause, orderBy=(Event.q.date, Event.q.name))
-            return events
+
+            events = conn.queryAll("""
+                select event.id, event.name, event.date, venue.name
+                from event, venue
+                where event.venue_id = venue.id
+                    AND %s
+                order by event.date, event.name
+                """ % where_clause)
+
+            day_result = {}
+            if identity.current.user:
+                tracked_event_ids = [a.id for a in identity.current.user.events]
+            else:
+                tracked_event_ids = []
+            for event_id, event_name, event_date, venue_name in events:
+                is_tracked = event_id in tracked_event_ids
+                yield (event_id, event_name, event_date, venue_name, is_tracked)
 
         if listby == "today":
             result = events_in_period(0)
@@ -82,9 +98,10 @@ class Events(controllers.Controller, util.RestAdapter):
             result = events_in_period(0, 7)
         elif listby == "all":
             result = events_in_period(0, 0)
+        result = list(result)
 
-        return dict(events=result, count=result.count(), 
-            listby=listby, event_search_form=event_search_form)
+        return dict(events=result, count=len(result),
+            listby=listby, event_search_form=event_search_form, track_button=track_button)
 
     @expose(template=".templates.event.show")
     def show(self, id):
@@ -232,6 +249,29 @@ class Events(controllers.Controller, util.RestAdapter):
         else:
             util.redirect("/events/%s" % e.id)
 
+    @expose("json", fragment=True)
+    @identity.require(identity.not_anonymous())
+    def dyntrack(self, id, tracked):
+        u = identity.current.user
+        ret = "Error"
+        try:
+            e = Event.get(id)
+            if not tracked == "true" and e not in u.events:
+                try:
+                    att = Attendance.selectBy(user=u, event=e)[0]
+                except IndexError:
+                    att = Attendance(user=u, event=e)
+                att.planning_to_go = True
+                ret = "Tracked"
+            if tracked == "true" and e in u.events:
+                atts = Attendance.selectBy(user=u, event=e)
+                for att in atts:
+                    att.destroySelf()
+                ret = "Untracked"
+        except SQLObjectNotFound:
+            pass
+        return ret
+
     @expose()
     @identity.require(identity.in_group("admin"))
     def delete(self, id):
@@ -242,3 +282,4 @@ class Events(controllers.Controller, util.RestAdapter):
         except SQLObjectNotFound:
             flash("Delete failed")
         util.redirect("/events/list")
+

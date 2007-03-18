@@ -376,6 +376,13 @@ class UserAcct(BRSQLObject):
     # groups this user belongs to
     groups = SQLRelatedJoin("Group")
 
+    def _get_events(self):
+        event_ids = [att.event.id for att in Attendance.selectBy(user=self)]
+        if not event_ids:
+            # return empty set, but we always have to return a SelectResults
+            return Event.selectBy(id=None)
+        return Event.select((IN(Event.q.id, event_ids)))
+
     def destroySelf(self):
         for a in self.artists:
             self.removeEvent(a)

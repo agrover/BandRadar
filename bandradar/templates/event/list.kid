@@ -9,7 +9,6 @@
 <body>
     <div id="searchbox">
         <h2>Search all Events</h2>
-        <?python from bandradar.events import event_search_form ?>
         ${event_search_form(action="/events/search")}
     </div>
 
@@ -30,15 +29,15 @@
     </div>
 
     <table>
-        <tr py:for="event in events">
+        <tr py:for="event_id, event_name, event_date, venue_name, is_tracked in events">
             <td>
-                <a href="/events/${event.id}">${event.name} @ ${event.venue.name}</a>
+                <a href="/events/${event_id}">${event_name} @ ${venue_name}</a>
             </td>
             <td>
-                ${event.get_fdate()}
+                ${event_date}
             </td>
             <td>
-                ${event.cost} ${event.ages}
+                ${track_button(tracked=is_tracked, id=event_id, action="/events/dyntrack")}
             </td>
         </tr>
     </table>

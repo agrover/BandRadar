@@ -74,10 +74,10 @@ venues by-date
         <th>Comments</th>
         <tr py:for="att in attendances">
             <td>
-                <a href="/events/${att.event.id}">${att.event.id}</a>
+                <a href="/events/${att.event.id}">${att.event.name}</a>
             </td>
             <td>
-                ${att.date}
+                ${att.event.date}
             </td>
             <td>
                 ${att.comment}
