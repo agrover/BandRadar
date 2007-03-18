@@ -49,7 +49,7 @@ event_search_form = w.ListForm(fields=SearchBox(), name="search",
 
 class Events(controllers.Controller, util.RestAdapter):
 
-    @expose("json")
+    @expose(allow_json=True)
     def dynsearch(self, name):
         return util.dynsearch(Event, name)
 
