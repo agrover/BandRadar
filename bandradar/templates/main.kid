@@ -18,8 +18,7 @@
 
     <div id="searchbox">
         <h2>Search Bands</h2>
-        <?python from bandradar.artists import artist_search_form ?>
-        ${artist_search_form(action="/artists/search")}
+        ${search_form(action="/artists/search")}
     </div>
 
     <hr />

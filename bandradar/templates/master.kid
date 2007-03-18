@@ -19,7 +19,7 @@
             <a href="/users/login">Login/Register</a>
         </span>
         <span py:if="tg.identity.user">
-            <a href="/users/${tg.identity.user.user_name}">${tg.identity.user.user_name}'s bands</a>
+            <a href="/users/${tg.identity.user.user_name}">${tg.identity.user.user_name}'s Page</a>
         </span>
         <a href="/artists/list">Bands</a>
         <a href="/events/list">Events</a>
