@@ -55,8 +55,8 @@ def send_email(start, finish):
             and a.id = ae.artist_id
             and ae.event_id = e.id
             and e.venue_id = v.id
-            and e.date >= '%s'
-            and e.date < '%s'
+            and e.created >= '%s'
+            and e.created < '%s'
         """ % (start, finish))
     for id, name, date, venue_name in results:
         evt_list = artist_email.get(id, list())
