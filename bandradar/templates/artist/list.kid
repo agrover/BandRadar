@@ -34,11 +34,11 @@
 
     <table>
         <tr py:for="artist in artists">
-            <td>${track_button(tracked=artist['is_tracked'], id=artist['id'], action="/artists/dyntrack")}
-            </td>
             <td>
-            <b py:strip="not artist['is_tracked']">
-            <a href="/artists/${artist['id']}">${artist['name']}</a></b>
+                <b py:strip="not artist['is_tracked']">
+                <a href="/artists/${artist['id']}">${artist['name']}</a></b>
+            </td>
+            <td>${track_button(tracked=artist['is_tracked'], id=artist['id'], action="/artists/dyntrack")}
             </td>
         </tr>
     </table>
