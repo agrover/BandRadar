@@ -9,6 +9,10 @@
 <body>
     <h2>Add an event</h2>
 
+    <script type="text/javascript">
+        focusOnLoad("event_name")
+    </script>
+
     ${event_form.display(value=form_vals, action="/events/save")}
 
 </body>

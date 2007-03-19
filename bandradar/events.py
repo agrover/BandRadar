@@ -26,7 +26,7 @@ class EventForm(w.WidgetsList):
         validator=v.String(strip=True))
     artists = w.TextArea(help_text="Enter artists, one per line", rows=3, cols=30,
         validator=v.String(strip=True))
-    venue = BRAutoCompleteField("/venues/dynsearch", label="Venue")
+    venue = BRAutoCompleteField("/venues/dynsearch", label="Venue", take_focus=False)
     date = BRCalendarDatePicker(not_empty=True)
     time = w.TextField(attrs=dict(maxlength=40))
     cost = w.TextField(attrs=dict(maxlength=120))
