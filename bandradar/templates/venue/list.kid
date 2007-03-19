@@ -21,15 +21,19 @@
             ${tg_ButtonWidget(action="/venues/edit", label="Add a new venue")}
         </span>
     </h3>
-    <p><em>You will receive a weekly email for upcoming events at any tracked venues.</em>
+    <p><em>You will receive a weekly email with upcoming events at any tracked venues.</em>
     </p>
     <br />
-    <p py:for="v in venues">
-        <p>
-            ${track_button(tracked=v['id'] in tracked_venues, id=v['id'], action="/venues/dyntrack")}
+    <table>
+    <tr py:for="v in venues">
+        <td>
             <a href="/venues/${v['id']}">${v['name']}</a>
             <span py:if="v['eventcount']"> (${v['eventcount']} upcoming)</span>
-        </p>
-    </p>
+        </td>
+        <td>
+            ${track_button(tracked=v['id'] in tracked_venues, id=v['id'], action="/venues/dyntrack")}
+        </td>
+    </tr>
+    </table>
 </body>
 </html>

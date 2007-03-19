@@ -2,7 +2,7 @@ body {
     font: normal small Verdana, Arial, Helvetica, sans-serif;
     background: black url(../images/background.png) repeat-y center;
     margin: 0 auto 0 auto;
-    width: 600px;
+    width: 800px;
 }
 
 a { text-decoration: none; }
