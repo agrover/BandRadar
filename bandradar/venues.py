@@ -76,10 +76,7 @@ class Venues(controllers.Controller, util.RestAdapter):
     def show(self, id):
         try:
             v = Venue.get(id)
-            if identity.current.user and v in identity.current.user.venues:
-                is_tracked = True
-            else:
-                is_tracked = False
+            is_tracked = identity.current.user and e in identity.current.user.venues
         except SQLObjectNotFound:
             turbogears.flash("Venue ID not found")
             redirect(turbogears.url("/venues/list"))

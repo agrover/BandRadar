@@ -107,11 +107,12 @@ class Events(controllers.Controller, util.RestAdapter):
     def show(self, id):
         try:
             e = Event.get(id)
+            is_tracked = identity.current.user and e in identity.current.user.events
         except SQLObjectNotFound:
             flash("Event not found")
             util.redirect("/events/list")
         return dict(event=e, artist_list=artist_list, googlemap=googlemap,
-            description=util.desc_format(e.description))
+            description=util.desc_format(e.description), is_tracked=is_tracked)
 
     @expose()
     @identity.require(identity.not_anonymous())

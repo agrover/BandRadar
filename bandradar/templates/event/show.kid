@@ -30,6 +30,15 @@
                 ${event.added_by.user_name}</a></p>
             <p>Added: ${event.get_fcreated()}</p>
             <p>Changed: ${event.get_fupdated()}</p>
+            <div py:if="is_tracked">
+                <i>currently being tracked by you.</i>
+                ${tg_ButtonWidget(action="/events/%s/untrack?viewing=yes" % event.id, label="Untrack")}
+            </div>
+            <div py:if="not is_tracked">
+                <i>not currently tracked by you.</i>
+                ${tg_ButtonWidget(action="/events/%s/track?viewing=yes" % event.id, label="Track")}
+            </div>
+
         </div>
 
         <div py:replace="edit_links(event)" />
