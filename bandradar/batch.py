@@ -44,6 +44,10 @@ def send_email(start, finish):
     conn = hub.getConnection()
 
     users_to_email = set()
+
+    #
+    # Gather results for tracked artists. Notify if events added since last update
+    #
     artist_email = {}
     results = conn.queryAll("""
         select u.id, e.name, e.date, v.name
@@ -64,10 +68,27 @@ def send_email(start, finish):
         artist_email[id] = evt_list
         users_to_email.add(id)
 
-    venue_email = {}
-    # do weekly processing (venues) on Thursday.
+    #
+    # Gather results for tracked events. Notify if they're today
+    #
+    event_email = {}
+    results = conn.queryAll("""
+        select e.id, e.name, att.user_id, v.name
+        from event e, attendance att, venue v
+            where e.date = CURRENT_DATE
+            and e.id = att.event_id
+            and e.venue_id = v.id
+        """)
+    for event_id, event_name, user_id, venue_name in results:
+        evt_list = event_email.get(id, list())
+        evt_list.append((event_name, venue_name))
+        artist_email[id] = evt_list
+        users_to_email.add(user_id)
+
+    # Gather results for tracked venues. Once a week.
     # why do this here, instead of having a separate scheduled function called?
     # because we want to put both artist and venue notifications in the same email.
+    venue_email = {}
     if finish.isoweekday() == 4:
         results = conn.queryAll("""
             select u.id, e.name, e.date, v.name
@@ -97,11 +118,18 @@ def send_email(start, finish):
         u = UserAcct.get(id)
 
         event_text = ""
-        for event_name, date, venue_name in artist_email.get(id, list()):
-            event_text += "%s, %s at %s\n" % (event_name, date, venue_name)
-        if event_text:
-            hdr_txt = "Newly added shows featuring artists you are tracking:\n\n"
+        for event_name, venue_name in event_email.get(id, list()):
+            event_text += "%s, at %s\n" % (event_name, venue_name)
+        if artist_text:
+            hdr_txt = "These events you want to go to are TONIGHT!\n\n"
             event_text = hdr_txt + event_text + "\n"
+
+        artist_text = ""
+        for event_name, date, venue_name in artist_email.get(id, list()):
+            artist_text += "%s, %s at %s\n" % (event_name, date, venue_name)
+        if artist_text:
+            hdr_txt = "Newly added shows featuring artists you are tracking:\n\n"
+            artist_text = hdr_txt + artist_text + "\n"
 
         venue_text = ""
         for venue_name, event_list in venue_email.get(id, dict()).iteritems():
@@ -112,7 +140,7 @@ def send_email(start, finish):
             hdr_txt = "Upcoming shows at the venues you are tracking:\n\n"
             venue_text = hdr_txt + venue_text + "\n"
 
-        text = event_text + venue_text
+        text = event_text + artist_text + venue_text
 
         user_url = "http://bandradar.com/users/%s" % u.user_name
 
