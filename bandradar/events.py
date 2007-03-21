@@ -252,19 +252,19 @@ class Events(controllers.Controller, util.RestAdapter):
 
     @expose("json", fragment=True)
     @identity.require(identity.not_anonymous())
-    def dyntrack(self, id, tracked):
+    def dyntrack(self, id, track):
         u = identity.current.user
         ret = "Error"
         try:
             e = Event.get(id)
-            if not tracked == "true" and e not in u.events:
+            if track == "true" and e not in u.events:
                 try:
                     att = Attendance.selectBy(user=u, event=e)[0]
                 except IndexError:
                     att = Attendance(user=u, event=e)
                 att.planning_to_go = True
                 ret = "Tracked"
-            if tracked == "true" and e in u.events:
+            if track == "false" and e in u.events:
                 atts = Attendance.selectBy(user=u, event=e)
                 for att in atts:
                     att.destroySelf()

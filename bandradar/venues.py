@@ -153,15 +153,15 @@ class Venues(controllers.Controller, util.RestAdapter):
 
     @expose("json", fragment=True)
     @identity.require(identity.not_anonymous())
-    def dyntrack(self, id, tracked):
+    def dyntrack(self, id, track):
         u = identity.current.user
         ret = "Error"
         try:
             v = Venue.get(id)
-            if not tracked == "true" and v not in u.venues:
+            if track == "true" and v not in u.venues:
                 u.addVenue(v)
                 ret = "Tracked"
-            if tracked == "true" and v in u.venues:
+            if track == "false" and v in u.venues:
                 u.removeVenue(v)
                 ret = "Untracked"
         except SQLObjectNotFound:

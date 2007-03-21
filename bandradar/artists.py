@@ -183,15 +183,15 @@ class Artists(controllers.Controller, util.RestAdapter):
 
     @expose("json", fragment=True)
     @identity.require(identity.not_anonymous())
-    def dyntrack(self, id, tracked):
+    def dyntrack(self, id, track):
         u = identity.current.user
         ret = "Error"
         try:
             a = Artist.get(id)
-            if not tracked == "true" and a not in u.artists:
+            if track == "true" and a not in u.artists:
                 u.addArtist(a)
                 ret = "Tracked"
-            if tracked == "true" and a in u.artists:
+            if track == "false" and a in u.artists:
                 u.removeArtist(a)
                 ret = "Untracked"
         except SQLObjectNotFound:
