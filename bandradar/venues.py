@@ -8,7 +8,7 @@ from model import Venue, Event, hub
 from sqlobject import SQLObjectNotFound, LIKE, func, AND
 from datetime import date
 from bandradar import util
-from bandradar.widgets import BRAutoCompleteField, track_button, googlemap
+from bandradar.widgets import BRAutoCompleteField, googlemap
 
 class VenueForm(w.WidgetsList):
     id = w.HiddenField(validator=v.Int)
@@ -69,7 +69,7 @@ class Venues(controllers.Controller, util.RestAdapter):
         for id, name, count in results:
             venue_list.append(dict(name=name, id=id, eventcount=count))
         return dict(venues=venue_list, count=len(venue_list),
-            venue_search_form=venue_search_form, track_button=track_button,
+            venue_search_form=venue_search_form,
             tracked_venues=tracked_venues)
 
     @expose(template=".templates.venue.show")

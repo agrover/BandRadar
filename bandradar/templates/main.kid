@@ -23,7 +23,10 @@
 
     <hr />
 
-    <h4>Tonight's events</h4>
+    <h4>
+        Tonight's events
+        ${tg_ButtonWidget(action="/events/edit", label="Add a new event")}
+    </h4>
 
     <p py:for="event_id, event_name, venue_name in events">
         <a href="/events/${event_id}">${event_name} @ ${venue_name}</a>

@@ -37,7 +37,7 @@
                 ${event_date}
             </td>
             <td>
-                ${track_button(tracked=is_tracked, id=event_id, action="/events/dyntrack")}
+                ${tg_track_button(tracked=is_tracked, id=event_id, action="/events/dyntrack")}
             </td>
         </tr>
     </table>

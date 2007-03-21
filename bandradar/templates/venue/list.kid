@@ -31,7 +31,7 @@
             <span py:if="v['eventcount']"> (${v['eventcount']} upcoming)</span>
         </td>
         <td>
-            ${track_button(tracked=v['id'] in tracked_venues, id=v['id'], action="/venues/dyntrack")}
+            ${tg_track_button(tracked=v['id'] in tracked_venues, id=v['id'], action="/venues/dyntrack")}
         </td>
     </tr>
     </table>

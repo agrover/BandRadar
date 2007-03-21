@@ -11,7 +11,7 @@ import formencode
 
 from bandradar import util
 from bandradar.widgets import (BRAutoCompleteField, BRCalendarDatePicker,
-                               artist_list, googlemap, track_button)
+                               artist_list, googlemap)
 
 class EitherNameOrArtists(formencode.FancyValidator):
     def validate_python(self, field_dict, state):
@@ -101,7 +101,7 @@ class Events(controllers.Controller, util.RestAdapter):
         result = list(result)
 
         return dict(events=result, count=len(result),
-            listby=listby, event_search_form=event_search_form, track_button=track_button)
+            listby=listby, event_search_form=event_search_form)
 
     @expose(template=".templates.event.show")
     def show(self, id):

@@ -38,7 +38,7 @@
                 <b py:strip="not artist['is_tracked']">
                 <a href="/artists/${artist['id']}">${artist['name']}</a></b>
             </td>
-            <td>${track_button(tracked=artist['is_tracked'], id=artist['id'], action="/artists/dyntrack")}
+            <td>${tg_track_button(tracked=artist['is_tracked'], id=artist['id'], action="/artists/dyntrack")}
             </td>
         </tr>
     </table>
