@@ -2,7 +2,6 @@
 
 <?python
     from bandradar.widgets import track_button
-    from cgi import escape
 ?>
 
 <span xmlns:py="http://purl.org/kid/ns#"
