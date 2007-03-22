@@ -182,11 +182,13 @@ class Artist(BRSQLObject):
             try:
                 good_artist = Artist.byNameI(good_name)
                 for event in bad_artist.events:
-                    good_artist.addEvent(event)
+                    if event not in good_artist.events:
+                        good_artist.addEvent(event)
                     bad_artist.removeEvent(event)
                 for user in bad_artist.users:
-                    good_artist.addUser(user)
-                    bad_artist.removeUser(user)
+                    if user not in good_artist.users:
+                        good_artist.addUserAcct(user)
+                    bad_artist.removeUserAcct(user)
                 bad_artist.destroySelf()
             except SQLObjectNotFound:
                 bad_artist.name = good_name
@@ -199,11 +201,13 @@ class Artist(BRSQLObject):
         old = cls.get(old_id)
         new = cls.get(new_id)
         for event in old.events:
-            new.addEvent(event)
+            if event not in new.events:
+                new.addEvent(event)
             old.removeEvent(event)
         for user in old.users:
-            new.addUser(user)
-            old.removeUser(user)
+            if user not in new.users:
+                new.addUserAcct(user)
+            old.removeUserAcct(user)
         old.destroySelf()
 
     def _get_future_events(self):
