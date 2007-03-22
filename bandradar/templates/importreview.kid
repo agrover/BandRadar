@@ -27,6 +27,7 @@
                 <input py:attrs="type='hidden', name='eid' + str(e_counter), value=e.id" />
                 <a href="/events/${e.id}/edit"><b py:strip="e.approved">${e.name}</b></a>
                 <br />${e.date} ${e.time} <b>${e.cost}</b> ${e.ages}
+                <span style="font-size:xx-small">(<a href="mailto:${e.added_by.email_address}">${e.added_by.user_name})</a></span>
             </td>
             <td>
                 <div py:for="artist in e.artists">
