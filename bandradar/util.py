@@ -32,7 +32,8 @@ def search(model, name, tg_errors=None):
     result_cnt = result.count()
     if not result_cnt:
         name_str = "%%%s%%" % str(name).lower()
-        result = model.select(LIKE(func.LOWER(model.q.name), name_str),
+        result = model.select(
+            AND(LIKE(func.LOWER(model.q.name), name_str), model.q.approved != None),
             orderBy=model.q.name)
         result_cnt = result.count()
 

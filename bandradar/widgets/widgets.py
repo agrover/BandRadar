@@ -59,7 +59,7 @@ class TrackButtonWidget(w.Widget):
     template = "bandradar.widgets.templates.trackbutton"
     javascript = [w.mochikit, w.JSLink("br", 'javascript/trackbutton.js')]
     params = ["id", "action", "tracked", "text"]
-    text = dict(off="Track", on="UnTrack")
+    text = dict(off="Track", on="Untrack")
 
     def track_str(self, tracked):
         if tracked:
