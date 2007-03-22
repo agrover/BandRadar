@@ -209,6 +209,9 @@ class Events(controllers.Controller, util.RestAdapter):
                 attrib_old_value=old_artists,
                 attrib_new_value=new_artists
                 )
+        # mark user as going to all added events by default
+        if not "admin" in identity.current.groups:
+            att = Attendance(user=identity.current.user, event=e, planning_to_go=True)
         flash("Event %s" % flash_msg)
         util.redirect("/events/%s" % e.id)
 
