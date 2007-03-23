@@ -120,7 +120,7 @@ def send_email(start, finish):
         event_text = ""
         for event_name, venue_name in event_email.get(id, list()):
             event_text += "%s, at %s\n" % (event_name, venue_name)
-        if artist_text:
+        if event_text:
             hdr_txt = "These events you want to go to are TONIGHT!\n\n"
             event_text = hdr_txt + event_text + "\n"
 
