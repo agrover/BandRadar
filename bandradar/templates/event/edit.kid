@@ -13,7 +13,7 @@
         focusOnLoad("event_name")
     </script>
 
-    ${event_form.display(value=form_vals, action="/events/save")}
+    ${event_form.display(form_vals, action="/events/save")}
 
 </body>
 </html>

@@ -20,8 +20,8 @@
         Added by: <a href="/users/${artist.added_by.user_name}">
             ${artist.added_by.user_name}</a></p>
         <p>Similar Bands: ${artist_list(artists=artist.similars)}</p>
-        <p>Added: ${artist.get_fcreated()}</p>
-        <p>Changed: ${artist.get_fupdated()}</p>
+        <p>Added: ${artist.fcreated}</p>
+        <p>Changed: ${artist.fupdated}</p>
         <p py:if="tracked_count">Users tracking: ${tracked_count}</p>
         <div py:if="is_tracked">
             <i>currently being tracked by you.</i>
@@ -39,7 +39,7 @@
         <h3>Past events</h3>
         <div class="event_list">
             <p py:for="e in past_events">
-                ${e.get_fdate()}: <a href="/events/${e.id}">${e.name}</a>
+                ${e.fdate}: <a href="/events/${e.id}">${e.name}</a>
             </p>
             <p py:if="not len(list(past_events))">None</p>
         </div>
@@ -49,7 +49,7 @@
         </h3>
         <div class="event_list">
             <p py:for="e in future_events">
-                ${e.get_fdate()}: <a href="/events/${e.id}">${e.name}</a>
+                ${e.fdate}: <a href="/events/${e.id}">${e.name}</a>
                 ${e.time} ${e.cost}
             </p>
             <p py:if="not len(list(future_events))">None</p>

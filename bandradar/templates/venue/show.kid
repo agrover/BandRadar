@@ -24,8 +24,8 @@
             <p py:if="not 'admin' in venue.added_by.groups">
             Added by: <a href="/users/${venue.added_by.user_name}">
                 ${venue.added_by.user_name}</a></p>
-            <p>Added: ${venue.get_fcreated()}</p>
-            <p>Changed: ${venue.get_fupdated()}</p>
+            <p>Added: ${venue.fcreated}</p>
+            <p>Changed: ${venue.fupdated}</p>
             <p py:if="tracked_count">Users tracking: ${tracked_count}</p>
             <div py:if="is_tracked">
                 <i>Currently being tracked by you. You will receive weekly emails with
@@ -41,7 +41,7 @@
         <h3>Past events</h3>
         <div class="event_list">
             <p py:for="e in past_events">
-                ${e.get_fdate()}: <a href="/events/${e.id}">${e.name}</a>
+                ${e.fdate}: <a href="/events/${e.id}">${e.name}</a>
             </p>
             <p py:if="not len(list(past_events))">None</p>
         </div>
@@ -51,7 +51,7 @@
 
         <div class="event_list">
             <p py:for="e in future_events">
-                ${e.get_fdate()}: <a href="/events/${e.id}">${e.name}</a>
+                ${e.fdate}: <a href="/events/${e.id}">${e.name}</a>
                 ${e.time} ${e.cost}
             </p>
             <p py:if="not len(list(future_events))">None</p>

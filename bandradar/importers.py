@@ -209,10 +209,7 @@ class Importers(controllers.Controller, identity.SecureResource):
             try:
                 a = Artist.byNameI(artist)
             except SQLObjectNotFound:
-                try:
-                    a = Artist.byNameI("DJ " + artist)
-                except SQLObjectNotFound:
-                    a = Artist(name=artist, added_by=identity.current.user)
+                a = Artist(name=artist, added_by=identity.current.user)
             if not e.id in [existing.id for existing in a.events]:
                 a.addEvent(e)
 

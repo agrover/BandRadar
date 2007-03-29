@@ -28,8 +28,8 @@
             <p py:if="not 'admin' in event.added_by.groups">
             Added by: <a href="/users/${event.added_by.user_name}">
                 ${event.added_by.user_name}</a></p>
-            <p>Added: ${event.get_fcreated()}</p>
-            <p>Changed: ${event.get_fupdated()}</p>
+            <p>Added: ${event.fcreated}</p>
+            <p>Changed: ${event.fupdated}</p>
             <div py:if="is_tracked">
                 <i>currently being tracked by you.</i>
                 ${tg_ButtonWidget(action="/events/%s/untrack?viewing=yes" % event.id, label="Untrack")}

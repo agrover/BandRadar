@@ -13,11 +13,24 @@ soClasses = ('UserAcct', 'Group', 'Permission', 'Venue', 'Artist',
              'SimilarArtist', 'Event', 'BatchRecord', 'Attendance',
              'Comment', 'UpdateLog')
 
+def fancy_date(past_date):
+    elapsed = datetime.now() - past_date
+    if elapsed.days > 1:
+        return "%s (%d days ago)" % (past_date.strftime("%x"), elapsed.days)
+    if elapsed.days == 1:
+        return "%s (%d day ago)" % (past_date.strftime("%x"), elapsed.days)
+    if elapsed.seconds / 7200:
+        return "%s (%d hours ago)" % (past_date.strftime("%H:%M"),
+            elapsed.seconds / 3600)
+    if elapsed.seconds / 120:
+        return "%s (%d minutes ago)" % (past_date.strftime("%H:%M"),
+            elapsed.seconds / 60)
+    if elapsed.seconds != 1:
+        return "%d seconds ago" % elapsed.seconds
+    return "1 second ago"
 
-class BRSQLObject(SQLObject):
-    created = DateTimeCol(default=datetime.now)
-    approved = DateTimeCol(default=None)
-    last_updated = DateTimeCol(default=datetime.now)
+
+class BRMixin(object):
 
     @classmethod
     def clean_dict(self, dirty_dict):
@@ -38,22 +51,28 @@ class BRSQLObject(SQLObject):
             name_col = self.q.name
         except AttributeError:
             name_col = self.q.user_name
-        results = self.select(func.LOWER(name_col) == name.lower().strip())
-        if results.count() == 0:
-            raise SQLObjectNotFound
-        else:
+        name = name.lower().strip()
+        results = self.select(func.LOWER(name_col) == name)
+        if results.count():
             return results[0]
+        raise SQLObjectNotFound
+
+
+class Journalled(SQLObject):
+    created = DateTimeCol(default=datetime.now)
+    approved = DateTimeCol(default=None)
+    last_updated = DateTimeCol(default=datetime.now)
 
     def __setattr__(self, name, value):
         if name in self.sqlmeta.columns.keys():
             self._record_update({name:value})
-            super(BRSQLObject, self).__setattr__('last_updated', datetime.now())
-        super(BRSQLObject, self).__setattr__(name, value)
+            super(Journalled, self).__setattr__('last_updated', datetime.now())
+        super(Journalled, self).__setattr__(name, value)
 
     def set(self, **kw):
         self._record_update(kw)
         kw['last_updated'] = datetime.now()
-        super(BRSQLObject, self).set(**kw)
+        super(Journalled, self).set(**kw)
 
     def _record_update(self, updates):
         # don't log changes until approved
@@ -82,29 +101,13 @@ class BRSQLObject(SQLObject):
             # super.set() can call our setattr() (overridden to update last_updated)
             # if we don't update the value here to its new value,
             #   the second call to _record_update will insert a duplicate row.
-            super(BRSQLObject, self).__setattr__(name, value)
+            super(Journalled, self).__setattr__(name, value)
 
-    def _fdate(self, past_date):
-        elapsed = datetime.now() - past_date
-        if elapsed.days > 1:
-            return "%s (%d days ago)" % (past_date.strftime("%x"), elapsed.days)
-        if elapsed.days == 1:
-            return "%s (%d day ago)" % (past_date.strftime("%x"), elapsed.days)
-        if elapsed.seconds / 7200:
-            return "%s (%d hours ago)" % (past_date.strftime("%H:%M"),
-                elapsed.seconds / 3600)
-        if elapsed.seconds / 120:
-            return "%s (%d minutes ago)" % (past_date.strftime("%H:%M"),
-                elapsed.seconds / 60)
-        if elapsed.seconds != 1:
-            return "%d seconds ago" % elapsed.seconds
-        return "1 second ago"
+    def _get_fupdated(self):
+        return fancy_date(self.last_updated)
 
-    def get_fupdated(self):
-        return self._fdate(self.last_updated)
-
-    def get_fcreated(self):
-        return self._fdate(self.created)
+    def _get_fcreated(self):
+        return fancy_date(self.created)
 
 
 class UpdateLog(SQLObject):
@@ -128,7 +131,7 @@ class UpdateLog(SQLObject):
     def _set_attrib_new_value(self, value):
         self._SO_set_attrib_new_value(pickle.dumps(value))
 
-class Venue(BRSQLObject):
+class Venue(Journalled, BRMixin):
     name = UnicodeCol(alternateID=True, length=100)
     description = UnicodeCol(default=None)
     address = UnicodeCol(default=None)
@@ -158,7 +161,7 @@ class Venue(BRSQLObject):
             return
         self.destroySelf()
 
-class Artist(BRSQLObject):
+class Artist(Journalled, BRMixin):
     name = UnicodeCol(alternateID=True, length=100)
     description = UnicodeCol(default=None)
     url = UnicodeCol(length=256, default=None)
@@ -167,6 +170,7 @@ class Artist(BRSQLObject):
     users = SQLRelatedJoin('UserAcct')
     added_by = ForeignKey('UserAcct')
     sims_updated = DateTimeCol(default=None)
+    is_dj = BoolCol(default=False)
 
     @classmethod
     def clean(cls, bad_snippet, good_snippet=""):
@@ -209,6 +213,37 @@ class Artist(BRSQLObject):
                 new.addUserAcct(user)
             old.removeUserAcct(user)
         old.destroySelf()
+
+    @classmethod
+    def byNameI(cls, name):
+        try:
+            return super(Artist, cls).byNameI(name)
+        except  SQLObjectNotFound:
+
+            def name_variations(name):
+                name = name.lower().strip()
+                pres = ("the ", "dj ")
+                posts = (" trio", " quartet", " band")
+                replaces = (("&", "and"), ("and", "&"))
+                for pre in pres:
+                    if name.startswith(pre):
+                        yield name[len(pre):]
+                    else:
+                        yield pre + name
+                for post in posts:
+                    if name.endswith(post):
+                        yield name[:-len(post)]
+                    else:
+                        yield name + post
+                for a, b in replaces:
+                    if name.find(a) != -1:
+                        yield name.replace(a, b)
+
+            for name_var in name_variations(name):
+                results = Artist.select(func.LOWER(Artist.q.name) == name_var)
+                if results.count():
+                    return results[0]
+            raise SQLObjectNotFound
 
     def _get_future_events(self):
         return self.events.filter(Event.q.date >= date.today())
@@ -255,7 +290,7 @@ class SimilarArtist(SQLObject):
     similar_artist = ForeignKey('Artist')
 
 
-class Event(BRSQLObject):
+class Event(Journalled, BRMixin):
     name = UnicodeCol(length=400)
     description = UnicodeCol(default=None)
     time = UnicodeCol(length=40, default=None)
@@ -285,12 +320,18 @@ class Event(BRSQLObject):
             new.added_by = old.added_by
         old.destroySelf()
 
+    def _get_has_djs(self):
+        for artist in self.artists:
+            if artist.is_dj:
+                return True
+        return False
+
     def destroySelf(self):
         for a in self.artists:
             self.removeArtist(a)
         super(Event, self).destroySelf()
 
-    def get_fdate(self):
+    def _get_fdate(self):
         thedate = date.today()
         note = ""
         if self.date == thedate:
@@ -300,7 +341,7 @@ class Event(BRSQLObject):
         return self.date.strftime("%a %m/%d/%y") + note
 
 
-class Attendance(BRSQLObject):
+class Attendance(Journalled):
     event = ForeignKey('Event')
     user = ForeignKey('UserAcct')
     planning_to_go = BoolCol(default=False)
@@ -361,13 +402,14 @@ class Group(SQLObject):
         return cmp(self.group_name, other.group_name)
 
 
-class UserAcct(BRSQLObject):
+class UserAcct(SQLObject, BRMixin):
     user_name = UnicodeCol(length=16, alternateID=True,
                            alternateMethodName="by_user_name")
     email_address = UnicodeCol(length=255, alternateID=True,
                                alternateMethodName="by_email_address")
     password = UnicodeCol(length=40)
     # site-specific fields
+    created = DateTimeCol(default=datetime.now)
     description = UnicodeCol(default=None)
     zip_code = UnicodeCol(length=10, default=None)
     url = UnicodeCol(length=256, default=None)
@@ -386,6 +428,9 @@ class UserAcct(BRSQLObject):
             # return empty set, but we always have to return a SelectResults
             return Event.selectBy(id=None)
         return Event.select((IN(Event.q.id, event_ids)))
+
+    def _get_fcreated(self):
+        return fancy_date(self.created)
 
     def destroySelf(self):
         for a in self.artists:
