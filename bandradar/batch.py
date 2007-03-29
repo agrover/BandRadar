@@ -114,6 +114,7 @@ def send_email(start, finish):
         import smtplib
         import pkg_resources
         from email.MIMEText import MIMEText
+        from email.Utils import make_msgid
 
         u = UserAcct.get(id)
 
@@ -153,6 +154,7 @@ def send_email(start, finish):
         msg['Subject'] = "BandRadar upcoming events"
         msg['From'] = msg_from
         msg['To'] = msg_to
+        msg['Message-ID'] = make_msgid()
 
         s = smtplib.SMTP()
         s.connect()
