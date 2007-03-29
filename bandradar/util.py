@@ -13,11 +13,11 @@ def dynsearch(model, name):
             orderBy=model.q.name)[:result_cnt]
 
     # check startswith first
-    like_str = "%s%%" % str(name).lower()
+    like_str = "%s%%" % unicode(name).lower()
     names = set([a.name for a in my_search(like_str)])
     if not len(names) > result_cnt / 2:
         # then go all out
-        like_str = "%%%s%%" % str(name).lower()
+        like_str = "%%%s%%" % unicode(name).lower()
         names = set([a.name for a in my_search(like_str)])
     return dict(results=list(names))
 
@@ -25,13 +25,13 @@ def search(model, name, tg_errors=None):
     if tg_errors:
         redirect_previous()
 
-    name_str = "%s" % str(name).lower()
+    name_str = "%s" % unicode(name).lower()
     result = model.select(
         AND(LIKE(func.LOWER(model.q.name), name_str), model.q.approved != None),
         orderBy=model.q.name)
     result_cnt = result.count()
     if not result_cnt:
-        name_str = "%%%s%%" % str(name).lower()
+        name_str = "%%%s%%" % unicode(name).lower()
         result = model.select(
             AND(LIKE(func.LOWER(model.q.name), name_str), model.q.approved != None),
             orderBy=model.q.name)
