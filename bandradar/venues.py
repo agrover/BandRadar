@@ -6,7 +6,7 @@ from turbogears import validators as v
 
 from model import Venue, Event, hub
 from sqlobject import SQLObjectNotFound, LIKE, func, AND
-from datetime import date
+from datetime import date, datetime
 from bandradar import util
 from bandradar.widgets import BRAutoCompleteField, googlemap
 
@@ -117,6 +117,7 @@ class Venues(controllers.Controller, util.RestAdapter):
         else:
             v = Venue(added_by=identity.current.user, **Venue.clean_dict(kw))
             turbogears.flash("Added")
+        v.approved = datetime.now()
         redirect(turbogears.url("/venues/%s" % v.id))
 
     @expose()

@@ -6,7 +6,7 @@ from turbogears import validators as v
 
 from model import Artist, Event, hub
 from sqlobject import SQLObjectNotFound, LIKE, func, AND
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta
 from bandradar import util
 from bandradar.widgets import BRAutoCompleteField, artist_list
 
@@ -16,8 +16,8 @@ class ArtistForm(w.WidgetsList):
     description = w.TextArea(label="Description", rows=4)
     url = w.TextField(label="Website", attrs=dict(size=60),
         validator=v.Any(v.URL, v.Empty))
-    myspace = w.TextField(label="MySpace", attrs=dict(maxlength=40),
-        help_text="e.g. myspace.com/abc, enter abc")
+    myspace = w.TextField(label="MySpace", attrs=dict(maxlength=40))
+    is_dj = w.CheckBox(label="Is a DJ", default=False)
 
 class ArtistSchema(v.Schema):
     chained_validators = [util.UniqueName(Artist)]
@@ -147,6 +147,7 @@ class Artists(controllers.Controller, util.RestAdapter):
             if not "admin" in identity.current.groups:
                 identity.current.user.addArtist(a)
             turbogears.flash("Artist added")
+        a.approved = datetime.now()
         redirect(turbogears.url("/artists/%s" % a.id))
 
     @expose()
