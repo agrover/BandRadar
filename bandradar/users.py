@@ -7,6 +7,7 @@ from turbogears import widgets as w
 from turbogears import validators as v
 
 from model import UserAcct, Event, Artist, Attendance, Venue, hub
+from widgets import artist_list
 from sqlobject import SQLObjectNotFound, LIKE, func
 from datetime import date
 import formencode
@@ -170,7 +171,6 @@ class Users(controllers.Controller, util.RestAdapter, identity.SecureResource):
             viewing_self = False
             if identity.current.user and identity.current.user.user_name == user_name:
                 viewing_self = True
-
         except SQLObjectNotFound:
             turbogears.flash("User not found")
             redirect(turbogears.url("/"))
@@ -179,10 +179,26 @@ class Users(controllers.Controller, util.RestAdapter, identity.SecureResource):
             attendances=attendances, viewing_self=viewing_self,
             description=util.desc_format(u.description))
 
+    @expose(template=".templates.user.showtracked")
+    def showtracked(self, user_name):
+        try:
+            u = UserAcct.by_user_name(user_name)
+            artists = u.artists.orderBy(Artist.q.name)
+
+            viewing_self = False
+            if identity.current.user and identity.current.user.user_name == user_name:
+                viewing_self = True
+        except SQLObjectNotFound:
+            turbogears.flash("User not found")
+            redirect(turbogears.url("/"))
+
+        return dict(user=u, artists=artists, viewing_self=viewing_self,
+            artist_list=artist_list)
+
     @expose(template=".templates.user.edit")
+    @identity.require(identity.not_anonymous())
     def edit(self, user_name):
-        if not ((identity.current.user
-                and identity.current.user.user_name == user_name)
+        if not (identity.current.user.user_name == user_name
                 or "admin" in identity.current.groups):
             raise identity.IdentityFailure("Not authorized")
         try:
@@ -196,9 +212,9 @@ class Users(controllers.Controller, util.RestAdapter, identity.SecureResource):
     @expose()
     @turbogears.validate(form=user_form)
     @turbogears.error_handler(edit)
+    @identity.require(identity.not_anonymous())
     def save(self, user_name, old_pass, pass1, **kw):
-        if not ((identity.current.user
-                and identity.current.user.user_name == user_name)
+        if not (identity.current.user.user_name == user_name
                 or "admin" in identity.current.groups):
             raise identity.IdentityFailure("Not authorized")
 
