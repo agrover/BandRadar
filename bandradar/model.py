@@ -11,9 +11,12 @@ __connection__ = hub
 
 soClasses = ('UserAcct', 'Group', 'Permission', 'Venue', 'Artist',
              'SimilarArtist', 'Event', 'BatchRecord', 'Attendance',
-             'Comment', 'UpdateLog')
+             'Comment', 'UpdateLog', 'Source')
 
 def fancy_date(past_date):
+    """Take a date in the past and return it pretty-printed, with elapsed time.
+
+    """
     elapsed = datetime.now() - past_date
     if elapsed.days > 1:
         return "%s (%d days ago)" % (past_date.strftime("%x"), elapsed.days)
@@ -30,6 +33,9 @@ def fancy_date(past_date):
     return "1 second ago"
 
 
+#
+# Pull some methods out to here, need to think of a more desc. name
+#
 class BRMixin(object):
 
     @classmethod
@@ -58,6 +64,9 @@ class BRMixin(object):
         raise SQLObjectNotFound
 
 
+#
+# Classes inheriting from this will have changes stored in the UpdateLog table
+#
 class Journalled(SQLObject):
     created = DateTimeCol(default=datetime.now)
     approved = DateTimeCol(default=None)
@@ -110,6 +119,10 @@ class Journalled(SQLObject):
         return fancy_date(self.created)
 
 
+#
+# Keep track of all edits to Journalled objects, so in case of vandalism,
+# the changes can be reverted.
+#
 class UpdateLog(SQLObject):
     created = DateTimeCol(default=datetime.now)
     changed_by = IntCol()
@@ -131,6 +144,9 @@ class UpdateLog(SQLObject):
     def _set_attrib_new_value(self, value):
         self._SO_set_attrib_new_value(pickle.dumps(value))
 
+#
+# Where events happen.
+#
 class Venue(Journalled, BRMixin):
     name = UnicodeCol(alternateID=True, length=100)
     description = UnicodeCol(default=None)
@@ -141,9 +157,9 @@ class Venue(Journalled, BRMixin):
     zip_code = UnicodeCol(length=10, default=None)
     geocode_lat = DecimalCol(size=11, precision=8, default=None)
     geocode_lon = DecimalCol(size=11, precision=8, default=None)
-    added_by = ForeignKey('UserAcct')
-    events = SQLMultipleJoin('Event')
+    added_by = ForeignKey('UserAcct', cascade=False)
     users = SQLRelatedJoin('UserAcct')
+    events = SQLMultipleJoin('Event')
 
     def _get_future_events(self):
         return self.events.filter(Event.q.date >= date.today())
@@ -151,26 +167,24 @@ class Venue(Journalled, BRMixin):
     def _get_past_events(self):
         return self.events.filter(Event.q.date < date.today())
 
-    def destroySelf(self):
-        for u in self.users:
-            self.removeUserAcct(u)
-        super(Venue, self).destroySelf()
-
     def destroy_if_unused(self):
         if self.events.count() or self.users.count():
             return
         self.destroySelf()
 
+#
+# Data on bands/artists
+#
 class Artist(Journalled, BRMixin):
     name = UnicodeCol(alternateID=True, length=100)
     description = UnicodeCol(default=None)
     url = UnicodeCol(length=256, default=None)
     myspace = UnicodeCol(length=50, default=None)
-    events = SQLRelatedJoin('Event')
-    users = SQLRelatedJoin('UserAcct')
-    added_by = ForeignKey('UserAcct')
+    added_by = ForeignKey('UserAcct', cascade=False)
     sims_updated = DateTimeCol(default=None)
     is_dj = BoolCol(default=False)
+    events = SQLRelatedJoin('Event')
+    users = SQLRelatedJoin('UserAcct')
 
     @classmethod
     def clean(cls, bad_snippet, good_snippet=""):
@@ -185,15 +199,7 @@ class Artist(Journalled, BRMixin):
             good_name = bad_artist.name.replace(bad_snippet, good_snippet)
             try:
                 good_artist = Artist.byNameI(good_name)
-                for event in bad_artist.events:
-                    if event not in good_artist.events:
-                        good_artist.addEvent(event)
-                    bad_artist.removeEvent(event)
-                for user in bad_artist.users:
-                    if user not in good_artist.users:
-                        good_artist.addUserAcct(user)
-                    bad_artist.removeUserAcct(user)
-                bad_artist.destroySelf()
+                this.move(cls, bad_artist.id, good_artist.id)
             except SQLObjectNotFound:
                 bad_artist.name = good_name
 
@@ -270,10 +276,6 @@ class Artist(Journalled, BRMixin):
             sim = SimilarArtist(artist=self, similar_artist=artist)
 
     def destroySelf(self):
-        for e in self.events:
-            self.removeEvent(e)
-        for u in self.users:
-            self.removeUserAcct(u)
         sims = SimilarArtist.selectBy(artist=self)
         for sim in sims:
             sim.destroySelf()
@@ -284,12 +286,16 @@ class Artist(Journalled, BRMixin):
             return
         self.destroySelf()
 
-
+#
+# Link an Artist to similar Artists (bit of a hack)
+#
 class SimilarArtist(SQLObject):
-    artist = ForeignKey('Artist')
-    similar_artist = ForeignKey('Artist')
+    artist = ForeignKey('Artist', cascade=False)
+    similar_artist = ForeignKey('Artist', cascade=False)
 
-
+#
+# The most important class
+#
 class Event(Journalled, BRMixin):
     name = UnicodeCol(length=400)
     description = UnicodeCol(default=None)
@@ -298,9 +304,11 @@ class Event(Journalled, BRMixin):
     cost = UnicodeCol(length=120, default=None)
     ages = UnicodeCol(length=40, default=None)
     url = UnicodeCol(length=256, default=None)
-    venue = ForeignKey('Venue')
+    venue = ForeignKey('Venue', cascade=False)
+    added_by = ForeignKey('UserAcct', cascade=False)
     artists = SQLRelatedJoin('Artist')
-    added_by = ForeignKey('UserAcct')
+    sources = SQLRelatedJoin('Source')
+    attendances = SQLMultipleJoin('Attendance')
     date_index = DatabaseIndex('date')
 
     @classmethod
@@ -320,16 +328,17 @@ class Event(Journalled, BRMixin):
             new.added_by = old.added_by
         old.destroySelf()
 
+    def _get_attendees(self):
+        user_ids = [att.user.id for att in self.attendances]
+        if not user_ids:
+            return []
+        return UserAcct.select((IN(UserAcct.q.id, user_ids)))
+
     def _get_has_djs(self):
         for artist in self.artists:
             if artist.is_dj:
                 return True
         return False
-
-    def destroySelf(self):
-        for a in self.artists:
-            self.removeArtist(a)
-        super(Event, self).destroySelf()
 
     def _get_fdate(self):
         thedate = date.today()
@@ -340,15 +349,19 @@ class Event(Journalled, BRMixin):
             note = " (tomorrow)"
         return self.date.strftime("%a %m/%d/%y") + note
 
-
+#
+# User:Event M:M, with some add'l fields
+#
 class Attendance(Journalled):
-    event = ForeignKey('Event')
-    user = ForeignKey('UserAcct')
+    event = ForeignKey('Event', cascade=False)
+    user = ForeignKey('UserAcct', cascade=False)
     planning_to_go = BoolCol(default=False)
     attended = BoolCol(default=False)
     comment = UnicodeCol(default=None)
 
-
+#
+# A record of each nightly batch run
+#
 class BatchRecord(SQLObject):
     # when the batch thread starts and finishes
     started = DateTimeCol(default=datetime.now)
@@ -360,12 +373,22 @@ class BatchRecord(SQLObject):
     event_pings = IntCol(default=0)
     venue_pings = IntCol(default=0)
 
-
+#
+# Comments on the site
+#
 class Comment(SQLObject):
     created = DateTimeCol(default=datetime.now)
     comment = UnicodeCol()
-    comment_by = ForeignKey('UserAcct', default=None)
+    comment_by = ForeignKey('UserAcct', default=None, cascade=False)
     handled = BoolCol(default=False)
+
+#
+# Sources we import from
+#
+class Source(SQLObject):
+    name = UnicodeCol(alternateID=True, length=100)
+    created = DateTimeCol(default=datetime.now)
+    events = SQLRelatedJoin('Event')
 
 
 class VisitIdentity(SQLObject):
@@ -414,30 +437,26 @@ class UserAcct(SQLObject, BRMixin):
     zip_code = UnicodeCol(length=10, default=None)
     url = UnicodeCol(length=256, default=None)
     myspace = UnicodeCol(length=50, default=None)
-    artists = SQLRelatedJoin('Artist')
-    venues = SQLRelatedJoin('Venue')
     last_emailed = DateTimeCol(default=None)
     event_email = BoolCol(default=True)
     other_email = BoolCol(default=False)
-    # groups this user belongs to
+    artists = SQLRelatedJoin('Artist')
+    venues = SQLRelatedJoin('Venue')
     groups = SQLRelatedJoin("Group")
+    artists_added = SQLMultipleJoin("Artist", joinColumn="added__by__id")
+    events_added = SQLMultipleJoin("Event", joinColumn="added__by__id")
+    venues_added = SQLMultipleJoin("Venue", joinColumn="added__by__id")
+    comments = SQLMultipleJoin("Comment", joinColumn="comment__by__id")
+    attendances = SQLMultipleJoin("Attendance", joinColumn="user__id")
 
     def _get_events(self):
-        event_ids = [att.event.id for att in Attendance.selectBy(user=self)]
+        event_ids = [att.event.id for att in self.attendances]
         if not event_ids:
-            # return empty set, but we always have to return a SelectResults
-            return Event.selectBy(id=None)
+            return []
         return Event.select((IN(Event.q.id, event_ids)))
 
     def _get_fcreated(self):
         return fancy_date(self.created)
-
-    def destroySelf(self):
-        for a in self.artists:
-            self.removeEvent(a)
-        for g in self.groups:
-            self.removeGroup(g)        
-        super(UserAcct, self).destroySelf()
 
     def _get_permissions(self):
         perms = set()

@@ -181,7 +181,9 @@ class Events(controllers.Controller, util.RestAdapter):
         del kw['venue']
         e.set(**e.clean_dict(kw))
         e.name = name
+        old_venue = e.venue
         e.venue = v
+        old_venue.destroy_if_unused()
         old_artists = set([a.name for a in e.artists])
         # add new artists
         artist_list = []

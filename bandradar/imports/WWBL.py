@@ -53,7 +53,7 @@ def day_events(date):
         if anchor.parent.name == "div":
             # handle wweek "preview" entries
             venue = {}
-            event_dict = {}
+            event_dict = dict(source="wweek")
             div = anchor.parent
             event_dict['name'], event_dict['artists'] = \
                 parse_event(div.h2.string.strip())
@@ -92,7 +92,7 @@ def day_events(date):
                 continue
             events = b2.string.strip().split(";")
             for event in events:
-                event_dict = {}
+                event_dict = dict(source="wweek")
                 event_dict['venue'] = venue
                 m = re.search(r'(.*?)\(([\d:&]+\ ?[ap]m)\)$', event)
                 if m:

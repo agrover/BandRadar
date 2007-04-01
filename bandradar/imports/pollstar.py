@@ -63,7 +63,7 @@ def events():
     venues = []
     for key, artists in events.iteritems():
         venue, date = key
-        event = dict()
+        event = dict(source="pollstar")
         event['artists'] = artists
         event['date'] = date
         event['name'] = ", ".join(artists)

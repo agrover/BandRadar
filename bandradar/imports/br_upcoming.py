@@ -40,7 +40,7 @@ def events():
                 yield dict(name=clean(event.name), date=event_date, time=event_time,
                            description=clean(event.description),
                            artists=clean(event.name).split(','),
-                           venue=venue)
+                           venue=venue, source="upcoming")
 
 if __name__ == "__main__":
     for event in events():

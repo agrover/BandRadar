@@ -4,7 +4,7 @@ from turbogears import controllers, expose, redirect
 from turbogears import identity
 from turbogears import widgets as w
 from turbogears import validators as v
-from model import Event, Venue, Artist, hub
+from model import Event, Venue, Artist, Source, hub
 from sqlobject import SQLObjectNotFound
 from datetime import date, datetime
 import bandradar.imports.MBL as MBL
@@ -86,19 +86,27 @@ class Importers(controllers.Controller, identity.SecureResource):
         "Ash Street Saloon":"Ash Street",
         "Abou Karim":"Abou Karim Restaurant",
         "Abu Karim Restaurant":"Abou Karim Restaurant",
+        "Alberta St. Public House":"Alberta Street Public House",
         "Arlene Schnitzer Hall":"Arlene Schnitzer Concert Hall",
+        "Bridgeport":"Bridgeport Brewpub",
         "Doug Fir Lounge":"Doug Fir",
         "Jax Bar":"Jax",
         "Jimmy Macks":"Jimmy Mak's",
+        "Kells Irish Pub":"Kells Irish Restautant & Pub",
         "Koji's":"Koji Osakaya",
+        "Laurelthirst":"Laurelthirst Public House",
         "Marriott Hotel":"Marriott-Waterfront",
         "Memorial Auditorium":"Memorial Coliseum",
+        "Oregon Symphony":"Arlene Schnitzer Concert Hall",
         "Outlaws Bar Grill":"Outlaws Bar & Grill",
         "Rock N Roll Pizza":"Rock 'N' Roll Pizza",
         "Rose Garden Arena":"Rose Garden",
+        "Roseland Grill":"Roseland",
         "Roseland Theater":"Roseland",
         "Sabala's at Mt. Tabor":"Sabala's at Mount Tabor",
+        "Tom McCall Park":"Tom McCall Waterfront Park",
         "The Satyricon":"Satyricon",
+        "Washington Park Zoo Amphitheatre":"Oregon Zoo Amphitheatre",
     }
 
     artist_fixup_dict = {
@@ -167,6 +175,7 @@ class Importers(controllers.Controller, identity.SecureResource):
     # event dict:
     #   name (req'd)
     #   date (req'd)
+    #   source (req'd)
     #   time
     #   description
     #   cost
@@ -195,13 +204,14 @@ class Importers(controllers.Controller, identity.SecureResource):
         event_time = event.get("time")
         db_events = Event.selectBy(date=event_date,
             time=event_time, venue=v)
-        # must be unique, due to db constraint
         if db_events.count():
             e = db_events[0]
         else:
             e = Event(venue=v, name=event_name,
                 date=event_date, time=event_time,
                 added_by=identity.current.user)
+            s = Source.byName(event["source"])
+            e.addSource(s)
         self._set_optional_fields(e, event, ("cost", "ages", "url", "description"))
 
         artists = self.artists_clean(event['artists'])
@@ -279,13 +289,18 @@ class Importers(controllers.Controller, identity.SecureResource):
         redirect(turbogears.url("/importers/review"))
 
     def events_likely_dupes(self, events):
-        temp_set = set()
+        temp_artist_set = set()
+        temp_event_set = set()
         for event in events:
             for artist in event.artists:
-                if artist.name in temp_set:
+                if artist.name in temp_artist_set:
                     return True
                 else:
-                    temp_set.add(artist.name)
+                    temp_artist_set.add(artist.name)
+            if event.name in temp_event_set:
+                return True
+            else:
+                temp_event_set.add(event.name)
         return False
 
     @expose(template=".templates.reviewdupes")
