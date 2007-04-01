@@ -27,17 +27,19 @@
                 <input py:attrs="type='hidden', name='eid' + str(e_counter), value=e.id" />
                 <a href="/events/${e.id}/edit"><b py:strip="e.approved">${e.name}</b></a>
                 <br />${e.date} ${e.time} <b>${e.cost}</b> ${e.ages}
-                <span style="font-size:xx-small">(<a href="mailto:${e.added_by.email_address}">${e.added_by.user_name})</a></span>
+                <span style="font-size:xx-small">(<a href="mailto:${e.added_by.email_address}">${e.added_by.user_name}</a>)
+                    <span py:if="e.sources.count()">${",".join([s.name for s in e.sources])}</span>
+                </span>
             </td>
             <td>
                 <div py:for="artist in e.artists">
-                    <a href="/artists/${artist.id}/edit">
+                    <a href="/artists/${artist.id}">
                         <b py:strip="artist.approved">${artist.name}</b>
                     </a>
                 </div>
             </td>
             <td>
-                <a href="/venues/${e.venue.id}/edit">
+                <a href="/venues/${e.venue.id}">
                     <b py:strip="e.venue.approved">${e.venue.name}</b><br />
                 </a>
                 ${e.venue.address} ${e.venue.phone} ${e.venue.zip_code}

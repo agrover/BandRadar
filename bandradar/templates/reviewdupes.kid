@@ -11,7 +11,7 @@
     <tr py:for="dupe, others in dupe_group">
         <td>
             <a href="/events/${dupe.id}"><b py:strip="dupe.approved">${dupe.id} ${dupe.name}</b></a>
-            <br />${dupe.date} ${dupe.time} <b>${dupe.cost}</b> ${dupe.ages} Created: ${dupe.get_fcreated()}
+            <br />${dupe.date} ${dupe.time} <b>${dupe.cost}</b> ${dupe.ages} Created ${dupe.fcreated}
         </td>
         <td>
             <p py:for="other in others">

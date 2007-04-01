@@ -41,6 +41,10 @@
 
         </div>
 
+        <div py:if="'admin' in tg.identity.groups and event.sources.count()">
+            From: ${",".join([s.name for s in event.sources])}
+        </div>
+
         <div py:replace="edit_links(event)" />
 
     </div>

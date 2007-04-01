@@ -6,6 +6,7 @@ from turbogears import validators as v
 
 from model import Venue, Event, hub
 from sqlobject import SQLObjectNotFound, LIKE, func, AND
+from sqlobject.main import SQLObjectIntegrityError
 from datetime import date, datetime
 from bandradar import util
 from bandradar.widgets import BRAutoCompleteField, googlemap
@@ -177,5 +178,8 @@ class Venues(controllers.Controller, util.RestAdapter):
             v.destroySelf()
             turbogears.flash("Deleted")
         except SQLObjectNotFound:
-            turbogears.flash("Delete failed")
+            turbogears.flash("Not Found")
+        except SQLObjectIntegrityError:
+            turbogears.flash("Cannot delete")
         redirect(turbogears.url("/venues/list"))
+
