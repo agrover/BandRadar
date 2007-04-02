@@ -28,6 +28,8 @@ h3 {
 }
 h4 { margin: 0 0 .5em 0; }
 
+h3 span.small { font-size:x-small; }
+
 .event_list { margin: 0 0 1em 1em; }
 
 .name {

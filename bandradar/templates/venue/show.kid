@@ -38,7 +38,7 @@
             </div>
 
         </div>
-        <h3>Past events</h3>
+        <h3>Past events <span class="small">(<a href="?list_all=1">See all</a>)</span></h3>
         <div class="event_list">
             <p py:for="e in past_events">
                 ${e.fdate}: <a href="/events/${e.id}">${e.name}</a>

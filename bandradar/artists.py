@@ -99,7 +99,7 @@ class Artists(controllers.Controller, util.RestAdapter):
             listby=listby, artist_search_form=artist_search_form)
 
     @expose(template=".templates.artist.show")
-    def show(self, id):
+    def show(self, id, list_all=0):
         try:
             a = Artist.get(id)
             if identity.current.user and a in identity.current.user.artists:
@@ -110,9 +110,11 @@ class Artists(controllers.Controller, util.RestAdapter):
             turbogears.flash("Artist ID not found")
             redirect(turbogears.url("/artists/list"))
 
-        past_events = a.events.filter(Event.q.date < date.today()).orderBy(Event.q.date).reversed()[:5]
+        past_events = a.events.filter(Event.q.date < date.today()).orderBy('-date')
+        if not list_all:
+            past_events = past_events[:5]
         past_events = list(reversed(list(past_events)))
-        future_events = a.events.filter(Event.q.date >= date.today()).orderBy(Event.q.date)
+        future_events = a.events.filter(Event.q.date >= date.today()).orderBy('date')
         return dict(artist=a, past_events=past_events, future_events=future_events,
             tracked_count=a.users.count(), is_tracked=is_tracked,
             description=util.desc_format(a.description), artist_list=artist_list)

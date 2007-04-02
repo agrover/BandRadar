@@ -74,7 +74,7 @@ class Venues(controllers.Controller, util.RestAdapter):
             tracked_venues=tracked_venues)
 
     @expose(template=".templates.venue.show")
-    def show(self, id):
+    def show(self, id, list_all=0):
         try:
             v = Venue.get(id)
             is_tracked = identity.current.user and v in identity.current.user.venues
@@ -82,7 +82,9 @@ class Venues(controllers.Controller, util.RestAdapter):
             turbogears.flash("Venue ID not found")
             redirect(turbogears.url("/venues/list"))
 
-        past_events = v.events.filter(Event.q.date < date.today()).orderBy('-date')[:5]
+        past_events = v.events.filter(Event.q.date < date.today()).orderBy('-date')
+        if not list_all:
+            past_events = past_events[:5]
         past_events = list(reversed(list(past_events)))
         future_events = v.events.filter(Event.q.date >= date.today()).orderBy('date')
 
