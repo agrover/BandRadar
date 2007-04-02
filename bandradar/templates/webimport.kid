@@ -29,5 +29,11 @@
         <input type="submit" class="submitbutton" value="Go" />
     </form>
 
+    <h3>Import TicketsWest?</h3>
+
+    <form action="/importers/importticketswest" method="post" class="tableform" name="lastfm">        
+        <input type="submit" class="submitbutton" value="Go" />
+    </form>
+
 </body>
 </html>

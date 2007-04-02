@@ -12,7 +12,8 @@
 
         ${googlemap(venue=event.venue, width=250, height=200)}
 
-        <h2>Event: ${event.name}</h2>
+        <h2>Event: ${event.name}
+        <span py:if="event.ticket_url">${tg_ButtonWidget(action=event.ticket_url, label="Buy Tickets")}</span></h2>
 
         <div id="details">
             <p id="description" py:if="description">${XML(description)}</p>

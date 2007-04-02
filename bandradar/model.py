@@ -291,8 +291,11 @@ class Artist(Journalled, BRMixin):
             sim = SimilarArtist(artist=self, similar_artist=artist)
 
     def destroySelf(self):
-        sims = SimilarArtist.selectBy(artist=self)
-        for sim in sims:
+        # remove links to other artists
+        for sim in SimilarArtist.selectBy(artist=self):
+            sim.destroySelf()
+        # remove links FROM other artist
+        for sim in SimilarArtist.selectBy(similar_artist=self):
             sim.destroySelf()
         super(Artist, self).destroySelf()
 
@@ -319,6 +322,7 @@ class Event(Journalled, BRMixin):
     cost = UnicodeCol(length=120, default=None)
     ages = UnicodeCol(length=40, default=None)
     url = UnicodeCol(length=256, default=None)
+    ticket_url = UnicodeCol(length=256, default=None)
     venue = ForeignKey('Venue', cascade=False)
     added_by = ForeignKey('UserAcct', cascade=False)
     artists = SQLRelatedJoin('Artist')
@@ -331,6 +335,8 @@ class Event(Journalled, BRMixin):
         for artist in old.artists:
             if artist not in new.artists:
                 new.addArtist(artist)
+        for source in old.sources:
+            new.addSource(source)
         for field in old.sqlmeta.columns.keys():
             # only set if not set already
             if not getattr(new, field, None) and getattr(old, field, None):

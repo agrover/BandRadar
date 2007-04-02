@@ -7,11 +7,14 @@ from turbogears import validators as v
 from model import Event, Venue, Artist, Source, hub
 from sqlobject import SQLObjectNotFound
 from datetime import date, datetime
-import bandradar.imports.MBL as MBL
-import bandradar.imports.WWBL as WWBL
-import bandradar.imports.pollstar as pollstar
-import bandradar.imports.br_upcoming as br
-import bandradar.imports.lastfm as lastfm
+from bandradar.widgets import artist_list
+from bandradar.imports import MBL
+from bandradar.imports import WWBL
+from bandradar.imports import pollstar
+from bandradar.imports import br_upcoming as br
+from bandradar.imports import lastfm
+from bandradar.imports import ticketswest
+
 
 class Merc(w.WidgetsList):
     url = w.TextField(label="URL", attrs=dict(size=60),
@@ -75,6 +78,13 @@ class Importers(controllers.Controller, identity.SecureResource):
         for event in lastfm.events():
             self.import_to_db(event)
         turbogears.flash("last.fm Imported")
+        redirect(turbogears.url("/importers/review"))
+
+    @expose()
+    def importticketswest(self):
+        for event in ticketswest.events():
+            self.import_to_db(event)
+        turbogears.flash("TicketsWest Imported")
         redirect(turbogears.url("/importers/review"))
 
     def _set_optional_fields(self, obj, in_dict, field_list):
@@ -190,6 +200,7 @@ class Importers(controllers.Controller, identity.SecureResource):
     #   cost
     #   ages
     #   url
+    #   ticket_url
     #   artists = list(unicode) (req'd)
     #   venue = dict:
     #       name (req'd)
@@ -219,9 +230,13 @@ class Importers(controllers.Controller, identity.SecureResource):
             e = Event(venue=v, name=event_name,
                 date=event_date, time=event_time,
                 added_by=identity.current.user)
-            s = Source.byName(event["source"])
+            try:
+                s = Source.byName(event["source"])
+            except SQLObjectNotFound:
+                s = Source(name=event["source"])
             e.addSource(s)
-        self._set_optional_fields(e, event, ("cost", "ages", "url", "description"))
+        self._set_optional_fields(e, event, ("cost", "ages", "url",
+            "description", "ticket_url"))
 
         artists = self.artists_clean(event['artists'])
         for artist in artists:
@@ -332,11 +347,14 @@ class Importers(controllers.Controller, identity.SecureResource):
                     others.remove(dupe)
                     dupes.append((dupe, others))
                 dupe_groups.append(dupes)
-        return dict(dupes=dupe_groups)
+        return dict(dupes=dupe_groups, artist_list=artist_list)
 
     @expose()
     def merge_dupe(self, old_id, new_id):
         old = Event.get(old_id)
+        for artist in old.artists:
+            if not artist.approved:
+                artist.approved = datetime.now()
         new = Event.get(new_id)
         Event.merge(old, new)
         redirect(turbogears.url("/importers/reviewdupes"))
