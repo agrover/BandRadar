@@ -71,6 +71,7 @@
         <div id="footer">
             <a href="/about">about</a> |
             <a href="/privacy">privacy</a> |
+            <a href="http://bandradar.blogspot.com">blog</a> |
 <!--            <a href="/contact">contact</a> | -->
             <a href="/feeds">rss</a>
         </div>
