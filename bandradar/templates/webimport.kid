@@ -25,7 +25,7 @@
 
     <h3>Import last.fm?</h3>
 
-    <form action="/importers/importuplastfm" method="post" class="tableform" name="lastfm">        
+    <form action="/importers/importlastfm" method="post" class="tableform" name="lastfm">        
         <input type="submit" class="submitbutton" value="Go" />
     </form>
 

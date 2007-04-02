@@ -1,5 +1,5 @@
 import scrobxlib
-import BeautifulSoup
+from BeautifulSoup import BeautifulSoup
 from datetime import date
 import urllib
 import re
