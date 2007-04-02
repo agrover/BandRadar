@@ -42,3 +42,4 @@ def events():
 
 if __name__ == "__main__":
     print user_top_artists("agrover", 4)
+    print len(list(events()))
