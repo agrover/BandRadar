@@ -8,13 +8,16 @@ def artist_clean(artist):
     artist = artist.replace("(taverna)", "")
     return " ".join.artist.split()
 
+def unix_to_date(unix):
+    return datetime.datetime.fromtimestamp(float(unix))
+
 def date_to_url(date):
     baseurl = "http://wweek.com/calendar/music/index.php?date="
     # they started having the pages be for 1 am on 2007-3-12
     dt = datetime.datetime(*date.timetuple()[:3])
     an_hour = datetime.timedelta(hours=1)
     if dt >= datetime.datetime(2007, 4, 2):
-        dt += an_hour * 24
+        dt = dt
     elif dt >= datetime.datetime(2007, 3, 12):
         dt += an_hour
     datestr = str(int(time.mktime(dt.timetuple())))
