@@ -4,7 +4,7 @@ from sqlobject.util.threadinglocal import local as threading_local
 from model import (hub, BatchRecord, UserAcct, Event, Venue,
                   Artist, SimilarArtist, AND, SQLObjectNotFound)
 import datetime
-import lastfm
+from imports import lastfm
 import time
 from imports import google
 

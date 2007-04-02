@@ -11,6 +11,7 @@ import bandradar.imports.MBL as MBL
 import bandradar.imports.WWBL as WWBL
 import bandradar.imports.pollstar as pollstar
 import bandradar.imports.br_upcoming as br
+import bandradar.imports.lastfm as lastfm
 
 class Merc(w.WidgetsList):
     url = w.TextField(label="URL", attrs=dict(size=60),
@@ -67,6 +68,13 @@ class Importers(controllers.Controller, identity.SecureResource):
         for event in br.events():
             self.import_to_db(event)
         turbogears.flash("Upcoming Imported")
+        redirect(turbogears.url("/importers/review"))
+
+    @expose()
+    def importlastfm(self):
+        for event in lastfm.events():
+            self.import_to_db(event)
+        turbogears.flash("last.fm Imported")
         redirect(turbogears.url("/importers/review"))
 
     def _set_optional_fields(self, obj, in_dict, field_list):
