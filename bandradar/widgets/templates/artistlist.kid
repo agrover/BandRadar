@@ -4,6 +4,4 @@
     from bandradar.widgets import artist_list
 ?>
 
-<span xmlns:py="http://purl.org/kid/ns#" class="artistlist">
-    ${XML(artist_list.get_list(artists))}
-</span>
+<span xmlns:py="http://purl.org/kid/ns#" class="artistlist">${XML(artist_list.get_list(artists))}</span>
