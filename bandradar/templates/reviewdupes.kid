@@ -10,7 +10,7 @@
     <table py:for="dupe_group in dupes">
     <tr py:for="dupe, others in dupe_group">
         <td>
-            <a href="/events/${dupe.id}"><b py:strip="dupe.approved">${dupe.id} ${dupe.name}</b></a>
+            <a href="/events/${dupe.id}"><b py:strip="dupe.approved">${dupe.id} ${dupe.name}</b></a> <span style="font-size:xx-small">(${artist_list(artists=dupe.artists)})</span>
             <br />${dupe.date} ${dupe.time} <b>${dupe.cost}</b> ${dupe.ages} Created ${dupe.fcreated}
         </td>
         <td>
