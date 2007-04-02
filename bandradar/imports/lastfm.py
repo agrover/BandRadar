@@ -36,6 +36,7 @@ def events():
                 artists.extend(other_artists.split(","))
             except IndexError:
                 pass
+            event_dict['name'] = ", ".join(artists)
             event_dict['artists'] = artists
             event_dict['venue'] = venue
             yield event_dict
