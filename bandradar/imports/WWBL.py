@@ -4,10 +4,6 @@ import datetime
 import time
 import re
 
-def artist_clean(artist):
-    artist = artist.replace("(taverna)", "")
-    return " ".join.artist.split()
-
 def unix_to_date(unix):
     return datetime.datetime.fromtimestamp(float(unix))
 
