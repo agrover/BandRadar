@@ -228,22 +228,37 @@ class Artist(Journalled, BRMixin):
 
             def name_variations(name):
                 name = name.lower().strip()
-                pres = ("the ", "dj ")
-                posts = (" trio", " quartet", " band")
-                replaces = (("&", "and"), ("and", "&"))
-                for pre in pres:
-                    if name.startswith(pre):
-                        yield name[len(pre):]
-                    else:
-                        yield pre + name
-                for post in posts:
-                    if name.endswith(post):
-                        yield name[:-len(post)]
-                    else:
-                        yield name + post
-                for a, b in replaces:
-                    if name.find(a) != -1:
-                        yield name.replace(a, b)
+
+                def pres(name):
+                    pres = ("the ", "dj ")
+                    yield name
+                    for pre in pres:
+                        if name.startswith(pre):
+                            yield name[len(pre):]
+                        else:
+                            yield pre + name
+
+                def posts(name):
+                    posts = (" trio", " quartet", " band", " septet")
+                    yield name
+                    for post in posts:
+                        if name.endswith(post):
+                            yield name[:-len(post)]
+                        else:
+                            yield name + post
+
+                def replaces(name):
+                    replaces = ((" & ", " and "), (" and ", " & "))
+                    yield name
+                    for a, b in replaces:
+                        if name.find(a) != -1:
+                            yield name.replace(a, b)
+
+                # return all combinations of posts, pres, and replaces
+                for pre in pres(name):
+                    for post in posts(pre):
+                        for replace in replaces(post):
+                            yield replace
 
             for name_var in name_variations(name):
                 results = Artist.select(func.LOWER(Artist.q.name) == name_var)

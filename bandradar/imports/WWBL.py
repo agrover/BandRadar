@@ -12,8 +12,11 @@ def date_to_url(date):
     baseurl = "http://wweek.com/calendar/music/index.php?date="
     # they started having the pages be for 1 am on 2007-3-12
     dt = datetime.datetime(*date.timetuple()[:3])
-    if dt >= datetime.datetime(2007, 3, 12):
-        dt = dt.replace(hour=1)
+    an_hour = datetime.timedelta(hours=1)
+    if dt >= datetime.datetime(2007, 4, 2):
+        dt += an_hour * 24
+    elif dt >= datetime.datetime(2007, 3, 12):
+        dt += an_hour
     datestr = str(int(time.mktime(dt.timetuple())))
     return baseurl + datestr
 
@@ -116,7 +119,7 @@ def month_events(start_date):
 
 if __name__ == "__main__":
     #parse_day(datetime.date.today())
-    print len(list(day_events(datetime.date(2007, 3, 12))))
+    print len(list(day_events(datetime.date(2007, 4, 2))))
 
 #find named anchors
 # if a.parent = div class preview

@@ -115,6 +115,7 @@ class Importers(controllers.Controller, identity.SecureResource):
         "Tom McCall Park":"Tom McCall Waterfront Park",
         "The Satyricon":"Satyricon",
         "Washington Park Zoo Amphitheatre":"Oregon Zoo Amphitheatre",
+        "Wonder Cafe":"Cafe Wonder",
     }
 
     artist_fixup_dict = {
