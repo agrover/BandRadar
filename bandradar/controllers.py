@@ -77,12 +77,20 @@ udl_datagrid = w.PaginateDataGrid(fields=[
                 w.DataGrid.Column("new", lambda row: unicode(row.attrib_new_value)),
                 ])
 
+def batch_time(row):
+    if not row.finished:
+        return "running"
+    else:
+        return row.finished - row.started
+
 br_datagrid = w.PaginateDataGrid(fields=[
                 ("Started", "started"),
-                w.DataGrid.Column("Time", lambda row: row.finished - row.started),
+                w.DataGrid.Column("Time", batch_time),
                 ("Email sent", "email_sent"),
-                ("Events Pinged", "event_pings"),
+                ("Events Pinged", "artist_pings"),
                 ("Venues Pinged", "venue_pings"),
+                ("Sims Updated", "sims_updated"),
+                ("Geocodes Updated", "geocodes_updated"),
                 ])
 
 class Root(controllers.RootController):

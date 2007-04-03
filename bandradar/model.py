@@ -296,6 +296,8 @@ class Artist(Journalled, BRMixin):
             sim.destroySelf()
         # remove links FROM other artist
         for sim in SimilarArtist.selectBy(similar_artist=self):
+            # re-gen sim-links during batch, since now we're short
+            sim.artist.sims_updated = None
             sim.destroySelf()
         super(Artist, self).destroySelf()
 
@@ -391,8 +393,10 @@ class BatchRecord(SQLObject):
     first_handled = DateTimeCol(default=None)
     last_handled = DateTimeCol(default=None)
     email_sent = IntCol(default=0)
-    event_pings = IntCol(default=0)
+    artist_pings = IntCol(default=0)
     venue_pings = IntCol(default=0)
+    sims_updated = IntCol(default=0)
+    geocodes_updated = IntCol(default=0)
 
 #
 # Comments on the site

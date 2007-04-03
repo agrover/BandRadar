@@ -27,10 +27,10 @@ def task():
     hub.commit()
 
     try:
-        current.email_sent, current.event_pings, current.venue_pings = \
+        current.email_sent, current.artist_pings, current.venue_pings = \
             send_email(from_when, last_handled)
-        build_similars()
-        build_geocodes()
+        current.sims_updated = build_similars()
+        current.geocodes_updated = build_geocodes()
         cleanup_db()
 
         current.finished = datetime.datetime.now()
@@ -172,6 +172,7 @@ def build_similars(count=3600):
     # Do 3600 artists at a time, only hitting last.fm for an hour...
     artists = Artist.select(
         AND(Artist.q.approved != None, Artist.q.sims_updated == None))[:count]
+    artist_num = artists.count()
     for artist in artists:
         sims_objs = []
         sims_names = lastfm.similar_artists(artist.name)
@@ -188,6 +189,7 @@ def build_similars(count=3600):
         artist.similars = sims_objs
         artist.sims_updated = datetime.datetime.now()
         time.sleep(1)
+    return artist_num
 
 def build_geocodes():
     venues = Venue.selectBy(geocode_lat=None)
@@ -203,6 +205,7 @@ def build_geocodes():
                 venue.geocode_lon = lon
             except IOError:
                 pass
+    return venues.count()
 
 def cleanup_db():
     from model import VisitIdentity
