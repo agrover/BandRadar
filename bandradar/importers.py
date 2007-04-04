@@ -226,7 +226,7 @@ class Importers(controllers.Controller, identity.SecureResource):
 
         event_name = self.event_name_fix(event['name'])
         event_date = event["date"]
-        event_time = event.get("time")
+        event_time = event.get("time").lower()
         db_events = Event.selectBy(date=event_date,
             time=event_time, venue=v)
         if db_events.count():
