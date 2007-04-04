@@ -102,7 +102,9 @@ class Root(controllers.RootController):
         events = conn.queryAll("""
             select event.id, event.name, venue.name
             from event, venue
-            where event.venue_id = venue.id and event.date = CURRENT_DATE
+            where event.venue_id = venue.id
+                and event.date = CURRENT_DATE
+                and event.approved is not NULL
             order by event.name
             """)
 

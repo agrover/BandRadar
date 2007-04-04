@@ -208,6 +208,8 @@ class Artist(Journalled, BRMixin):
         """Move relations from a duplicate entry to the real one, and
         remove the duplicate.
         """
+        if old_id == new_id:
+            raise Exception
         old = cls.get(old_id)
         new = cls.get(new_id)
         for event in old.events:
@@ -221,45 +223,58 @@ class Artist(Journalled, BRMixin):
         old.destroySelf()
 
     @classmethod
+    def foo(cls, name):
+        artists = Artist.select()
+        out = []
+        for artist in artists:
+            for variation in list(cls.name_variations(artist.name))[1:]:
+                results = Artist.select(func.LOWER(Artist.q.name) == variation)
+                if results.count():
+                    out.append((results[0].name, "-", artist.name))
+        print out
+
+    @classmethod
+    def name_variations(cls, name):
+        name = name.lower().strip()
+
+        def pres(name):
+            pres = ("the ", "dj ")
+            yield name
+            for pre in pres:
+                if name.startswith(pre):
+                    yield name[len(pre):]
+                else:
+                    yield pre + name
+
+        def posts(name):
+            posts = (" trio", " quartet", " band", " septet",
+                     " jam", " jazz jam", " show", " and band")
+            yield name
+            for post in posts:
+                if name.endswith(post):
+                    yield name[:-len(post)]
+                else:
+                    yield name + post
+
+        def replaces(name):
+            replaces = ((" & ", " and "), (" and ", " & "))
+            yield name
+            for a, b in replaces:
+                if name.find(a) != -1:
+                    yield name.replace(a, b)
+
+        # return all combinations of posts, pres, and replaces
+        for pre in pres(name):
+            for post in posts(pre):
+                for replace in replaces(post):
+                    yield replace
+
+
+    @classmethod
     def byNameI(cls, name):
         try:
             return super(Artist, cls).byNameI(name)
         except  SQLObjectNotFound:
-
-            def name_variations(name):
-                name = name.lower().strip()
-
-                def pres(name):
-                    pres = ("the ", "dj ")
-                    yield name
-                    for pre in pres:
-                        if name.startswith(pre):
-                            yield name[len(pre):]
-                        else:
-                            yield pre + name
-
-                def posts(name):
-                    posts = (" trio", " quartet", " band", " septet")
-                    yield name
-                    for post in posts:
-                        if name.endswith(post):
-                            yield name[:-len(post)]
-                        else:
-                            yield name + post
-
-                def replaces(name):
-                    replaces = ((" & ", " and "), (" and ", " & "))
-                    yield name
-                    for a, b in replaces:
-                        if name.find(a) != -1:
-                            yield name.replace(a, b)
-
-                # return all combinations of posts, pres, and replaces
-                for pre in pres(name):
-                    for post in posts(pre):
-                        for replace in replaces(post):
-                            yield replace
-
             for name_var in name_variations(name):
                 results = Artist.select(func.LOWER(Artist.q.name) == name_var)
                 if results.count():
@@ -339,6 +354,8 @@ class Event(Journalled, BRMixin):
                 new.addArtist(artist)
         for source in old.sources:
             new.addSource(source)
+        for attendance in old.attendances:
+            attendance.event = new
         for field in old.sqlmeta.columns.keys():
             # only set if not set already
             if not getattr(new, field, None) and getattr(old, field, None):
