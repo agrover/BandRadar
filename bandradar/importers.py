@@ -341,6 +341,7 @@ class Importers(controllers.Controller, identity.SecureResource):
             where date >= CURRENT_DATE
             group by venue_id, date
             having count(*) > 1
+            limit 10
             """)
         dupe_groups = []
         for date, venue_id, count in dupe_results:
