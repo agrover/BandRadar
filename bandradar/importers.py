@@ -352,7 +352,7 @@ class Importers(controllers.Controller, identity.SecureResource):
                     others.remove(dupe)
                     dupes.append((dupe, others))
                 dupe_groups.append(dupes)
-        return dict(dupes=dupe_groups, artist_list=artist_list)
+        return dict(dupes=dupe_groups[:10], artist_list=artist_list)
 
     @expose()
     def merge_dupe(self, old_id, new_id):
