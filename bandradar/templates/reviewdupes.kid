@@ -7,6 +7,8 @@
 </head>
 
 <body>
+    <h3>Dupes (${len(dupes)} out of ${dupe_count} potentials)</h3>
+
     <table py:for="dupe_group in dupes">
     <tr py:for="dupe, others in dupe_group">
         <td>

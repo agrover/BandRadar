@@ -343,6 +343,7 @@ class Importers(controllers.Controller, identity.SecureResource):
             having count(*) > 1
             """)
         dupe_groups = []
+        limit = 5
         for date, venue_id, count in dupe_results:
             possible_dupes = Event.selectBy(date=date, venueID=venue_id)
             if self.events_likely_dupes(possible_dupes):
@@ -352,7 +353,10 @@ class Importers(controllers.Controller, identity.SecureResource):
                     others.remove(dupe)
                     dupes.append((dupe, others))
                 dupe_groups.append(dupes)
-        return dict(dupes=dupe_groups[:10], artist_list=artist_list)
+                if len(dupe_groups) >= limit:
+                    break
+        return dict(dupes=dupe_groups, dupe_count=len(dupe_results),
+            artist_list=artist_list)
 
     @expose()
     def merge_dupe(self, old_id, new_id):
