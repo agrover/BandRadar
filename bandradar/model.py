@@ -223,15 +223,33 @@ class Artist(Journalled, BRMixin):
         old.destroySelf()
 
     @classmethod
-    def foo(cls, name):
+    def megamerge(cls):
         artists = Artist.select()
         out = []
         for artist in artists:
-            for variation in list(cls.name_variations(artist.name))[1:]:
+            variations = list(cls.name_variations(artist.name))
+            for variation in variations[1:]:
                 results = Artist.select(func.LOWER(Artist.q.name) == variation)
                 if results.count():
-                    out.append((results[0].name, "-", artist.name))
-        print out
+                    out.append((results[0].id, artist.id))
+        result_str = ""
+        for a_id, b_id in out:
+            try:
+                a = Artist.get(a_id)
+                b = Artist.get(b_id)
+                if a.events.count() >= b.events.count():
+                    new_id = a.id
+                    old_id = b.id
+                    result_str += "merging %s into %s\n" % (b.name, a.name)
+                else:
+                    new_id = b.id
+                    old_id = a.id
+                    result_str += "merging %s into %s\n" % (a.name, b.name)
+                cls.move(old_id, new_id)
+            except SQLObjectNotFound:
+                # one of them already zapped, continue
+                pass
+        print result_str
 
     @classmethod
     def name_variations(cls, name):
