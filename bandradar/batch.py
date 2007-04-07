@@ -62,11 +62,11 @@ def send_email(start, finish):
             and e.created >= '%s'
             and e.created < '%s'
         """ % (start, finish))
-    for id, name, date, venue_name in results:
-        evt_list = artist_email.get(id, list())
+    for user_id, name, date, venue_name in results:
+        evt_list = artist_email.get(user_id, list())
         evt_list.append((name, date, venue_name))
-        artist_email[id] = evt_list
-        users_to_email.add(id)
+        artist_email[user_id] = evt_list
+        users_to_email.add(user_id)
 
     #
     # Gather results for tracked events. Notify if they're today
@@ -80,9 +80,9 @@ def send_email(start, finish):
             and e.venue_id = v.id
         """)
     for event_id, event_name, user_id, venue_name in results:
-        evt_list = event_email.get(id, list())
+        evt_list = event_email.get(user_id, list())
         evt_list.append((event_name, venue_name))
-        artist_email[id] = evt_list
+        artist_email[user_id] = evt_list
         users_to_email.add(user_id)
 
     # Gather results for tracked venues. Once a week.
@@ -102,13 +102,13 @@ def send_email(start, finish):
                 order by e.date
             """)
 
-        for id, event_name, date, venue_name in results:
-            venue_dict = venue_email.get(id, dict())
+        for user_id, event_name, date, venue_name in results:
+            venue_dict = venue_email.get(user_id, dict())
             venue = venue_dict.get(venue_name, list())
             venue.append((event_name, date))
             venue_dict[venue_name] = venue
-            venue_email[id] = venue_dict
-            users_to_email.add(id)
+            venue_email[user_id] = venue_dict
+            users_to_email.add(user_id)
 
     for id in users_to_email:
         import smtplib
