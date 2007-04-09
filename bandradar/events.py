@@ -176,7 +176,7 @@ class Events(controllers.Controller, util.RestAdapter):
         else:
             e = Event(name=name, date=kw['date'], time=kw['time'], venue=v,
                 added_by=identity.current.user)
-            flash_msg = "added"
+            flash_msg = "added, will be reviewed and posted within 24 hrs"
 
         del kw['venue']
         e.set(**e.clean_dict(kw))
