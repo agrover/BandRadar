@@ -1,7 +1,7 @@
 import turbogears
 import logging
 from sqlobject.util.threadinglocal import local as threading_local
-from model import (hub, BatchRecord, UserAcct, Event, Venue,
+from model import (hub, BatchRecord, UserAcct, Event, Venue, Group,
                   Artist, SimilarArtist, AND, SQLObjectNotFound)
 import datetime
 from imports import lastfm
@@ -110,12 +110,12 @@ def send_email(start, finish):
             venue_email[user_id] = venue_dict
             users_to_email.add(user_id)
 
-    for id in users_to_email:
-        import smtplib
-        import pkg_resources
-        from email.MIMEText import MIMEText
-        from email.Utils import make_msgid
+    if Event.select(Event.q.approved == None).count():
+        for admin in Group.by_group_name("admin").users:
+            email(admin.email_address, "BandRadar <events@bandradar.com>",
+                "events in queue", "There are events in the pending queue.")
 
+    for id in users_to_email:
         u = UserAcct.get(id)
 
         event_text = ""
@@ -144,28 +144,36 @@ def send_email(start, finish):
         text = event_text + artist_text + venue_text
 
         user_url = "http://bandradar.com/users/%s" % u.user_name
-
         msg_to = u.email_address
         msg_from = "BandRadar Events <events@bandradar.com>"
         body = pkg_resources.resource_string(__name__, 
                     'templates/new_event_email.txt')
         body  = body % {'text': text, 'user_url': user_url}
-        msg = MIMEText(body)
-        msg['Subject'] = "BandRadar upcoming events"
-        msg['From'] = msg_from
-        msg['To'] = msg_to
-        msg['Message-ID'] = make_msgid()
 
-        s = smtplib.SMTP()
-        s.connect()
-        try:
-            s.sendmail(msg_from, [msg_to], msg.as_string())
-        except smtplib.SMTPException, smtp:
-            # todo: record bounces so a human can do something
-            log.error("smtp error %s" % repr(smtp))
-        s.close()
+        email(msg_to, msg_from, "BandRadar upcoming events", body)
 
     return (len(users_to_email), len(artist_email), len(venue_email))
+
+def email(msg_to, msg_from, subject, body):
+    import smtplib
+    import pkg_resources
+    from email.MIMEText import MIMEText
+    from email.Utils import make_msgid
+
+    msg = MIMEText(body)
+    msg['To'] = msg_to
+    msg['From'] = msg_from
+    msg['Subject'] = subject
+    msg['Message-ID'] = make_msgid()
+
+    s = smtplib.SMTP()
+    s.connect()
+    try:
+        s.sendmail(msg_from, [msg_to], msg.as_string())
+    except smtplib.SMTPException, smtp:
+        # todo: record bounces so a human can do something
+        log.error("smtp error %s" % repr(smtp))
+    s.close()
 
 def build_similars(count=3600):
     admin = UserAcct.get(1)
