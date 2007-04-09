@@ -82,11 +82,11 @@ class Venues(controllers.Controller, util.RestAdapter):
             turbogears.flash("Venue ID not found")
             redirect(turbogears.url("/venues/list"))
 
-        past_events = v.events.filter(Event.q.date < date.today()).orderBy('-date')
+        past_events = v.past_events.orderBy('-date')
         if not list_all:
             past_events = past_events[:5]
         past_events = list(reversed(list(past_events)))
-        future_events = v.events.filter(Event.q.date >= date.today()).orderBy('date')
+        future_events = v.future_events.orderBy('date')
 
         return dict(venue=v, past_events=past_events, future_events=future_events,
             description=util.desc_format(v.description), googlemap=googlemap,

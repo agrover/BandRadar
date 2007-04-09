@@ -162,10 +162,12 @@ class Venue(Journalled, BRMixin):
     events = SQLMultipleJoin('Event')
 
     def _get_future_events(self):
-        return self.events.filter(Event.q.date >= date.today())
+        return self.events.filter(
+            AND(Event.q.date >= date.today(), Event.q.approved != None))
 
     def _get_past_events(self):
-        return self.events.filter(Event.q.date < date.today())
+        return self.events.filter(
+            AND(Event.q.date < date.today(), Event.q.approved != None))
 
     def destroy_if_unused(self):
         if self.events.count() or self.users.count():
