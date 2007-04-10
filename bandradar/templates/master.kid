@@ -52,29 +52,44 @@
     <meta py:replace="item[:]"/>
 </head>
 
-<body py:match="item.tag=='{http://www.w3.org/1999/xhtml}body'">
-
-    <div id="main_column">
-
-        <div id="logo">
+ <body py:match="item.tag=='{http://www.w3.org/1999/xhtml}body'">  
+    <div id="wrapper">
+    
+    <!-- for future use
+		<div id="leftPanel">
+    	  <p>blahblabhbhbh</p>
+      </div>     
+     -->
+     
+    	<div id="contentArea">
+			<div id="logo">
             <a href="/"><img src="/static/images/logo3md.png" alt="BandRadar logo" /></a>
-        </div>
+			</div>     
+			<div py:replace="header()" /> 
+			<div py:replace="[item.text] + item[:]"/>
+		</div>  
+      <div id="rightPanel">
+    		<h4>
+        	<em>Tonight's events</em>
+    		</h4>
+		   <!-- <small><p py:for="event_id, event_name, venue_name in events">
+			<a href="/events/${event_id}"><b>${venue_name}</b>: ${event_name}</a>
+			</p></small> -->
+		</div>       
+           
+      <div py:if="tg_flash" class="flash" py:content="tg_flash"></div>
 
-        <div py:replace="header()" />
-
-        <div py:if="tg_flash" class="flash" py:content="tg_flash"></div>
-
-        <div id="content">
-            <div py:replace="[item.text] + item[:]"/>
-        </div>
-
-        <div id="footer">
+		
+        
+		<!-- <div id="contentArea">	   
+	   	<div id="footer">
             <a href="/about">about</a> |
             <a href="/privacy">privacy</a> |
             <a href="http://bandradar.blogspot.com">blog</a> |
-<!--            <a href="/contact">contact</a> | -->
+         	<a href="/contact">contact</a> | 
             <a href="/feeds">rss</a>
-        </div>
-    </div>
-</body>
+      	</div>
+      </div>	 -->
+	</div> 
+</body> 
 </html>

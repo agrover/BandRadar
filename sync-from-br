@@ -1,5 +1,5 @@
 pushd ~/
 ssh bandradar.com "pg_dump bandradar -U bandradar -Fc >br.dmp"
 scp bandradar.com:br.dmp .
-pg_restore -c br.dmp | psql bandradar
+pg_restore -c br.dmp | psql bandradar -U bandradar
 popd

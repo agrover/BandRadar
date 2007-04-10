@@ -7,6 +7,7 @@
 </head>
 
 <body>
+    
     <div id="tagline">
         <h3>The easy way to track your favorite Portland bands!</h3>
         <ul>
@@ -19,23 +20,16 @@
     <div id="searchbox">
         <h2>Search Bands</h2>
         ${search_form(action="/artists/search")}
+        ${tg_ButtonWidget(action="/events/edit", label="Add a new event")}
     </div>
 
     <hr />
-
-    <h4>
-        Tonight's events
-        ${tg_ButtonWidget(action="/events/edit", label="Add a new event")}
-    </h4>
-
-    <p py:for="event_id, event_name, venue_name in events">
-        <a href="/events/${event_id}">${event_name} @ ${venue_name}</a>
-    </p>
-
     <h4>Top Tracked</h4>
     <p py:for="item in top_tracked">
         <a href="/artists/${item['id']}">${item['name']}</a>
     </p>
-
+    
+   
+    
 </body>
 </html>
