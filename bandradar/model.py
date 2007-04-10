@@ -189,26 +189,10 @@ class Artist(Journalled, BRMixin):
     users = SQLRelatedJoin('UserAcct')
 
     @classmethod
-    def clean(cls, bad_snippet, good_snippet=""):
-        """
-        Rename artists with accidental crap in their name.
-        If there is already a clean version, copy over links and
-        remove the bad one.
-        """
-        artists = Artist.select(Artist.q.name.startswith(bad_snippet))
-        for bad_artist in artists:
-            # is there another artist with the name? move links over
-            good_name = bad_artist.name.replace(bad_snippet, good_snippet)
-            try:
-                good_artist = Artist.byNameI(good_name)
-                this.move(cls, bad_artist.id, good_artist.id)
-            except SQLObjectNotFound:
-                bad_artist.name = good_name
+    def clone(cls, old_id, new_id):
+        """Copy all links from one artist to another.
 
-    @classmethod
-    def move(cls, old_id, new_id):
-        """Move relations from a duplicate entry to the real one, and
-        remove the duplicate.
+        new must already exist, and can have attrs/relations already.
         """
         if old_id == new_id:
             raise Exception
@@ -217,12 +201,50 @@ class Artist(Journalled, BRMixin):
         for event in old.events:
             if event not in new.events:
                 new.addEvent(event)
-            old.removeEvent(event)
         for user in old.users:
             if user not in new.users:
                 new.addUserAcct(user)
-            old.removeUserAcct(user)
-        old.destroySelf()
+        for field in old.sqlmeta.columns.keys():
+            # only set if not set already
+            if not getattr(new, field, None) and getattr(old, field, None):
+                value = getattr(old, field)
+                setattr(new, field, value)
+
+
+    @classmethod
+    def move(cls, old_id, new_id):
+        """Move relations from a duplicate entry to the real one, and
+        remove the duplicate.
+        """
+        cls.clone(old_id, new_id)
+        cls.delete(old_id)
+
+    @classmethod
+    def split_artists(cls):
+        out = ""
+        u = UserAcct.get(1)
+        import importers
+        i = importers.Importers()
+        artists = Artist.select(AND(Artist.q.approved != None, Artist.q.is_dj == True))
+        for artist in artists:
+            new = list(i.artists_clean([artist.name]))
+            if len(new) > 1:
+                a0 = Artist.byNameI(new[0])
+                try:
+                    a1 = Artist.byNameI(new[1])
+                    add = False
+                except SQLObjectNotFound:
+                    out += "add artist %s\n" % new[1]
+                    add = True
+                out += "cloning from %s to %s\n" % (artist.name, new[1])
+                out += "moving from %s to %s\n" % (artist.name, a0.name)
+                print out
+                if not add or raw_input("adding, look ok? (y/n)>") == 'y':
+                    if add:
+                        a1 = Artist(name=new[1], added_by=u)
+                    Artist.clone(artist.id, a1.id)
+                    Artist.move(artist.id, a0.id)
+                out = ""
 
     @classmethod
     def megamerge(cls):

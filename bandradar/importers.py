@@ -199,9 +199,11 @@ class Importers(controllers.Controller, identity.SecureResource):
             if artist.find("&") != -1:
                 artist1, artist2 = artist.split("&", 1)
                 try:
+                    if not len(artist1.strip()):
+                        continue
                     a = Artist.byNameI(artist1)
-                    yield artist1
-                    yield artist2
+                    yield artist1.strip()
+                    yield artist2.strip()
                 except SQLObjectNotFound:
                     yield artist
             else:
