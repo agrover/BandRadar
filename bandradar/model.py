@@ -235,6 +235,8 @@ class Artist(Journalled, BRMixin):
                     add = False
                 except SQLObjectNotFound:
                     out += "add artist %s\n" % new[1]
+                    if not new[1].startswith("DJ"):
+                        new[1] = "DJ " + new[1]
                     add = True
                 out += "cloning from %s to %s\n" % (artist.name, new[1])
                 out += "moving from %s to %s\n" % (artist.name, a0.name)
