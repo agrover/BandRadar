@@ -16,7 +16,8 @@ class ArtistForm(w.WidgetsList):
     description = w.TextArea(label="Description", rows=4)
     url = w.TextField(label="Website", attrs=dict(size=60),
         validator=v.Any(v.URL, v.Empty))
-    myspace = w.TextField(label="MySpace", attrs=dict(maxlength=40))
+    myspace = w.TextField(label="MySpace", attrs=dict(maxlength=40),
+        help_text="either myspace.com/abc or abc")
     is_dj = w.CheckBox(label="Is a DJ", default=False)
 
 class ArtistSchema(v.Schema):
