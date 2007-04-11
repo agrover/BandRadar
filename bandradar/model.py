@@ -210,43 +210,30 @@ class Artist(Journalled, BRMixin):
                 value = getattr(old, field)
                 setattr(new, field, value)
 
-
     @classmethod
-    def move(cls, old_id, new_id):
+    def merge(cls, old_id, new_id):
         """Move relations from a duplicate entry to the real one, and
         remove the duplicate.
         """
         cls.clone(old_id, new_id)
         cls.delete(old_id)
 
-    @classmethod
-    def split_artists(cls):
-        out = ""
-        u = UserAcct.get(1)
+    def split_artist(self):
+        u = identity.current.user
         import importers
         i = importers.Importers()
-        artists = Artist.select(AND(Artist.q.approved != None, Artist.q.is_dj == True))
-        for artist in artists:
-            new = list(i.artists_clean([artist.name]))
-            if len(new) > 1:
-                a0 = Artist.byNameI(new[0])
-                try:
-                    a1 = Artist.byNameI(new[1])
-                    add = False
-                except SQLObjectNotFound:
-                    out += "add artist %s\n" % new[1]
-                    if not new[1].startswith("DJ"):
-                        new[1] = "DJ " + new[1]
-                    add = True
-                out += "cloning from %s to %s\n" % (artist.name, new[1])
-                out += "moving from %s to %s\n" % (artist.name, a0.name)
-                print out
-                if not add or raw_input("adding, look ok? (y/n)>") == 'y':
-                    if add:
-                        a1 = Artist(name=new[1], added_by=u)
-                    Artist.clone(artist.id, a1.id)
-                    Artist.move(artist.id, a0.id)
-                out = ""
+        new = list(i.artists_clean([self.name]))
+        if len(new) > 1:
+            a0 = Artist.byNameI(new[0])
+            try:
+                a1 = Artist.byNameI(new[1])
+            except SQLObjectNotFound:
+                a1 = Artist(name=new[1], added_by=u)
+            Artist.clone(self.id, a1.id)
+            Artist.merge(self.id, a0.id)
+            return {a0.id:a0.name,a1.id:a1.name}
+        else:
+            return {self.id:self.name}
 
     @classmethod
     def megamerge(cls):
@@ -271,7 +258,7 @@ class Artist(Journalled, BRMixin):
                     new_id = b.id
                     old_id = a.id
                     result_str += "merging %s into %s\n" % (a.name, b.name)
-                cls.move(old_id, new_id)
+                cls.merge(old_id, new_id)
             except SQLObjectNotFound:
                 # one of them already zapped, continue
                 pass
@@ -291,7 +278,7 @@ class Artist(Journalled, BRMixin):
                     yield pre + name
 
         def posts(name):
-            posts = (" trio", " quartet", " band", " septet",
+            posts = (" trio", " quartet", " band", " septet", " combo",
                      " jam", " jazz jam", " show", " and band")
             yield name
             for post in posts:

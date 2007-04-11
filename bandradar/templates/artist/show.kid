@@ -8,7 +8,16 @@
 
 <body>
     <div id="body">
-        <p class="name">${artist.name}</p>
+        <p class="name">${artist.name}
+            <span py:if="'admin' in tg.identity.groups">
+                ${tg_ButtonWidget(action="/artists/%s/split" % artist.id, label="Split")}
+                <form class="buttonform" action="/artists/${artist.id}/merge" method="POST">
+                    <label style="font-size: x-small;font-weight: normal" for="other_id">Merge into:</label>
+                    <input type="text" id="other_id" name="other_id" size="8"/>
+                    <input type="submit" class="button" value="Merge"/>
+                </form>
+            </span>
+        </p>
         <p id="description" py:if="description">${XML(description)}</p>
         <p py:if="artist.url">Website: <a href="${artist.url}">${artist.url}</a></p>
         <p py:if="artist.myspace">MySpace:

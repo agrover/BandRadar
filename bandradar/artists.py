@@ -203,6 +203,30 @@ class Artists(controllers.Controller, util.RestAdapter):
 
     @expose()
     @identity.require(identity.in_group("admin"))
+    def split(self, id):
+        try:
+            a = Artist.get(id)
+            new_artists = a.split_artist()
+            if len(new_artists) > 1:
+                turbogears.flash("split into %s" % ", ".join(new_artists.values()))
+            else:
+                turbogears.flash("Not split")
+        except SQLObjectNotFound:
+            turbogears.flash("not found")
+        redirect(turbogears.url("/artists/%s") % new_artists.keys()[0])
+
+    @expose()
+    @identity.require(identity.in_group("admin"))
+    def merge(self, id, other_id):
+        try:
+            Artist.merge(id, other_id)
+            turbogears.flash("Artist %s merged into %s" % (id, other_id))
+        except SQLObjectNotFound:
+            turbogears.flash("Could not move")
+        redirect(turbogears.url("/artists/%s") % other_id)
+
+    @expose()
+    @identity.require(identity.in_group("admin"))
     def delete(self, id):
         try:
             a = Artist.get(id)
