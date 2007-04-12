@@ -7,10 +7,19 @@
 </head>
 
 <body>
+	<div class="topContainer">
+      <div id="wrapper">     
+      <div class="contentArea">
+
     <h2>User List</h2>
 
     <p py:for="u in users">
         <p><a href="/users/${u.user_name}">${u.user_name}</a> tracking ${u.artists.count()}, added ${u.fcreated}</p>
     </p>
+
+
+   </div>
+  </div>
+  </div>    
 </body>
 </html>

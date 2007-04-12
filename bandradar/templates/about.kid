@@ -7,6 +7,11 @@
 </head>
 
 <body>
+
+<div class="topContainer">
+      <div id="wrapper">     
+      <div class="contentArea">
+      
     <h2>About BandRadar</h2>
     <p>
     BandRadar is meant to be a tool to help both people who love live music
@@ -19,6 +24,10 @@
     BandRadar also gives bands, venues, and promoters another way to find out
     about their events.
     </p>
+ 
+ </div>
+ </div>
+ </div>
 
 </body>
 </html>

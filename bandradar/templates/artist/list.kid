@@ -7,6 +7,9 @@
 </head>
 
 <body>
+   <div class="topContainer">
+      <div id="wrapper">     
+      <div class="contentArea">
     <div id="searchbox">
         <h2>Search all Bands</h2>
         <?python from bandradar.artists import artist_search_form ?>
@@ -42,5 +45,8 @@
             </td>
         </tr>
     </table>
+</div>
+</div>
+</div>    
 </body>
 </html>

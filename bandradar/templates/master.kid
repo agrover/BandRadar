@@ -55,35 +55,21 @@
  <body py:match="item.tag=='{http://www.w3.org/1999/xhtml}body'">  
    
    <div class="topContainer">
-   <div id="logo">
+  
+   <img src="/static/images/top_bk.png"/>
+   <div id="banner">
 	<a href="/"><img src="/static/images/banner.png" alt="BandRadar logo" /></a>
    </div>
    
 	<div py:replace="nav()" /> 
 	<div py:replace="[item.text] + item[:]"/> 
+	
+	 <div id="wrapper">
+	 <div class="contentArea">
+   <div py:if="tg_flash" class="flash" py:content="tg_flash"></div>
    
-    <div id="wrapper">
-    
-			
-     
-    	<div class="contentArea">
-		</div>  
-      
-      <div class="rightPanel">
-    		<h4>
-        	Tonight's events
-    		</h4>
- <!-- This is the broken part -->
-		 <small><p py:for="event_id, event_name, venue_name in events">
-			<a href="/events/${event_id}"><b>${event_name}</b>@${venue_name}</a>
-			</p></small>
-		</div>       
-  <!-- End Broken Part        -->  
-  
-      <div py:if="tg_flash" class="flash" py:content="tg_flash"></div>
-
-		     
-	</div> 
+ </div>
+ </div>
    </div>  
 </body> 
 </html>

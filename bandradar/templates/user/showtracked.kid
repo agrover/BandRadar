@@ -7,6 +7,10 @@
 </head>
 
 <body>
+ <div class="topContainer">
+      <div id="wrapper">     
+      <div class="contentArea">
+
     <div id="userinfo">
         <h2>${user.user_name}</h2>
         <p>Since: ${user.created.strftime("%x")}</p>
@@ -51,6 +55,8 @@ venues by-date
         </tr>
     </table>
 
-
+</div>
+</div>
+</div>
 </body>
 </html>

@@ -7,9 +7,15 @@
 </head>
 
 <body>
+<div class="topContainer">
+      <div id="wrapper">     
+      <div class="contentArea">
     <h2>${user_name}</h2>
 
     ${user_form(value=form_vals, action="/users/save")}
-
+    
+   </div>
+  </div>
+ </div>
 </body>
 </html>

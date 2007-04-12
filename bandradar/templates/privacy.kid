@@ -7,6 +7,9 @@
 </head>
 
 <body>
+<div class="topContainer">
+      <div id="wrapper">     
+      <div class="contentArea">
     <h2>Privacy</h2>
     <p>
     BandRadar intentionally limits the amount of personal information it collects
@@ -18,5 +21,8 @@
     We are still working on a formal privacy policy, but it will follow the
     informal guidelines above.
     </p>
+    </div>
+    </div>
+    </div>
 </body>
 </html>

@@ -8,7 +8,10 @@
     <title>Login</title>
 </head>
 
-<body>
+ <body>
+    <div class="topContainer">
+      <div id="wrapper">     
+      <div class="contentArea">
     <div id="loginBox">
         <h2>Login</h2>
         <p id="login_msg">${message}</p>
@@ -59,5 +62,10 @@
         <h2>New Login</h2>
         ${newuser_form(value=form_vals, action="/users/usercreate")}
     </div>
+  </div>
+  </div>
+ </div>
+
+ 
 </body>
 </html>

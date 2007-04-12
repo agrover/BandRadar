@@ -7,6 +7,9 @@
 </head>
 
 <body>
+    <div class="topContainer">
+      <div id="wrapper">     
+      <div class="contentArea">
     <div id="searchbox">
         <h2>Search all Venues</h2>
         <?python from bandradar.venues import venue_search_form ?>
@@ -35,5 +38,8 @@
         </td>
     </tr>
     </table>
+    </div>
+    </div>
+    </div>
 </body>
 </html>

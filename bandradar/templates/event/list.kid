@@ -7,6 +7,11 @@
 </head>
 
 <body>
+
+    <div class="topContainer">
+      <div id="wrapper">     
+      <div class="contentArea">
+      
     <div id="searchbox">
         <h2>Search all Events</h2>
         ${event_search_form(action="/events/search")}
@@ -41,5 +46,8 @@
             </td>
         </tr>
     </table>
+ </div>
+ </div>
+ </div>
 </body>
 </html>

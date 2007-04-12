@@ -7,6 +7,10 @@
 </head>
 
 <body>
+
+<div class="topContainer">
+  <div id="wrapper">     
+   <div class="contentArea">
     <div id="body">
 
         ${googlemap(venue=venue, width=250, height=200)}
@@ -59,5 +63,9 @@
 
         <div py:replace="edit_links(venue)" />
     </div>
+</div>
+</div>
+</div>
+
 </body>
 </html>

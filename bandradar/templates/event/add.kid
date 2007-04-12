@@ -7,6 +7,9 @@
 </head>
 
 <body>
+	<div class="topContainer">
+      <div id="wrapper">     
+      <div class="contentArea">
     <h2>Add an event</h2>
 
     <script type="text/javascript">
@@ -14,6 +17,10 @@
     </script>
 
     ${event_form.display(value=form_vals, action="/events/save")}
+    
+ </div>
+ </div>
+ </div>
 
 </body>
 </html>

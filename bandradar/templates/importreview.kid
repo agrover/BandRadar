@@ -7,6 +7,9 @@
 </head>
 
 <body>
+<div class="topContainer">
+      <div id="wrapper">     
+      <div class="contentArea">
     <h2>Review New Shows (${shown} of ${total})</h2>
 
     <form action="/importers/reviewsubmit" method="post">
@@ -51,5 +54,8 @@
         <input type="submit" name="submit" value="Delete Checked" />
     </form>
     <a href="/importers/reviewpurge">Remove all entries</a>
+    </div>
+    </div>
+    </div>
 </body>
 </html>

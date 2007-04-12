@@ -7,6 +7,9 @@
 </head>
 
 <body>
+  <div class="topContainer">
+   <div id="wrapper">     
+    <div class="contentArea">
     <div id="body">
         <p class="name">${artist.name}
             <span py:if="'admin' in tg.identity.groups">
@@ -65,6 +68,10 @@
         </div>
 
         <div py:replace="edit_links(artist)" />
-    </div>
+        </div>
+</div>
+</div>
+</div>
+
 </body>
 </html>
