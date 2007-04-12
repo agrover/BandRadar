@@ -14,16 +14,16 @@ from bandradar.widgets import BRAutoCompleteField, googlemap
 class VenueForm(w.WidgetsList):
     id = w.HiddenField(validator=v.Int)
     name = w.TextField(validator=v.NotEmpty(strip=True))
-    description = w.TextArea(rows=3)
+    description = w.TextArea(rows=6, cols=60)
     address = w.TextField()
     zip_code = w.TextField(label="Zip Code",
         attrs=dict(size=10, maxlength=10),
         validator=v.PostalCode(strip=True))
-    phone = w.TextField()
+    phone = w.TextField(validator=v.PhoneNumber())
     url = w.TextField(label="Website", attrs=dict(size=50),
         validator=v.Any(v.URL, v.Empty))
     myspace = w.TextField(label="MySpace", attrs=dict(maxlength=40),
-        help_text="e.g. myspace.com/abc, enter abc")
+        help_text="either myspace.com/abc or abc")
 
 class VenueSchema(v.Schema):
     chained_validators = [util.UniqueName(Venue)]

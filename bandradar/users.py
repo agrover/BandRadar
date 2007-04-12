@@ -82,7 +82,7 @@ class UserForm(w.WidgetsList):
     url = w.TextField(label="Website", attrs=dict(size=50),
         validator=v.URL)
     myspace = w.TextField(label="MySpace", attrs=dict(maxlength=40),
-        help_text="e.g. myspace.com/abc, enter abc")
+        help_text="either myspace.com/abc or abc")
     description = w.TextArea(label="About Me", rows=3, cols=60)
     event_email = w.CheckBox(label="Upcoming Events Email",
         help_text="email about upcoming events for tracked artists", default=False)

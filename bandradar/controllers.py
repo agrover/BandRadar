@@ -8,7 +8,7 @@ from turbogears import widgets as w
 from turbogears import validators as v
 from turbogears import paginate
 from turbogears.view import root_variable_providers
-from sqlobject import AND, SQLObjectNotFound
+from sqlobject import AND, NOT, IN, SQLObjectNotFound
 
 from artists import Artists, artist_search_form
 from venues import Venues
@@ -16,7 +16,7 @@ from events import Events
 from users import Users
 from importers import Importers
 from comments import Comments
-from model import Event, UpdateLog, UserAcct, BatchRecord, hub
+from model import Event, UpdateLog, UserAcct, BatchRecord, Group, hub
 import batch
 import saved_visit
 import util
@@ -155,10 +155,11 @@ class Root(controllers.RootController):
     @expose(template=".templates.datagrid")
     @identity.require(identity.in_group("admin"))
     @paginate("data", default_order="created", limit=25)
-    def list_update_log(self, filter_user=None):
+    def list_update_log(self, filter_admin=1):
         results = UpdateLog.select().reversed()
-        if filter_user:
-            results = results.filter(UpdateLog.q.changed_by == int(filter_user))
+        if filter_admin:
+            g = Group.by_group_name("admin")
+            results = results.filter(NOT(IN(UpdateLog.q.changed_by, [u.id for u in g.users])))
         return dict(title="BandRadar Update Log", grid=udl_datagrid, data=results)
 
     @expose(template=".templates.datagrid")

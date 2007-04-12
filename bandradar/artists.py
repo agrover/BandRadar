@@ -16,7 +16,8 @@ class ArtistForm(w.WidgetsList):
     description = w.TextArea(label="Description", rows=4)
     url = w.TextField(label="Website", attrs=dict(size=60),
         validator=v.Any(v.URL, v.Empty))
-    myspace = w.TextField(label="MySpace", attrs=dict(maxlength=40))
+    myspace = w.TextField(label="MySpace", attrs=dict(maxlength=40),
+        help_text="either myspace.com/abc or abc")
     is_dj = w.CheckBox(label="Is a DJ", default=False)
 
 class ArtistSchema(v.Schema):
@@ -200,6 +201,30 @@ class Artists(controllers.Controller, util.RestAdapter):
         except SQLObjectNotFound:
             pass
         return ret
+
+    @expose()
+    @identity.require(identity.in_group("admin"))
+    def split(self, id):
+        try:
+            a = Artist.get(id)
+            new_artists = a.split_artist()
+            if len(new_artists) > 1:
+                turbogears.flash("split into %s" % ", ".join(new_artists.values()))
+            else:
+                turbogears.flash("Not split")
+        except SQLObjectNotFound:
+            turbogears.flash("not found")
+        redirect(turbogears.url("/artists/%s") % new_artists.keys()[0])
+
+    @expose()
+    @identity.require(identity.in_group("admin"))
+    def merge(self, id, other_id):
+        try:
+            Artist.merge(id, other_id)
+            turbogears.flash("Artist %s merged into %s" % (id, other_id))
+        except SQLObjectNotFound:
+            turbogears.flash("Could not move")
+        redirect(turbogears.url("/artists/%s") % other_id)
 
     @expose()
     @identity.require(identity.in_group("admin"))

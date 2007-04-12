@@ -23,15 +23,15 @@ class EitherNameOrArtists(formencode.FancyValidator):
 class EventForm(w.WidgetsList):
     id = w.HiddenField(validator=v.Int)
     name = w.TextField(label="Event Name", help_text="If different from artists' names",
-        validator=v.String(strip=True))
-    artists = w.TextArea(help_text="Enter artists, one per line", rows=3, cols=30,
+        validator=v.String(strip=True), attrs=dict(size=40))
+    artists = w.TextArea(help_text="Enter artists, one per line", rows=4, cols=40,
         validator=v.String(strip=True))
     venue = BRAutoCompleteField("/venues/dynsearch", label="Venue", take_focus=False)
     date = BRCalendarDatePicker(not_empty=True)
     time = w.TextField(attrs=dict(maxlength=40))
     cost = w.TextField(attrs=dict(maxlength=120))
     ages = w.TextField(attrs=dict(maxlength=40))
-    description = w.TextArea(rows=3)
+    description = w.TextArea(rows=3, cols=60)
     url = w.TextField(label="Website", attrs=dict(size=50, maxlength=256),
         validator=v.Any(v.URL, v.Empty))
 
@@ -202,6 +202,12 @@ class Events(controllers.Controller, util.RestAdapter):
                 e.removeArtist(artist)
                 artist.destroy_if_unused()
         new_artists = set([a.name for a in e.artists])
+        # approve all artists at approved events
+        if e.approved:
+            for artist in e.artists:
+                if not artist.approved:
+                    artist.approved = datetime.now()
+        # add entry to UpdateLog
         if old_artists != new_artists and e.approved:
             u = UpdateLog(
                 changed_by=identity.current.user.id,
