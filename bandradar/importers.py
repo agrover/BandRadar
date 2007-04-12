@@ -138,7 +138,7 @@ class Importers(controllers.Controller, identity.SecureResource):
         "Van Gloryious":"DJ Van Glorious",
         "hosted by Cory":"Cory",
         "Tamara J. Brown Open Mic":"Tamara J. Brown",
-        "Professor Stone":"DJ Professor Stone",
+        "DJ Lopez Pure Dance Mix":"DJ Lopez",
         "DJ My Friend Andy":"My Friend Andy",
         "DJ Moisti loves Mr. E":"DJ Moisti",
         "The Fabulous DJ Moisti":"DJ Moisti",
@@ -192,7 +192,20 @@ class Importers(controllers.Controller, identity.SecureResource):
         artists = [a for a in artists if a != "with guests"]
         artists = [a for a in artists if a != "and guests"]
         artists = [self.artist_name_fix(a) for a in artists]
-        return artists
+
+        # break all "john foo & susan bar" into separate artists, if "john foo"
+        # already exists in the db
+        for artist in artists:
+            if artist.find("&") != -1:
+                artist1, artist2 = artist.split("&", 1)
+                try:
+                    a = Artist.byNameI(artist1)
+                    yield artist1
+                    yield artist2
+                except SQLObjectNotFound:
+                    yield artist
+            else:
+                yield artist
 
     # IMPORTERS MUST YIELD:
     #
@@ -226,7 +239,9 @@ class Importers(controllers.Controller, identity.SecureResource):
 
         event_name = self.event_name_fix(event['name'])
         event_date = event["date"]
-        event_time = event.get("time").lower()
+        event_time = event.get("time")
+        if event_time:
+            event_time = event_time.lower()
         db_events = Event.selectBy(date=event_date,
             time=event_time, venue=v)
         if db_events.count():
@@ -243,8 +258,7 @@ class Importers(controllers.Controller, identity.SecureResource):
         self._set_optional_fields(e, event, ("cost", "ages", "url",
             "description", "ticket_url"))
 
-        artists = self.artists_clean(event['artists'])
-        for artist in artists:
+        for artist in self.artists_clean(event['artists']):
             try:
                 a = Artist.byNameI(artist)
             except SQLObjectNotFound:
