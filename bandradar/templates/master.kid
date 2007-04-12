@@ -13,8 +13,8 @@
     </p>
 </div>
 
-<div py:def="header()">
-    <div id="header">
+<div py:def="nav()">
+    <div class="nav">
         <span py:if="not tg.identity.user">
             <a href="/users/login">Login/Register</a>
         </span>
@@ -29,7 +29,7 @@
             <a href="/users/logout">Logout</a>
         </span>
     </div>
-    <div id="admin_header" py:if="'admin' in tg.identity.groups">
+    <div class="admin_nav" py:if="'admin' in tg.identity.groups">
         <a href="/importers/webimport">Import Events</a>
         <a href="/importers/review">Review Events</a>
         <a href="/importers/reviewdupes">Possible dupes</a>
@@ -53,43 +53,37 @@
 </head>
 
  <body py:match="item.tag=='{http://www.w3.org/1999/xhtml}body'">  
+   
+   <div class="topContainer">
+   <div id="logo">
+	<a href="/"><img src="/static/images/banner.png" alt="BandRadar logo" /></a>
+   </div>
+   
+	<div py:replace="nav()" /> 
+	<div py:replace="[item.text] + item[:]"/> 
+   
     <div id="wrapper">
     
-    <!-- for future use
-		<div id="leftPanel">
-    	  <p>blahblabhbhbh</p>
-      </div>     
-     -->
+			
      
-    	<div id="contentArea">
-			<div id="logo">
-            <a href="/"><img src="/static/images/logo3md.png" alt="BandRadar logo" /></a>
-			</div>     
-			<div py:replace="header()" /> 
-			<div py:replace="[item.text] + item[:]"/>
+    	<div class="contentArea">
 		</div>  
-      <div id="rightPanel">
+      
+      <div class="rightPanel">
     		<h4>
-        	<em>Tonight's events</em>
+        	Tonight's events
     		</h4>
-		   <!-- <small><p py:for="event_id, event_name, venue_name in events">
-			<a href="/events/${event_id}"><b>${venue_name}</b>: ${event_name}</a>
-			</p></small> -->
+ <!-- This is the broken part -->
+		 <small><p py:for="event_id, event_name, venue_name in events">
+			<a href="/events/${event_id}"><b>${event_name}</b>@${venue_name}</a>
+			</p></small>
 		</div>       
-           
+  <!-- End Broken Part        -->  
+  
       <div py:if="tg_flash" class="flash" py:content="tg_flash"></div>
 
-		
-        
-		<!-- <div id="contentArea">	   
-	   	<div id="footer">
-            <a href="/about">about</a> |
-            <a href="/privacy">privacy</a> |
-            <a href="http://bandradar.blogspot.com">blog</a> |
-         	<a href="/contact">contact</a> | 
-            <a href="/feeds">rss</a>
-      	</div>
-      </div>	 -->
+		     
 	</div> 
+   </div>  
 </body> 
 </html>

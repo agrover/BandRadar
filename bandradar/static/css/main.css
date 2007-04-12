@@ -1,12 +1,25 @@
 body {
     font: normal small Verdana, Arial, Helvetica, sans-serif;
 	 text-align: center;    
+    background: black url(../images/br_back.png) repeat-y center;
+    margin: 0 auto 0 auto;
+    width: 800px;
 }
  
 a { text-decoration: none; }
 a:link { color: #060; }
 a:visited { color: #0A0; }
 a:hover { color: #0A0; text-decoration: underline; }
+
+.topContainer {
+	width: 800px;
+	margin: 0 auto;
+	text-align: left;
+	position: absolute;
+	left: 50%;
+	margin-left: -400px;
+}
+	
 
 #wrapper {
 	 width: 800px:    
@@ -16,42 +29,56 @@ a:hover { color: #0A0; text-decoration: underline; }
     left: 50%;
     margin-left: -400px;
 }
-  
-#leftPanel {
+/*  
+.leftPanel {
  width: 10px;
  position: absolute;
- /*float: left;*/
  top: 0;
  left: 0px;
  border: green 1px solid;
 }  
+*/
   
-#contentArea {
+.contentArea {
  width: 590px;
  position: absolute;
  /*float: left;*/
- border: purple 1px solid;
  top: 0;
  left: 10px;
 }
 
-#rightPanel {
+.rightPanel {
  width: 200px;
  position: absolute;
- /*float: left;*/
+ /*float: right;*/
  top: 0;
- left: 600px;
- border: blue 1px solid;
+ left: 545px;
+ border-top: #bd2c00 4px solid;
+ border-bottom: #bd2c00 4px ridge;
+ border-left: #bd2c00 4px solid;
+ border-right: #bd2c00 4px solid;
+ padding: 1em;
 }
 
 #footer {
- display: none;
+    text-align: center;
+    color: gray;
+}
+
+.nav {
+    position: relative;
+    padding-left: 2em;
+    
+}    
+ .admin_nav {
+    position: relative;
+    padding: .5em;
+    margin-bottom: .5em;
+    border: 2px dashed red
 }
 
 
-
-
-
+#nav a, #admin_nav a { padding: 0 .3em 0 .3em; }
 
 
 
@@ -71,18 +98,15 @@ a:hover { color: #0A0; text-decoration: underline; }
     padding: .5em;
 }
 */
-/* #logo {
-    float: left;
-    margin-bottom: 1em;
-} */
+ #logo {
+  margin-bottom: 1em;
+  padding-left:  25px;
+} 
 
-#footer {
-    text-align: center;
-    color: gray;
-}
+
 
 /*see main.kid*/
-#tagline {
+/*#tagline {
 	 position: relative;	    
     border: 2px solid green;
     margin: 1em;
@@ -90,7 +114,7 @@ a:hover { color: #0A0; text-decoration: underline; }
     background-color: #080;
     color: white;
 }
-#tagline ul {
+/*#tagline ul {
     margin: 0 0 .5em 0;
 }
 
@@ -98,11 +122,13 @@ a:hover { color: #0A0; text-decoration: underline; }
 #searchbox {
     margin: 1em;
 }
+*/
+/*
 #searchbox h2 {
     display: inline;
     margin-bottom: 0;
 }
-
+*/
 
 h2 {
     margin: 0 0 .5em 0;
@@ -190,17 +216,9 @@ textarea { border: 1px solid black; }
 
 
 
-#header, #admin_header {
-   /* float: left;*/
-    position: relative;
-    padding: .5em;
-    margin-bottom: .5em;
-    border: 1px solid black;
+
 }
 
-#admin_header { border: 2px dashed red }
-
-#header a, #admin_header a { padding: 0 .3em 0 .3em; }
 
 
 #details { margin: 0 0 1em 1em; }

@@ -7,29 +7,9 @@
 </head>
 
 <body>
-    
-    <div id="tagline">
-        <h3>The easy way to track your favorite Portland bands!</h3>
-        <ul>
-            <li>Find out who's playing</li>
-            <li>Get notified when bands you like play live</li>
-            <li>Your band's gig not here? Add it!</li>
-        </ul>
-    </div>
+     
 
-    <div id="searchbox">
-        <h2>Search Bands</h2>
-        ${search_form(action="/artists/search")}
-        ${tg_ButtonWidget(action="/events/edit", label="Add a new event")}
-    </div>
 
-    <hr />
-    <h4>Top Tracked</h4>
-    <p py:for="item in top_tracked">
-        <a href="/artists/${item['id']}">${item['name']}</a>
-    </p>
-    
-   
     
 </body>
 </html>
