@@ -38,54 +38,46 @@ class Importers(controllers.Controller, identity.SecureResource):
         return dict(merc_form=merc_form, wweek_form=wweek_form)
 
     @expose()
-    @turbogears.validate(form=merc_form)
-    @turbogears.error_handler(webimport)
-    def importmercury(self, url):
-        venues = MBL.parse_week(url)
-        self.import_to_db(venues)
-        turbogears.flash("Mercury Imported")
-        redirect(turbogears.url("/importers/review"))
-
-    @expose()
     @turbogears.validate(form=wweek_form)
     @turbogears.error_handler(webimport)
     def importwweek(self, thedate, do_week=False):
         if not do_week:
-            gen = WWBL.day_events
+            gen = WWBL.day_events(thedate)
         else:
-            gen = WWBL.week_events
-        for event in gen(thedate):
-            self.import_to_db(event)
-        turbogears.flash("WWeek Imported")
+            gen = WWBL.week_events(thedate)
+        self.generic_import("WWeek", gen)
+
+    def generic_import(self, name, gen):
+        not_added = 0
+        review_count = 0
+        nonreview_count = 0
+        for event in gen:
+            new_event, flagged = self.import_to_db(event)
+            if not new_event:
+                not_added += 1
+            elif flagged:
+                review_count += 1
+            else:
+                nonreview_count += 1
+        turbogears.flash("%s added %d, %d flagged for review, %d skipped" % \
+            (name, nonreview_count, review_count, not_added))
         redirect(turbogears.url("/importers/review"))
 
     @expose()
     def importpollstar(self):
-        for event in pollstar.events():
-            self.import_to_db(event)
-        turbogears.flash("Pollstar Imported")
-        redirect(turbogears.url("/importers/review"))
+        self.generic_import("Pollstar", pollstar.events())
 
     @expose()
     def importupcoming(self):
-        for event in br.events():
-            self.import_to_db(event)
-        turbogears.flash("Upcoming Imported")
-        redirect(turbogears.url("/importers/review"))
+        self.generic_import("Upcoming", br.events())
 
     @expose()
     def importlastfm(self):
-        for event in lastfm.events():
-            self.import_to_db(event)
-        turbogears.flash("last.fm Imported")
-        redirect(turbogears.url("/importers/review"))
+        self.generic_import("last.fm", lastfm.events())
 
     @expose()
     def importticketswest(self):
-        for event in ticketswest.events():
-            self.import_to_db(event)
-        turbogears.flash("TicketsWest Imported")
-        redirect(turbogears.url("/importers/review"))
+        self.generic_import("Ticketswest", ticketswest.events())
 
     def _set_optional_fields(self, obj, in_dict, field_list):
         model = obj.__class__
@@ -134,6 +126,7 @@ class Importers(controllers.Controller, identity.SecureResource):
     }
 
     artist_fixup_dict = {
+        "+44":"Plus 44",
         "DJ Van Gloryus":"DJ Van Glorious",
         "Van Gloryious":"DJ Van Glorious",
         "hosted by Cory":"Cory",
@@ -231,11 +224,13 @@ class Importers(controllers.Controller, identity.SecureResource):
     #       description
 
     def import_to_db(self, event):
+        flag_for_review = False
         venue_name = self.venue_name_fix(event['venue']['name'])
         try:
             v = Venue.byNameI(venue_name)
         except SQLObjectNotFound:
             v = Venue(name=venue_name, added_by=identity.current.user)
+            flag_for_review = True
         self._set_optional_fields(v, event['venue'], ("address", "phone", "zip_code",
             "url", "description"))
 
@@ -248,14 +243,17 @@ class Importers(controllers.Controller, identity.SecureResource):
             time=event_time, venue=v)
         if db_events.count():
             e = db_events[0]
+            new_event = False
         else:
             e = Event(venue=v, name=event_name,
                 date=event_date, time=event_time,
                 added_by=identity.current.user)
+            new_event = True
             try:
                 s = Source.byName(event["source"])
             except SQLObjectNotFound:
                 s = Source(name=event["source"])
+                flag_for_review = True
             e.addSource(s)
         self._set_optional_fields(e, event, ("cost", "ages", "url",
             "description", "ticket_url"))
@@ -265,8 +263,12 @@ class Importers(controllers.Controller, identity.SecureResource):
                 a = Artist.byNameI(artist)
             except SQLObjectNotFound:
                 a = Artist(name=artist, added_by=identity.current.user)
+                flag_for_review = True
             if not e.id in [existing.id for existing in a.events]:
                 a.addEvent(e)
+        if new_event and not flag_for_review:
+            e.approved = datetime.now()
+        return (new_event, flag_for_review)
 
     @expose(template=".templates.importreview")
     def review(self):
@@ -377,9 +379,9 @@ class Importers(controllers.Controller, identity.SecureResource):
     @expose()
     def merge_dupe(self, old_id, new_id):
         old = Event.get(old_id)
-        for artist in old.artists:
-            if not artist.approved:
-                artist.approved = datetime.now()
         new = Event.get(new_id)
         Event.merge(old, new)
+        for artist in new.artists:
+            if not artist.approved:
+                artist.approved = datetime.now()
         redirect(turbogears.url("/importers/reviewdupes"))
