@@ -73,7 +73,7 @@ a:hover { color: #91b023; text-decoration: underline; }
 */
   
 .contentArea {
- width: 590px;
+ width: 510px;
  position: absolute;
  /*float: left;*/
  top: 0;
@@ -90,7 +90,7 @@ a:hover { color: #91b023; text-decoration: underline; }
  border-bottom: #bd2c00 4px ridge;
  border-left: #bd2c00 4px solid;
  border-right: #bd2c00 4px solid;
- padding: 1em;
+ padding: .5em;
 }
 
 h4 {
