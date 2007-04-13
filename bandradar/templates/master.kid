@@ -14,30 +14,34 @@
 </div>
 
 <div py:def="nav()">
-    <div class="nav">
-        <span py:if="not tg.identity.user">
-            <a href="/users/login">Login/Register</a>
+    <!-- <div class="nav"> -->
+     <ul id="nav">
+        <li id="login"><span py:if="not tg.identity.user">
+            <a href="/users/login">Come In!</a>
         </span>
         <span py:if="tg.identity.user">
-            <a href="/users/${tg.identity.user.user_name}">${tg.identity.user.user_name}'s Page</a>
-        </span>
-        <a href="/artists/list">Bands</a>
-        <a href="/events/list">Events</a>
-        <a href="/venues/list">Venues</a>
-        <a href="/comments/add">Comments?</a>
-        <span py:if="tg.identity.user">
+            <a href="/users/${tg.identity.user.user_name}">
+            ${tg.identity.user.user_name}'s Page</a>
+        </span></li>
+        <li id="nav-bands"><a href="/artists/list">Bands</a></li>
+        <li id="nav-events"><a href="/events/list">Events</a></li>
+        <li id="nav-venues"><a href="/venues/list">Venues</a></li>
+        <li id="nav-comments"><a href="/comments/add">Comments</a></li>
+        <li id="nav-logout"><span py:if="tg.identity.user">
             <a href="/users/logout">Logout</a>
-        </span>
-        ${tg_ButtonWidget(action="/events/edit", label="Add a new event")}
-       </div>
-    <div class="admin_nav" py:if="'admin' in tg.identity.groups">
-        <a href="/importers/webimport">Import Events</a>
-        <a href="/importers/review">Review Events</a>
-        <a href="/importers/reviewdupes">Possible dupes</a>
-        <a href="/comments/list">Comments</a>
-        <a href="/list_update_log">Updates</a>
-        <a href="/list_batch">Batches</a>
-    </div>
+        </span></li>
+       </ul>
+       <!-- </div> -->
+           
+   <!--    <div class="admin_nav" py:if="'admin' in tg.identity.groups">
+        <li><a href="/importers/webimport">Import Events</a></li>
+        <li><a href="/importers/review">Review Events</a></li>
+        <li><a href="/importers/reviewdupes">Possible dupes</a></li>
+        <li><a href="/comments/list">Comments</a></li>
+        <li><a href="/list_update_log">Updates</a></li>
+        <li><a href="/list_batch">Batches</a></li>
+      </div> 
+     </ul> -->
 </div>
 
 
@@ -54,24 +58,23 @@
 </head>
 
  <body py:match="item.tag=='{http://www.w3.org/1999/xhtml}body'">  
-   
    <div class="topContainer">
   
-   <img src="/static/images/top_bk.png"/>
-   <div id="banner">
-	<a href="/"><img src="/static/images/banner.png" alt="BandRadar logo" /></a>
-   </div>
+     <img src="/static/images/top_bk.png"/>
+     <div id="banner">
+	 <a href="/"><img src="/static/images/banner.png" alt="BandRadar logo" /></a>
+     </div>
    
-	<div py:replace="nav()" /> 
-	  
- 	<div py:replace="[item.text] + item[:]"/> 
-	
-	 <div id="wrapper">
-	 <div class="contentArea">
-   <div py:if="tg_flash" class="flash" py:content="tg_flash"></div>
+
+     <div py:replace="nav()" /> 
+
+	<div py:replace="[item.text] + item[:]"/> 
+  <div id="wrapper">
+  <div class="contentArea">
+    <div py:if="tg_flash" class="flash" py:content="tg_flash"></div>
    
+  </div> 
  </div>
  </div>
-   </div>  
-</body> 
+ </body> 
 </html>
