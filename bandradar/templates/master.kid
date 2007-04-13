@@ -28,7 +28,8 @@
         <span py:if="tg.identity.user">
             <a href="/users/logout">Logout</a>
         </span>
-    </div>
+        ${tg_ButtonWidget(action="/events/edit", label="Add a new event")}
+       </div>
     <div class="admin_nav" py:if="'admin' in tg.identity.groups">
         <a href="/importers/webimport">Import Events</a>
         <a href="/importers/review">Review Events</a>
@@ -62,7 +63,8 @@
    </div>
    
 	<div py:replace="nav()" /> 
-	<div py:replace="[item.text] + item[:]"/> 
+	  
+ 	<div py:replace="[item.text] + item[:]"/> 
 	
 	 <div id="wrapper">
 	 <div class="contentArea">

@@ -7,9 +7,9 @@ body {
 }
  
 a { text-decoration: none; }
-a:link { color: #0a396b; }
+a:link { color: #3b7120; }
 a:visited { color: #bd2c00; }
-a:hover { color: #91b023; text-decoration: underline; }
+a:hover { color: #0a396b; text-decoration: underline; }
 
 .topContainer {
 	width: 800px;
@@ -93,6 +93,37 @@ a:hover { color: #91b023; text-decoration: underline; }
  padding: 1em;
 }
 
+.buttonform { display: inline; }
+.button {
+    font-size: x-small;
+    color: #0a396b;
+    font-weight: bold;
+    border: 5px double #bd2c00;
+    background-color: #f4f9e0;
+    padding: 0 .5em 0 .5em;
+}
+.button:hover { cursor: pointer }
+
+#list_heading {
+    font-weight: bold;
+    border: thin solid black;
+    width: 40em;
+    padding-left: 1em;
+}
+#list_heading ul {
+    padding: 0;
+    margin: 0;
+}
+#list_heading li { display: inline; }
+
+
+
+
+
+
+
+
+
 h4 {
 	 margin: 0 0 .5em 0; 
 	 color:  #3b7120;
@@ -160,15 +191,20 @@ h3 span.small { font-size:x-small; }
 
 
 
-
 #map {
     float:right;
     margin: 1em 1em 1em 1em;
 }
 img { border-style: none; }
 p { margin: 0; }
-input { border: 1px solid black; }
-textarea { border: 1px solid black; }
+input { border: 5px double #3b7120;
+        padding: .5em;
+        background-color: #f4f9e0; 
+       
+}
+textarea { border: 1px solid black; 
+
+}
 
 
 
@@ -187,8 +223,8 @@ textarea { border: 1px solid black; }
 .listform { display: inline; }
 .listform ul {
     display: inline;
-    padding-left: .5em;
-    margin: 0;
+    padding-left: 1em;
+    margin: 3px;
 }
 .listform li { display: inline; }
 .listform li div { display: inline; }
@@ -199,29 +235,9 @@ textarea { border: 1px solid black; }
     margin-bottom: .5em;
 }
 
-#list_heading {
-    font-weight: bold;
-    border: thin solid black;
-    width: 40em;
-    padding-left: .5em;
-}
-#list_heading ul {
-    padding: 0;
-    margin: 0;
-}
-#list_heading li { display: inline; }
 
 .edit_links p { margin-bottom: .5em; }
 
-.buttonform { display: inline; }
-.button {
-    font-size: x-small;
-    font-weight: normal;
-    border: thin solid green;
-    background-color: #dfd;
-    padding: 0 .5em 0 .5em;
-}
-.button:hover { cursor: pointer }
 
 
 

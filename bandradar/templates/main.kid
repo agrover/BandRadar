@@ -23,7 +23,7 @@
       <div id="searchbox">
         <h2>Search Bands</h2>
         ${search_form(action="/artists/search")}
-        ${tg_ButtonWidget(action="/events/edit", label="Add a new event")}
+        
         
         <div id="tagline">
         <h3>The easy way to track your favorite Portland bands!</h3>
