@@ -116,6 +116,8 @@ def send_email(start, finish):
                 "events in queue", "There are events in the pending queue.")
 
     for id in users_to_email:
+        import pkg_resources
+
         u = UserAcct.get(id)
 
         event_text = ""
@@ -156,7 +158,6 @@ def send_email(start, finish):
 
 def email(msg_to, msg_from, subject, body):
     import smtplib
-    import pkg_resources
     from email.MIMEText import MIMEText
     from email.Utils import make_msgid
 
