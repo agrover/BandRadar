@@ -29,15 +29,15 @@ a:hover { color: #0a396b; text-decoration: underline; }*/
   margin-left: 25px;  
   float: left;
   background:#91b023;
-  width: 755px;
-  border-top: 2px double #bd2c00;
-  border-bottom: 1px double #bd2c00;
+  width: 757px;
+  border: 2px double #bd2c00;
  }
 
 #nav li {
   display:inline;
-  padding:0px;
+  padding:0;
   margin:0;
+  text-align: center;
 }
 #nav a:link,
 #nav a:visited {
@@ -55,9 +55,11 @@ a:hover { color: #0a396b; text-decoration: underline; }*/
   background:#3b7120;
 }
 
+/*
 #nav li:first-child a {
   border-left:1px solid #bd2c00;
 }
+*/
 
 #login #nav-login a,
 #bands #nav-bands a,
