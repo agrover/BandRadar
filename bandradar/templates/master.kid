@@ -33,15 +33,15 @@
        </ul>
        <!-- </div> -->
            
-   <!--    <div class="admin_nav" py:if="'admin' in tg.identity.groups">
-        <li><a href="/importers/webimport">Import Events</a></li>
-        <li><a href="/importers/review">Review Events</a></li>
-        <li><a href="/importers/reviewdupes">Possible dupes</a></li>
-        <li><a href="/comments/list">Comments</a></li>
-        <li><a href="/list_update_log">Updates</a></li>
-        <li><a href="/list_batch">Batches</a></li>
+ <div class="admin_nav" py:if="'admin' in tg.identity.groups">
+        <a href="/importers/webimport">Import Events</a>
+        <a href="/importers/review">Review Events</a>
+        <a href="/importers/reviewdupes">Possible dupes</a>
+        <a href="/comments/list">Comments</a>
+        <a href="/list_update_log">Updates</a>
+        <a href="/list_batch">Batches</a>
       </div> 
-     </ul> -->
+
 </div>
 
 

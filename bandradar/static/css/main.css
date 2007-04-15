@@ -19,26 +19,20 @@ a:hover { color: #0a396b; text-decoration: underline; }*/
 	left: 50%;
 	margin-left: -400px;
 }
+
 #banner {
   padding-left:  25px;
 } 
 
-.navContainer {
- width: 750px
- text-align: left;
- margin: 0 auto;
- position: absolute;
- left: 50%;
- margin-left: -375px;
-}
-
 #nav {
-  padding-left:26px;
-  margin: 0;  
+  padding-left:0px;
+  margin-left: 25px;  
   float: left;
-  background:#808259;
-  width: 100%;
-  }
+  background:#91b023;
+  width: 755px;
+  border-top: 2px double #bd2c00;
+  border-bottom: 1px double #bd2c00;
+ }
 
 #nav li {
   display:inline;
@@ -49,15 +43,13 @@ a:hover { color: #0a396b; text-decoration: underline; }*/
 #nav a:visited {
   color: #000;
   background:#91b023;
-  padding:8px 33px 4px 5px;
+  padding:8px 33px 4px 4px;
   float: left; 
   width:auto;
-  border:1px solid #bd2c00;
   text-decoration:none;
-  font:bold 1em/1em Arial, Helvetica, sans-serif;
+  font:bold 1.25em/1em Arial, Helvetica, sans-serif;
   text-transform:uppercase;
-  text-shadow: 2px 2px 2px #555;
-}
+  }
 #nav a:hover {
   color:#f4f9e0;
   background:#3b7120;
@@ -86,10 +78,17 @@ a:hover { color: #0a396b; text-decoration: underline; }*/
 #add #nav-add a:hover {
   background:#e35a00;
 }
+
 #nav a:active {
 background:#0a396b;
 color:#fff;
 }
+
+.admin_nav {
+  text-align: center;
+  padding: .5em;
+  margin-bottom: .5em;
+}    
 
 .flash {
     font-weight: bold;
@@ -130,8 +129,8 @@ color:#fff;
 .rightPanel {
  width: 200px;
  position: absolute;
- top: 30px;
- left: 545px;
+ top: 50px;
+ left: 550px;
  border-top: #bd2c00 4px solid;
  border-bottom: #bd2c00 4px ridge;
  border-left: #bd2c00 4px solid;
