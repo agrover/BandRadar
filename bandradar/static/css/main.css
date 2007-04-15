@@ -196,8 +196,11 @@ td {
 
 h4 {
 	 margin: 0 0 .5em 0; 
-	 color:  #3b7120;
-
+	 font:bold 1.25em/1em Arial, Helvetica, sans-serif;
+     text-transform:uppercase;
+     text-align: center;
+     border-bottom: 3px outset #bd2c00;
+     padding-bottom: .2em;
 }
 
 
@@ -264,6 +267,7 @@ h3 span.small { font-size:x-small; }
 #map {
     float:right;
     margin: 1em 1em 1em 1em;
+    border: 2px ridge #bd2c00;
 }
 img { border-style: none; }
 p { margin: 0; }
@@ -305,8 +309,8 @@ textarea { border: 1px solid black;
 
 #details { margin: 0 0 1em 1em; }
 
-.fieldhelp { color: gray; }
-.fielderror { color: red; }
+.fieldhelp { color: #91b023; }
+.fielderror { color: #bd2c00; }
 
 
 
