@@ -6,10 +6,10 @@ body {
     width: 800px;
 }
  
-/*a { text-decoration: none; }
-a:link { color: #3b7120; }
+a { text-decoration: none; }
+a:link { color: #215309;}
 a:visited { color: #bd2c00; }
-a:hover { color: #0a396b; text-decoration: underline; }*/
+a:hover { color: #0a396b; text-decoration: underline; }
 
 .topContainer {
 	width: 800px;
@@ -94,10 +94,11 @@ color:#fff;
 }    
 
 .flash {
+    color: #215309;    
     font-weight: bold;
     font-size: large;
     text-align: center;
-    }
+}
 
 #footer{
  float: bottom;
@@ -134,23 +135,19 @@ color:#fff;
  position: absolute;
  top: 50px;
  left: 550px;
- border-top: #bd2c00 4px solid;
- border-bottom: #bd2c00 4px ridge;
- border-left: #bd2c00 4px solid;
- border-right: #bd2c00 4px solid;
+ border-top: #bd2c00 3px ridge;
+ border-bottom: #bd2c00 3px ridge;
+ border-left: #bd2c00 3px ridge;
+ border-right: #bd2c00 3px ridge;
  padding: 1em;
 }
-
-
-
-
 
 .buttonform { display: inline; }
 .button {
     font-size: x-small;
-    color: #0a396b;
+    color: #215309;
     font-weight: bold;
-    border: 5px double #bd2c00;
+    border: 3px ridge #bd2c00;
     background-color: #f4f9e0;
     padding: 0 .5em 0 .5em;
 }
@@ -158,22 +155,42 @@ color:#fff;
 
 
 #list_heading {
-    font-weight: bold;
-    border: thin solid black;
-    width: 40em;
-    padding-left: 1em;
+   font-weight: bold;
+    width: 750px;
+    padding-left: 0;
+    background-color: #bd2c00; 
 }
 #list_heading ul {
-    padding: 0;
-    margin: 0;
+    padding-left: 0;
+    margin-left:0;
+    color: #215309;  
+    float: left;
+    width: 85%;
 }
-#list_heading li { display: inline; }
+#list_heading ul li { display: inline; }
 
+#list_heading ul li a {
+padding: 0.2em .5em;
+background-color: none;
+color: #215309;
+text-decoration: none;
+float: left;
+border-right: 1px solid #215309;
+}
 
+table { 
+        table-layout: fixed;
+        float: left;
+        margin-left: 2em;
+        margin-right: 2em; 
+        padding: .5em;
+        border-spacing: 0;
+}
 
-
-
-
+td { 
+  padding: .2em;
+  border-bottom: 1px dotted #215309;
+ }
 
 
 
@@ -251,19 +268,15 @@ h3 span.small { font-size:x-small; }
 img { border-style: none; }
 p { margin: 0; }
 
-input { border: 5px double #3b7120;
-        padding: .5em;
+input { border: 4px ridge #bd2c00;
+        padding: .2em;
         background-color: #f4f9e0; 
+        color: #215309;
        
 }
 textarea { border: 1px solid black; 
 
 }
-
-
-
-
-
 
 .event_list { margin: 0 0 1em 1em; }
 
@@ -271,8 +284,6 @@ textarea { border: 1px solid black;
     font-weight: bold;
     font-size: medium;
 }
-
-
 
 .listform { display: inline; }
 .listform ul {
@@ -289,16 +300,7 @@ textarea { border: 1px solid black;
     margin-bottom: .5em;
 }
 
-
 .edit_links p { margin-bottom: .5em; }
-
-
-
-
-
-
-}
-
 
 
 #details { margin: 0 0 1em 1em; }
