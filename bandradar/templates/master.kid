@@ -14,8 +14,8 @@
 </div>
 
 <div py:def="nav()">
-    <!-- <div class="nav"> -->
-     <ul id="nav">
+    <div id="navcon">
+     <ul id="navlist">
         <li id="login"><span py:if="not tg.identity.user">
             <a href="/users/login">Come In!</a>
         </span>
@@ -31,9 +31,9 @@
             <a href="/users/logout">Logout</a>
         </span></li>
        </ul>
-       <!-- </div> -->
+      </div> 
            
- <div class="admin_nav" py:if="'admin' in tg.identity.groups">
+  <div class="admin_nav" py:if="'admin' in tg.identity.groups">
         <a href="/importers/webimport">Import Events</a>
         <a href="/importers/review">Review Events</a>
         <a href="/importers/reviewdupes">Possible dupes</a>

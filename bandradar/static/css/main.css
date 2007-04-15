@@ -1,6 +1,6 @@
 body {
     font: normal small Verdana, Arial, Helvetica, sans-serif;
-	 text-align: center;    
+	text-align: center;    
     background: black url(../images/br_back.png) repeat-y center;
     margin: 0 auto 0 auto;
     width: 800px;
@@ -22,51 +22,52 @@ a:hover { color: #0a396b; text-decoration: underline; }*/
 
 #banner {
   padding-left:  25px;
+  margin: 0;
 } 
 
-#nav {
-  padding-left:0px;
-  margin-left: 25px;  
-  float: left;
-  background:#91b023;
-  width: 757px;
-  border: 2px double #bd2c00;
- }
-
-#nav li {
-  display:inline;
-  padding:0;
-  margin:0;
-  text-align: center;
+#navcon ul {
+ float: left;
+ background:#3b7120;
+ width: 90%;
+ margin-left: 25px;
+ border-top: 1px solid #bd2c00;
+ border-bottom: 1px solid #bd2c00;
 }
-#nav a:link,
-#nav a:visited {
+
+#navcon ul li {
+  display:inline;
+}
+
+#navcon ul li a:link,
+#navcon ul li a:visited {
   color: #000;
   background:#91b023;
-  padding:8px 33px 4px 4px;
-  float: left; 
-  width:auto;
+  padding: 0em .2em;   
+  width: auto;
   text-decoration:none;
   font:bold 1.25em/1em Arial, Helvetica, sans-serif;
   text-transform:uppercase;
-  }
-#nav a:hover {
+  border-right: 3px ridge #bd2c00;
+  border-top:3px ridge #bd2c00;
+  border-bottom:3px ridge #bd2c00;
+  border-left: 3px ridge #bd2c00;
+}
+
+#navcon ul li a:hover {
   color:#f4f9e0;
   background:#3b7120;
 }
 
-/*
-#nav li:first-child a {
-  border-left:1px solid #bd2c00;
+#navcon li:first-child a {
+  border-left:3px ridge #bd2c00;
 }
-*/
 
 #login #nav-login a,
 #bands #nav-bands a,
 #events #nav-events a,
 #venues #nav-venues a,
 #logout #nav-logout a,
-#add #nav-add a {
+{ 
   background:#0a396b;
   color:#fff;
   text-shadow:none;
@@ -81,7 +82,7 @@ a:hover { color: #0a396b; text-decoration: underline; }*/
   background:#e35a00;
 }
 
-#nav a:active {
+#navcon ul li a:active {
 background:#0a396b;
 color:#fff;
 }
