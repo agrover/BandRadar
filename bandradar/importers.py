@@ -97,62 +97,6 @@ class Importers(controllers.Controller, identity.SecureResource):
             except (KeyError, TypeError):
                 pass
 
-    old_venue_fixup_dict = {
-        "Ash Street Saloon":"Ash Street",
-        "Abou Karim":"Abou Karim Restaurant",
-        "Abu Karim Restaurant":"Abou Karim Restaurant",
-        "Alberta St. Public House":"Alberta Street Public House",
-        "Arlene Schnitzer Hall":"Arlene Schnitzer Concert Hall",
-        "Bridgeport":"Bridgeport Brewpub",
-        "Doug Fir Lounge":"Doug Fir",
-        "Fez Ballroom and Lounge":"Fez Ballroom",
-        "Jax Bar":"Jax",
-        "Jimmy Macks":"Jimmy Mak's",
-        "Kells Irish Pub":"Kells Irish Restautant & Pub",
-        "Koji's":"Koji Osakaya",
-        "Laurelthirst":"Laurelthirst Public House",
-        "Macadams Bar & Grill":"Macadam's Bar & Grill",
-        "Marriott Hotel":"Marriott-Waterfront",
-        "Memorial Auditorium":"Memorial Coliseum",
-        "Oregon Symphony":"Arlene Schnitzer Concert Hall",
-        "Outlaws Bar Grill":"Outlaws Bar & Grill",
-        "Rock N Roll Pizza":"Rock 'N' Roll Pizza",
-        "Rose Garden Arena":"Rose Garden",
-        "Roseland Grill":"Roseland",
-        "Roseland Theater":"Roseland",
-        "Roseland Theatre":"Roseland",
-        "Sabala's at Mt. Tabor":"Sabala's at Mount Tabor",
-        "Tom McCall Park":"Tom McCall Waterfront Park",
-        "The Rose Garden Arena":"Rose Garden",        
-        "The Satyricon":"Satyricon",
-        "Washington Park Zoo Amphitheatre":"Oregon Zoo Amphitheatre",
-        "White Eagle Saloon and Hotel":"White Eagle",
-        "Wonder Cafe":"Cafe Wonder",
-    }
-
-    old_artist_fixup_dict = {
-        "+44":"Plus 44",
-        "DJ Van Gloryus":"DJ Van Glorious",
-        "Van Gloryious":"DJ Van Glorious",
-        "hosted by Cory":"Cory",
-        "Tamara J. Brown Open Mic":"Tamara J. Brown",
-        "DJ Lopez Pure Dance Mix":"DJ Lopez",
-        "DJ My Friend Andy":"My Friend Andy",
-        "DJ Moisti loves Mr. E":"DJ Moisti",
-        "The Fabulous DJ Moisti":"DJ Moisti",
-        "Mr. Roboto":"DJ Mr. Roboto",
-        "DJ Mr Roboto":"DJ Mr. Roboto",
-        "Blues Jam with JR Sims":"JR Sims",
-        "DJ King Fader":"King Fader",
-        "Open Mic with Chuck Warda":"Chuck Warda",
-        "Suicide Club with DJ Nightschool":"DJ Nightschool",
-        "Beat Around the Bush with Paula B":"Paula B",
-        "Beat Around the Bush with Paula B.":"Paula B",
-        "Blues Jam with Suburban Slim":"Suburban Slim",
-        "Shut Up and Dance with DJ Gregarious":"DJ Gregarious",
-        "Sinferno Caberet with Polly Panic":"Polly Panic",
-    }
-
     def name_fix(self, name):
         return " ".join(name.strip().split())
 
