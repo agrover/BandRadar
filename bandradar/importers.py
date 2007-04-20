@@ -27,14 +27,12 @@ class WWeek(w.WidgetsList):
 merc_form = w.TableForm(fields=Merc(), name="merc", submit_text="Go")
 wweek_form = w.TableForm(fields=WWeek(), name="wweek", submit_text="Go")
 
+venue_fixup_dict = util.PersistentDict(VenueNameFixup)
+artist_fixup_dict = util.PersistentDict(ArtistNameFixup)
+
 
 class Importers(controllers.Controller, identity.SecureResource):
     require = identity.in_group("admin")
-
-    def __init__(self):
-        self.venue_fixup_dict = util.PersistentDict(VenueNameFixup)
-        self.artist_fixup_dict = util.PersistentDict(ArtistNameFixup)
-        super(Importers, self).__init__()
 
     @expose(template=".templates.webimport")
     def webimport(self, tg_errors=None):
@@ -98,15 +96,17 @@ class Importers(controllers.Controller, identity.SecureResource):
                 pass
 
     def name_fix(self, name):
-        return " ".join(name.strip().split())
+        name = " ".join(name.strip().split())
+        name = name.replace('"', "")
+        name = name.replace('&amp;', "&")
+        event_name = event_name.replace("(Boxxes)", "")
+        return name
 
     def venue_name_fix(self, venue_name):
         venue_name = self.name_fix(venue_name)
-        return self.venue_fixup_dict.get(venue_name, venue_name)
+        return venue_fixup_dict.get(venue_name, venue_name)
 
     def event_name_fix(self, event_name):
-        event_name = event_name.replace("(Boxxes)", "")
-        event_name = event_name.replace('"', "")
         event_name = self.name_fix(event_name)
         return event_name
 
@@ -120,14 +120,12 @@ class Importers(controllers.Controller, identity.SecureResource):
         artist_name = artist_name.replace("(noon)", "")
         artist_name = artist_name.replace("(CD release)", "")
         artist_name = artist_name.replace("(Red Cap Garage)", "")
-        artist_name = artist_name.replace("(Boxxes)", "")
         artist_name = artist_name.replace("(Taverna)", "")
         artist_name = artist_name.replace("(Minoan Ballroom)", "")
         artist_name = artist_name.replace("(Saganaki Lounge)", "")
         artist_name = artist_name.replace("(Sideshow Lounge)", "")
-        artist_name = artist_name.replace('"', "")
         artist_name = self.name_fix(artist_name)
-        artist_name = self.artist_fixup_dict.get(artist_name, artist_name)
+        artist_name = artist_fixup_dict.get(artist_name, artist_name)
         return artist_name
 
     def artists_clean(self, artists):
@@ -188,22 +186,30 @@ class Importers(controllers.Controller, identity.SecureResource):
         event_time = event.get("time")
         if event_time:
             event_time = event_time.lower()
+        # check same venue, date, time
         db_events = Event.selectBy(date=event_date,
             time=event_time, venue=v)
         if db_events.count():
             e = db_events[0]
             new_event = False
         else:
-            e = Event(venue=v, name=event_name,
-                date=event_date, time=event_time,
-                added_by=identity.current.user)
-            new_event = True
-            try:
-                s = Source.byName(event["source"])
-            except SQLObjectNotFound:
-                s = Source(name=event["source"])
-                flag_for_review = True
-            e.addSource(s)
+            # no time? still could be skippable, if event name is the same
+            db_events = Event.selectBy(date=event_date,
+                name=event_name, venue=v)
+            if db_events.count():
+                e = db_events[0]
+                new_event = False
+            else:
+                e = Event(venue=v, name=event_name,
+                    date=event_date, time=event_time,
+                    added_by=identity.current.user)
+                new_event = True
+                try:
+                    s = Source.byName(event["source"])
+                except SQLObjectNotFound:
+                    s = Source(name=event["source"])
+                    flag_for_review = True
+                e.addSource(s)
         self._set_optional_fields(e, event, ("cost", "ages", "url",
             "description", "ticket_url"))
 

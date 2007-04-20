@@ -7,8 +7,9 @@ from turbogears import validators as v
 from model import Artist, Event, hub
 from sqlobject import SQLObjectNotFound, LIKE, func, AND
 from datetime import date, datetime, timedelta
-from bandradar import util
-from bandradar.widgets import BRAutoCompleteField, artist_list
+import util
+from importers import venue_fixup_dict, artist_fixup_dict
+from widgets import BRAutoCompleteField, artist_list
 
 class ArtistForm(w.WidgetsList):
     id = w.HiddenField(validator=v.Int)
@@ -220,8 +221,12 @@ class Artists(controllers.Controller, util.RestAdapter):
     @identity.require(identity.in_group("admin"))
     def merge(self, id, other_id):
         try:
-            Artist.merge(id, other_id)
-            turbogears.flash("Artist %s merged into %s" % (id, other_id))
+            old = Artist.get(id)
+            new = Artist.get(other_id)
+            Artist.merge(old, new)
+            # add this to fixup dict, so will never have to merge again
+            artist_fixup_dict[old.name] = new.name
+            turbogears.flash("%s merged into %s and learned" % (old.name, new.name))
         except SQLObjectNotFound:
             turbogears.flash("Could not move")
         redirect(turbogears.url("/artists/%s") % other_id)
