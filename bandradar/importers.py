@@ -99,7 +99,7 @@ class Importers(controllers.Controller, identity.SecureResource):
         name = " ".join(name.strip().split())
         name = name.replace('"', "")
         name = name.replace('&amp;', "&")
-        event_name = event_name.replace("(Boxxes)", "")
+        name = name.replace("(Boxxes)", "")
         return name
 
     def venue_name_fix(self, venue_name):

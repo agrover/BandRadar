@@ -40,16 +40,23 @@ class ButtonWidget(w.Widget):
 
 class ArtistListWidget(w.Widget):
     template = "bandradar.widgets.templates.artistlist"
-    params = ['artists']
+    params = ['artists', 'emph_new']
 
-    def get_list(self, artists):
+    emph_new = False
+
+    def get_list(self, artists, emph_new):
+        artists = artists.orderBy('name')
         if not artists.count():
             artisthtml = "None"
         else:
-            htmlstr = "<a href=\"/artists/%s\">%s</a>"
+            app_htmlstr = "<a href=\"/artists/%s\">%s</a>"
+            if emph_new:
+                unapp_htmlstr = "<strong>%s</strong>"
+            else:
+                unapp_htmlstr = "%s"
             artist_html_list = []
-            artist_html_list.extend([ htmlstr % (a.id, escape(a.name)) for a in artists if a.approved])
-            artist_html_list.extend([escape(a.name) for a in artists if not a.approved])
+            artist_html_list.extend([ app_htmlstr % (a.id, escape(a.name)) for a in artists if a.approved])
+            artist_html_list.extend([ unapp_htmlstr % escape(a.name) for a in artists if not a.approved])
             artisthtml = ", ".join(artist_html_list)
         return artisthtml
 

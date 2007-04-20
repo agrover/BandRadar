@@ -14,7 +14,9 @@
         <td>
             <a href="/events/${dupe.id}"><b py:strip="dupe.approved">${dupe.id} ${dupe.name}</b></a>
             (<a href="/events/${dupe.id}/edit">edit</a>)
-            <span style="font-size:xx-small">(${artist_list(artists=dupe.artists)})</span>
+        </td>
+        <td>
+            <span style="font-size:x-small">(${artist_list(artists=dupe.artists, emph_new=True)})</span>
             <br />${dupe.date} ${dupe.time} <b>${dupe.cost}</b> ${dupe.ages} Created ${dupe.fcreated} from ${",".join([s.name for s in dupe.sources])}
 
         </td>
@@ -23,7 +25,7 @@
                 ${tg_ButtonWidget(action="/importers/merge_dupe/%d/%d" % (other.id, dupe.id), label="Merge from %d" % other.id)}
             </p>
         </td>
-    </tr>
+    </tr><hr/>
     </table>
 </body>
 </html>
