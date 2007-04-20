@@ -4,7 +4,7 @@ from turbogears import controllers, expose, redirect
 from turbogears import identity
 from turbogears import widgets as w
 from turbogears import validators as v
-from model import Event, Venue, Artist, Source, hub
+from model import Event, Venue, Artist, Source, ArtistNameFixup, VenueNameFixup, hub
 from sqlobject import SQLObjectNotFound
 from datetime import date, datetime
 from bandradar.widgets import artist_list
@@ -14,7 +14,7 @@ from bandradar.imports import pollstar
 from bandradar.imports import br_upcoming as br
 from bandradar.imports import lastfm
 from bandradar.imports import ticketswest
-
+import util
 
 class Merc(w.WidgetsList):
     url = w.TextField(label="URL", attrs=dict(size=60),
@@ -30,6 +30,11 @@ wweek_form = w.TableForm(fields=WWeek(), name="wweek", submit_text="Go")
 
 class Importers(controllers.Controller, identity.SecureResource):
     require = identity.in_group("admin")
+
+    def __init__(self):
+        self.venue_fixup_dict = util.PersistentDict(VenueNameFixup)
+        self.artist_fixup_dict = util.PersistentDict(ArtistNameFixup)
+        super(Importers, self).__init__()
 
     @expose(template=".templates.webimport")
     def webimport(self, tg_errors=None):
@@ -92,7 +97,7 @@ class Importers(controllers.Controller, identity.SecureResource):
             except (KeyError, TypeError):
                 pass
 
-    venue_fixup_dict = {
+    old_venue_fixup_dict = {
         "Ash Street Saloon":"Ash Street",
         "Abou Karim":"Abou Karim Restaurant",
         "Abu Karim Restaurant":"Abou Karim Restaurant",
@@ -125,7 +130,7 @@ class Importers(controllers.Controller, identity.SecureResource):
         "Wonder Cafe":"Cafe Wonder",
     }
 
-    artist_fixup_dict = {
+    old_artist_fixup_dict = {
         "+44":"Plus 44",
         "DJ Van Gloryus":"DJ Van Glorious",
         "Van Gloryious":"DJ Van Glorious",

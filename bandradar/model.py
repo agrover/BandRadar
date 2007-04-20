@@ -11,7 +11,7 @@ __connection__ = hub
 
 soClasses = ('UserAcct', 'Group', 'Permission', 'Venue', 'Artist',
              'SimilarArtist', 'Event', 'BatchRecord', 'Attendance',
-             'Comment', 'UpdateLog', 'Source')
+             'Comment', 'UpdateLog', 'Source', 'ArtistNameFixup', 'VenueNameFixup')
 
 def fancy_date(past_date):
     """Take a date in the past and return it pretty-printed, with elapsed time.
@@ -553,3 +553,13 @@ class Permission(SQLObject):
     description = UnicodeCol(length=255)
     
     groups = SQLRelatedJoin("Group")
+
+class FixupTable(SQLObject):
+    name = UnicodeCol(alternateID=True)
+    value = UnicodeCol()
+
+class ArtistNameFixup(FixupTable):
+    pass
+
+class VenueNameFixup(FixupTable):
+    pass
