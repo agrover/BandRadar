@@ -82,7 +82,7 @@ def send_email(start, finish):
     for event_id, event_name, user_id, venue_name in results:
         evt_list = event_email.get(user_id, list())
         evt_list.append((event_name, venue_name))
-        artist_email[user_id] = evt_list
+        event_email[user_id] = evt_list
         users_to_email.add(user_id)
 
     # Gather results for tracked venues. Once a week.
