@@ -33,12 +33,5 @@
                     <a href="/artists/${item['id']}">${item['name']}</a>
                 </p>
     </div>
-      <div class="footer">
-      <a href="/about">about</a> |
-      <a href="/privacy">privacy</a> |
-      <a href="http://bandradar.blogspot.com">blog</a> |
-      <a href="/contact">contact</a> | 
-      <a href="/feeds">rss</a>
-      </div> 
-      </body>
+ </body>
 </html>
