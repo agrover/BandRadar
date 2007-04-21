@@ -7,45 +7,38 @@
 </head>
 
 <body>
-    <div class="topContainer">
-        <div id="wrapper">     
-            <div class="rightPanel">
-                <h4>
-            	Tonight
-        		</h4>
+   	<div class="content">
+		      <div id="tagline">
+              <h3>The easy way to track your favorite Portland bands!</h3>
+              <ul>
+                 <li>Find out who's playing</li>
+                 <li>Get notified when bands you like play live</li>
+                 <li>Your band's gig not here? Add it!</li>
+              </ul>
+              </div>
+    <div class="rightcontent">
+                <h4>Tonight</h4>
      		    <small><p py:for="event_id, event_name, venue_name in events">
     			<a href="/events/${event_id}"><b>${event_name}</b> ${venue_name}</a>
     			</p></small>
     			${tg_ButtonWidget(action="/events/edit", label="Add a new event")}
-		    </div>       
-    		<div class="contentArea">
-		            <div id="tagline">
-                    <h3>The easy way to track your favorite Portland bands!</h3>
-                    <ul>
-                        <li>Find out who's playing</li>
-                        <li>Get notified when bands you like play live</li>
-                        <li>Your band's gig not here? Add it!</li>
-                    </ul>
-                </div>
-                
-                <div id="searchbox">
+	</div>       
+              <div id="searchbox">
                     <h2>Search Bands</h2>
                     ${search_form(action="/artists/search")}
-                </div>
+              </div>
                 
                 <h4>Top Tracked</h4>
                 <p py:for="item in top_tracked">
                     <a href="/artists/${item['id']}">${item['name']}</a>
                 </p>
-                <div id="footer">
-                    <a href="/about">about</a> |
-                    <a href="/privacy">privacy</a> |
-                    <a href="http://bandradar.blogspot.com">blog</a> |
-                    <a href="/contact">contact</a> | 
-                    <a href="/feeds">rss</a>
-                </div> 
-            </div>
-        </div>
-    </div>  
-</body>
+    </div>
+      <div class="footer">
+      <a href="/about">about</a> |
+      <a href="/privacy">privacy</a> |
+      <a href="http://bandradar.blogspot.com">blog</a> |
+      <a href="/contact">contact</a> | 
+      <a href="/feeds">rss</a>
+      </div> 
+      </body>
 </html>

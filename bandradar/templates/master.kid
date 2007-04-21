@@ -14,7 +14,7 @@
 </div>
 
 <div py:def="nav()">
-    <div id="navcon">
+    <div id="navcontainer">
      <ul id="navlist">
         <li id="login"><span py:if="not tg.identity.user">
             <a href="/users/login">Come In!</a>
@@ -44,7 +44,6 @@
 
 </div>
 
-
 <head py:match="item.tag=='{http://www.w3.org/1999/xhtml}head'">
     <meta content="text/html; charset=UTF-8" http-equiv="content-type" />
     <link rel="stylesheet" type="text/css" href="/static/css/main.css" />
@@ -58,23 +57,12 @@
 </head>
 
  <body py:match="item.tag=='{http://www.w3.org/1999/xhtml}body'">  
-   <div class="topContainer">
-  
-     <img src="/static/images/top_bk.png"/>
+          <!-- <img src="/static/images/top_bk.png"/> -->
      <div id="banner">
 	 <a href="/"><img src="/static/images/banner.png" alt="BandRadar logo" /></a>
      </div>
-   
-
      <div py:replace="nav()" /> 
-
-	<div py:replace="[item.text] + item[:]"/> 
-  <div id="wrapper">
-  <div class="contentArea">
-    <div py:if="tg_flash" class="flash" py:content="tg_flash"></div>
-   
-  </div> 
- </div>
- </div>
- </body> 
+     <div py:replace="[item.text] + item[:]"/> 
+     <div py:if="tg_flash" class="flash" py:content="tg_flash"></div>
+</body> 
 </html>
