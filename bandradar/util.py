@@ -116,3 +116,34 @@ class RestAdapter:
         else:
             raise cherrypy.NotFound
         return action(identifier, **params)
+
+#
+# A database-backed dict.
+#
+class PersistentDict(dict):
+    def __init__(self, model):
+        super(PersistentDict, self).__init__()
+        self.model = model
+        for row in model.select():
+            super(PersistentDict, self).__setitem__(row.name, row.value)
+
+    def __setitem__(self, name, value):
+        try:
+            r = self.model.byName(name)
+            r.value = value
+        except SQLObjectNotFound:
+            r = self.model(name=name, value=value)
+        super(PersistentDict, self).__setitem__(name, value)
+
+    def __delitem__(self, name):
+        self.model.byName(name).destroySelf()
+        super(PersistentDict, self).__delitem__(name)
+
+    def update(self, other_dict):
+        for name, value in other_dict.iteritems():
+            try:
+                r = self.model.byName(name)
+                r.value = value
+            except SQLObjectNotFound:
+                r = self.model(name=name, value=value)
+        super(PersistentDict, self).update(other_dict)

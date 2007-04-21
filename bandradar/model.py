@@ -11,7 +11,7 @@ __connection__ = hub
 
 soClasses = ('UserAcct', 'Group', 'Permission', 'Venue', 'Artist',
              'SimilarArtist', 'Event', 'BatchRecord', 'Attendance',
-             'Comment', 'UpdateLog', 'Source')
+             'Comment', 'UpdateLog', 'Source', 'ArtistNameFixup', 'VenueNameFixup')
 
 def fancy_date(past_date):
     """Take a date in the past and return it pretty-printed, with elapsed time.
@@ -189,15 +189,13 @@ class Artist(Journalled, BRMixin):
     users = SQLRelatedJoin('UserAcct')
 
     @classmethod
-    def clone(cls, old_id, new_id):
+    def clone(cls, old, new):
         """Copy all links from one artist to another.
 
         new must already exist, and can have attrs/relations already.
         """
-        if old_id == new_id:
+        if old == new:
             raise Exception
-        old = cls.get(old_id)
-        new = cls.get(new_id)
         for event in old.events:
             if event not in new.events:
                 new.addEvent(event)
@@ -211,12 +209,12 @@ class Artist(Journalled, BRMixin):
                 setattr(new, field, value)
 
     @classmethod
-    def merge(cls, old_id, new_id):
+    def merge(cls, old, new):
         """Move relations from a duplicate entry to the real one, and
         remove the duplicate.
         """
-        cls.clone(old_id, new_id)
-        cls.delete(old_id)
+        cls.clone(old, new)
+        cls.delete(old.id)
 
     def split_artist(self):
         u = identity.current.user
@@ -251,14 +249,13 @@ class Artist(Journalled, BRMixin):
                 a = Artist.get(a_id)
                 b = Artist.get(b_id)
                 if a.events.count() >= b.events.count():
-                    new_id = a.id
-                    old_id = b.id
-                    result_str += "merging %s into %s\n" % (b.name, a.name)
+                    new = a
+                    old = b
                 else:
-                    new_id = b.id
-                    old_id = a.id
-                    result_str += "merging %s into %s\n" % (a.name, b.name)
-                cls.merge(old_id, new_id)
+                    new = b
+                    old = a
+                result_str += "merging %s into %s\n" % (old.name, new.name)
+                cls.merge(old, new)
             except SQLObjectNotFound:
                 # one of them already zapped, continue
                 pass
@@ -279,7 +276,7 @@ class Artist(Journalled, BRMixin):
 
         def posts(name):
             posts = (" trio", " quartet", " band", " septet", " combo",
-                     " jam", " jazz jam", " show", " and band")
+                     " jam", " jazz jam", " show", " and band", " ensemble")
             yield name
             for post in posts:
                 if name.endswith(post):
@@ -553,3 +550,13 @@ class Permission(SQLObject):
     description = UnicodeCol(length=255)
     
     groups = SQLRelatedJoin("Group")
+
+class FixupTable(SQLObject):
+    name = UnicodeCol(alternateID=True)
+    value = UnicodeCol()
+
+class ArtistNameFixup(FixupTable):
+    pass
+
+class VenueNameFixup(FixupTable):
+    pass

@@ -4,7 +4,7 @@ from turbogears import controllers, expose, redirect
 from turbogears import identity
 from turbogears import widgets as w
 from turbogears import validators as v
-from model import Event, Venue, Artist, Source, hub
+from model import Event, Venue, Artist, Source, ArtistNameFixup, VenueNameFixup, hub
 from sqlobject import SQLObjectNotFound
 from datetime import date, datetime
 from bandradar.widgets import artist_list
@@ -14,7 +14,7 @@ from bandradar.imports import pollstar
 from bandradar.imports import br_upcoming as br
 from bandradar.imports import lastfm
 from bandradar.imports import ticketswest
-
+import util
 
 class Merc(w.WidgetsList):
     url = w.TextField(label="URL", attrs=dict(size=60),
@@ -26,6 +26,9 @@ class WWeek(w.WidgetsList):
 
 merc_form = w.TableForm(fields=Merc(), name="merc", submit_text="Go")
 wweek_form = w.TableForm(fields=WWeek(), name="wweek", submit_text="Go")
+
+venue_fixup_dict = util.PersistentDict(VenueNameFixup)
+artist_fixup_dict = util.PersistentDict(ArtistNameFixup)
 
 
 class Importers(controllers.Controller, identity.SecureResource):
@@ -92,72 +95,18 @@ class Importers(controllers.Controller, identity.SecureResource):
             except (KeyError, TypeError):
                 pass
 
-    venue_fixup_dict = {
-        "Ash Street Saloon":"Ash Street",
-        "Abou Karim":"Abou Karim Restaurant",
-        "Abu Karim Restaurant":"Abou Karim Restaurant",
-        "Alberta St. Public House":"Alberta Street Public House",
-        "Arlene Schnitzer Hall":"Arlene Schnitzer Concert Hall",
-        "Bridgeport":"Bridgeport Brewpub",
-        "Doug Fir Lounge":"Doug Fir",
-        "Fez Ballroom and Lounge":"Fez Ballroom",
-        "Jax Bar":"Jax",
-        "Jimmy Macks":"Jimmy Mak's",
-        "Kells Irish Pub":"Kells Irish Restautant & Pub",
-        "Koji's":"Koji Osakaya",
-        "Laurelthirst":"Laurelthirst Public House",
-        "Macadams Bar & Grill":"Macadam's Bar & Grill",
-        "Marriott Hotel":"Marriott-Waterfront",
-        "Memorial Auditorium":"Memorial Coliseum",
-        "Oregon Symphony":"Arlene Schnitzer Concert Hall",
-        "Outlaws Bar Grill":"Outlaws Bar & Grill",
-        "Rock N Roll Pizza":"Rock 'N' Roll Pizza",
-        "Rose Garden Arena":"Rose Garden",
-        "Roseland Grill":"Roseland",
-        "Roseland Theater":"Roseland",
-        "Roseland Theatre":"Roseland",
-        "Sabala's at Mt. Tabor":"Sabala's at Mount Tabor",
-        "Tom McCall Park":"Tom McCall Waterfront Park",
-        "The Rose Garden Arena":"Rose Garden",        
-        "The Satyricon":"Satyricon",
-        "Washington Park Zoo Amphitheatre":"Oregon Zoo Amphitheatre",
-        "White Eagle Saloon and Hotel":"White Eagle",
-        "Wonder Cafe":"Cafe Wonder",
-    }
-
-    artist_fixup_dict = {
-        "+44":"Plus 44",
-        "DJ Van Gloryus":"DJ Van Glorious",
-        "Van Gloryious":"DJ Van Glorious",
-        "hosted by Cory":"Cory",
-        "Tamara J. Brown Open Mic":"Tamara J. Brown",
-        "DJ Lopez Pure Dance Mix":"DJ Lopez",
-        "DJ My Friend Andy":"My Friend Andy",
-        "DJ Moisti loves Mr. E":"DJ Moisti",
-        "The Fabulous DJ Moisti":"DJ Moisti",
-        "Mr. Roboto":"DJ Mr. Roboto",
-        "DJ Mr Roboto":"DJ Mr. Roboto",
-        "Blues Jam with JR Sims":"JR Sims",
-        "DJ King Fader":"King Fader",
-        "Open Mic with Chuck Warda":"Chuck Warda",
-        "Suicide Club with DJ Nightschool":"DJ Nightschool",
-        "Beat Around the Bush with Paula B":"Paula B",
-        "Beat Around the Bush with Paula B.":"Paula B",
-        "Blues Jam with Suburban Slim":"Suburban Slim",
-        "Shut Up and Dance with DJ Gregarious":"DJ Gregarious",
-        "Sinferno Caberet with Polly Panic":"Polly Panic",
-    }
-
     def name_fix(self, name):
-        return " ".join(name.strip().split())
+        name = " ".join(name.strip().split())
+        name = name.replace('"', "")
+        name = name.replace('&amp;', "&")
+        name = name.replace("(Boxxes)", "")
+        return name
 
     def venue_name_fix(self, venue_name):
         venue_name = self.name_fix(venue_name)
-        return self.venue_fixup_dict.get(venue_name, venue_name)
+        return venue_fixup_dict.get(venue_name, venue_name)
 
     def event_name_fix(self, event_name):
-        event_name = event_name.replace("(Boxxes)", "")
-        event_name = event_name.replace('"', "")
         event_name = self.name_fix(event_name)
         return event_name
 
@@ -171,14 +120,12 @@ class Importers(controllers.Controller, identity.SecureResource):
         artist_name = artist_name.replace("(noon)", "")
         artist_name = artist_name.replace("(CD release)", "")
         artist_name = artist_name.replace("(Red Cap Garage)", "")
-        artist_name = artist_name.replace("(Boxxes)", "")
         artist_name = artist_name.replace("(Taverna)", "")
         artist_name = artist_name.replace("(Minoan Ballroom)", "")
         artist_name = artist_name.replace("(Saganaki Lounge)", "")
         artist_name = artist_name.replace("(Sideshow Lounge)", "")
-        artist_name = artist_name.replace('"', "")
         artist_name = self.name_fix(artist_name)
-        artist_name = self.artist_fixup_dict.get(artist_name, artist_name)
+        artist_name = artist_fixup_dict.get(artist_name, artist_name)
         return artist_name
 
     def artists_clean(self, artists):
@@ -239,22 +186,30 @@ class Importers(controllers.Controller, identity.SecureResource):
         event_time = event.get("time")
         if event_time:
             event_time = event_time.lower()
+        # check same venue, date, time
         db_events = Event.selectBy(date=event_date,
             time=event_time, venue=v)
         if db_events.count():
             e = db_events[0]
             new_event = False
         else:
-            e = Event(venue=v, name=event_name,
-                date=event_date, time=event_time,
-                added_by=identity.current.user)
-            new_event = True
-            try:
-                s = Source.byName(event["source"])
-            except SQLObjectNotFound:
-                s = Source(name=event["source"])
-                flag_for_review = True
-            e.addSource(s)
+            # no time? still could be skippable, if event name is the same
+            db_events = Event.selectBy(date=event_date,
+                name=event_name, venue=v)
+            if db_events.count():
+                e = db_events[0]
+                new_event = False
+            else:
+                e = Event(venue=v, name=event_name,
+                    date=event_date, time=event_time,
+                    added_by=identity.current.user)
+                new_event = True
+                try:
+                    s = Source.byName(event["source"])
+                except SQLObjectNotFound:
+                    s = Source(name=event["source"])
+                    flag_for_review = True
+                e.addSource(s)
         self._set_optional_fields(e, event, ("cost", "ages", "url",
             "description", "ticket_url"))
 
