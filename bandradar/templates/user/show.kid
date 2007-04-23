@@ -55,8 +55,8 @@ venues by-date
     <div id="venuestracked">   
     <table py:if="venues.count()">
         <th>Venue</th>
-        <th>Past Events</th>
-        <th>Upcoming Events</th>
+        <th>Past</th>
+        <th>Upcoming</th>
         <tr py:for="venue in venues">
             <td>
                 <a href="/venues/${venue.id}">${venue.name}</a>

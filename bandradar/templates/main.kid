@@ -36,11 +36,15 @@
    
      <div id="venuestats">    
         <p><h5>Top Tracked Venues</h5>
+        <span py:for="item in top_tracked">
+        <a href="/artists/${item['id']}">${item['name']}</a></span>
         </p>
      </div>		
      
      <div id="eventstats">
      <p><h5>Top Tracked Events</h5></p>
+     <span py:for="item in top_tracked">
+        <a href="/artists/${item['id']}">${item['name']}</a></span>
      </div>
      </div>          
                 
