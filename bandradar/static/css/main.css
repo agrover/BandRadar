@@ -100,6 +100,54 @@ a:hover { color: #0a396b; text-decoration: underline; }
  padding-left: .5em;
  }
  
+ #bandstats {
+  text-align: left;
+  width: 200px;
+  position: relative;
+  padding: .25em;
+  margin-left:25px;
+  color: #215309;
+  clear: both;
+  border-right: 2px dotted #215309;
+} 
+ #bandstats h5, 
+ #bandstats p{
+ padding: 0em;
+ margin: 0;
+ }
+
+#venuestats {
+  text-align: left;
+  width: 200px;
+  position: relative;
+  padding: .25em;
+  margin-left:250px;
+  color: #215309;
+  clear: both;
+  border-right: 2px dotted #215309;
+} 
+ #venuestats h5, 
+ #venuestats p{
+ padding: 0em;
+ margin: 0;
+ }
+
+#eventstats {
+  text-align: left;
+  width: 200px;
+  position: relative;
+  padding: .25em;
+  margin-left:25px;
+  color: #215309;
+  clear: both;
+  border-right: 2px dotted #215309;
+} 
+ #eventstats h5, 
+ #eventstats p{
+ padding: 0em;
+ margin: 0;
+ }
+
 .rightcontent{
   width: 200px;
   position: absolute;
@@ -108,6 +156,16 @@ a:hover { color: #0a396b; text-decoration: underline; }
   padding-left: 1em;
   padding-right: 1em;
   top: 20px;
+}
+
+.rightcontent h3 {
+    padding-left: 0em;   
+    font-size: small;
+    text-align: left;
+    color: #0a396b;
+    text-transform: uppercase;
+    padding-bottom: 0;
+    margin-left:0px;
 }
 
 .rightbutton{
@@ -143,8 +201,8 @@ a:hover { color: #0a396b; text-decoration: underline; }
 .footer{
   width: 750px;
   font-size: x-small;
-  text-align: center;
-  margin-left: 25px;
+  text-align: left;
+  margin-left: 40px;
   padding-top: 2em;
   clear: both;
 }  
@@ -162,21 +220,22 @@ a:hover { color: #0a396b; text-decoration: underline; }
 
 #map {
     float:right;
-    margin: 1em 1em 1em 1em;
     border: 2px solid #bd2c00;
-    margin-right: 5em;
-    margin-top: 5em;
+    margin-right: 4em;
+    margin-top: 2em;
 }    
 
 #tagline {
   position: relative;	    
-  border: 2px solid #215309;
-  margin-left: 1em;
-  padding: .5em 1em .5em 1em;
-  width: 58%;
-  background-color: #91b023;
-  color: #f4f9e0;
+  border-left: 2px dotted #215309;
+  margin-top: 3.5em;
+  width: 55%;
+  clear: both;
+  margin-right: .5em;
+  padding-left: 1em;
 }
+
+
 #searchbox {
     margin: 0em;
     text-align: left;
@@ -187,6 +246,11 @@ a:hover { color: #0a396b; text-decoration: underline; }
     margin-bottom: 0;
 }
 
+h1 { 
+  color: #215309;
+  font-size: small;
+  text-transform: lowercase;
+}
 
 
 h2 {
@@ -196,7 +260,7 @@ h2 {
     color: #215309;
     text-transform: lowercase;
 }
-h2 {display: inline;}
+
 h3 {
     padding-left: .5em;   
     font-size: small;
@@ -212,7 +276,7 @@ h4 {
   text-align: left;
   color: #0a396b;
   font-size: large;
-  padding-left: 0em;
+  padding-left: 1em;
   width: 100;
   margin-left: 0px;
 }
@@ -294,7 +358,6 @@ h5 {display: inline;}
   border-bottom: 1px dotted #91b023;
 }
 
-
 #event { 
   table-layout: fixed;
   border-spacing: 0;
@@ -314,8 +377,6 @@ h5 {display: inline;}
   padding: 0em;
  }
 
-
-
 #venue { 
   table-layout: fixed;
   border-spacing: 0;
@@ -330,34 +391,17 @@ h5 {display: inline;}
   border-bottom: 1px dotted #91b023;
 }
 
-#details { 
-  margin-left: 25px;
-  text-align: left;
-  padding: 1em;
-  
- }
-
-
-#body{
-  text-align: left;
-  margin-left: 25px;
-  padding: 1em;
-}
-
 #loginBox{
  margin-left: 25px;
  padding: 1em;
 }
-
 #loginBox td{
   padding: .5em;
   border-bottom: 0;
 } 
-
 #loginBox a{
  clear: both;
 }
-
 #loginBox label{
  color: #0a396b;
  padding-right: .5em;
@@ -365,7 +409,9 @@ h5 {display: inline;}
  font-size: x-small;
  font-weight: bold;
 }  
-
+#remember{
+ float: left;
+}
 /*
 #login_msg {
  text-align: left;
@@ -374,14 +420,12 @@ h5 {display: inline;}
 
 }
 */
-
 #newuserbox input,
 #loginBox input{
  border: 2px solid #215309;
  background-color: #f4f9e0; 
  color: black;
 } 
-
 #newuserbox  {
   text-align: left;
   margin-left: 25px;
@@ -389,8 +433,55 @@ h5 {display: inline;}
   clear: both;
 }
 
-#userinfo {
- padding: 1em;
+#bandstracked table{ 
+   width: 80%;
+   text-align: left;
+   margin-left: 25px;
+   padding: 1em;
+}
+
+#bandstracked th {
+	padding: 0 0.5em;
+	text-align: left;
+	border-bottom: 1px solid #91b023;
+	}
+#bandstracked td {
+	padding-left: 1em;
+	text-align: left;
+}
+
+#venuestracked table{ 
+   width: 80%;
+   text-align: left;
+   margin-left: 25px;
+   padding: 1em;
+}
+
+#venuestracked th {
+	padding: 0 0.5em;
+	text-align: left;
+	border-bottom: 1px solid #91b023;
+	}
+#venuestracked td {
+	padding-left:1em;
+	text-align: left;
+}
+
+#attendance table{ 
+   width: 80%;
+   text-align: left;
+   margin-left: 25px;
+   padding: 1em;
+}
+
+#attendance th {
+	text-align: left;
+	border-bottom: 1px solid #91b023;
+	}
+#attendance td {
+    padding: 0 0.5em;
+	padding-left: 1em;
+	text-align: left;
 }
 
 
@@ -400,6 +491,7 @@ input {
   background-color: #f4f9e0; 
   color: #001100;
 }
+
 textarea{ 
   border: 4px solid #215309; 
   background-color: #f4f9e0;
@@ -411,6 +503,7 @@ textarea{
  padding-right: .5em;
  text-transform: uppercase;
  font-size: x-small;
+ margin-left: 20px;
 }
 .fielderror{
   color: #bd2c00;
@@ -431,8 +524,6 @@ textarea{
 
 
 img { border-style: none; }
-   
-
 
 .name {
     font-weight: bold;
@@ -440,7 +531,6 @@ img { border-style: none; }
 }
 
 .content form {display: inline;}
-
 .listform { display: inline; }
 .listform ul {
     display: inline;
@@ -449,13 +539,11 @@ img { border-style: none; }
 }
 .listform li { display: inline; }
 .listform li div { display: inline; }
-
 #list_title {
     font-size: medium;
     font-weight: bold;
     margin-bottom: .5em;
 }
-
 .edit_links p { margin-bottom: .5em; }
 
 

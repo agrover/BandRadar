@@ -23,7 +23,7 @@
         <li><a href="/events/list/yesterday">Yesterday</a></li>
         <li><a href="/events/list/week">Upcoming week</a></li>
         <li><a href="/events/list/all">All upcoming</a></li>
-        <h5>Events: ${listby} <big>(${count})</big></h5>
+        <p><h5>Events: ${listby} <big>(${count})</big></h5></p>
         </ul>
   <div id="event">
     <table>

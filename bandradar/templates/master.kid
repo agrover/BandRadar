@@ -71,7 +71,7 @@
       <a href="http://bandradar.blogspot.com">blog</a> |
       <a href="/contact">contact</a> | 
       <a href="/feeds">rss</a>
-      <p>© Copyright 2007...Buunabet,LLC...All rights reserved.</p>
+      <p>© Copyright 2007 Buunabet,LLC All rights reserved.</p>
       </div> 
 </body> 
 </html>

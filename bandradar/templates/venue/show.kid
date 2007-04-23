@@ -8,58 +8,62 @@
 
 <body>
 <div class="content">
-    <div id="body">
+           ${googlemap(venue=venue, width=250, height=200)}
+           
+          <span id="name"><h4>${venue.name}</h4></span>
+          <span py:if="is_tracked">
+                ${tg_ButtonWidget(action="/venues/%s/untrack?viewing=yes" % venue.id, label="Untrack")}</span>
+          
+          <span py:if="not is_tracked">
+             ${tg_ButtonWidget(action="/venues/%s/track?viewing=yes" % venue.id, label="Track")}</span>
+          
 
-        ${googlemap(venue=venue, width=250, height=200)}
-
-        <h2>Venue: <span id="name">${venue.name}</span></h2>
-        <div id="details">
+        
+            <div id="blub">            
             <p id="description" py:if="description">${XML(description)}</p>
-            <p py:if="venue.address">Address: <span id="address">${venue.address}</span></p>
-            <p py:if="venue.phone">Phone: <span id="phone">${venue.phone}</span></p>
-            <p py:if="venue.url">Website: <a href="${venue.url}">${venue.url}</a></p>
-            <p py:if="venue.myspace">MySpace:
+            </div>           
+            <p py:if="venue.address"><h5>Address: </h5><span id="address">${venue.address}</span></p>
+            <p py:if="venue.phone"><h5>Phone: </h5><span id="phone">${venue.phone}</span></p>
+            <p py:if="venue.url"><h5>Website: </h5><a href="${venue.url}">${venue.url}</a></p>
+            <p py:if="venue.myspace"><h5>MySpace:</h5>
                 <a href="http://myspace.com/${venue.myspace}">
                     http://myspace.com/${venue.myspace}</a>
             </p>
             <p py:if="not 'admin' in venue.added_by.groups">
             Added by: <a href="/users/${venue.added_by.user_name}">
                 ${venue.added_by.user_name}</a></p>
-            <p>Added: ${venue.fcreated}</p>
-            <p>Changed: ${venue.fupdated}</p>
-            <p py:if="tracked_count">Users tracking: ${tracked_count}</p>
-            <div py:if="is_tracked">
-                <i>Currently being tracked by you. You will receive weekly emails with
-                upcoming shows for this venue.</i>
-                ${tg_ButtonWidget(action="/venues/%s/untrack?viewing=yes" % venue.id, label="Untrack")}
-            </div>
-            <div py:if="not is_tracked">
-                <i>not currently tracked by you.</i>
-                ${tg_ButtonWidget(action="/venues/%s/track?viewing=yes" % venue.id, label="Track")}
-            </div>
-
-        </div>
-        <h3>Past events <span class="small">(<a href="?list_all=1">See all</a>)</span></h3>
-        <div class="event_list">
-            <p py:for="e in past_events">
-                ${e.fdate}: <a href="/events/${e.id}">${e.name}</a>
-            </p>
-            <p py:if="not len(list(past_events))">None</p>
-        </div>
-
-        <h3>Upcoming events
-        ${tg_ButtonWidget(action="/events/edit?venue_prefill=%s" % venue.id, label="Add a new event")}</h3>
-
-        <div class="event_list">
-            <p py:for="e in future_events">
+            <p><h5>Added: </h5>${venue.fcreated}</p>
+            <p><h5>Changed: </h5>${venue.fupdated}</p>
+             <p py:if="tracked_count"><h5>Users tracking: </h5>${tracked_count}</p>
+              
+        <p><h5>Upcoming events</h5></p>
+             <div class="event_list">  
+             <p py:for="e in future_events">
                 ${e.fdate}: <a href="/events/${e.id}">${e.name}</a>
                 ${e.time} ${e.cost}
             </p>
             <p py:if="not len(list(future_events))">None</p>
-        </div>
+            </div>
+
+           <h5> Past events <span class="small">(<a href="?list_all=1">See all</a>)</span></h5>
+            <div class="event_list">
+            <p py:for="e in past_events">
+            ${e.fdate}: <a href="/events/${e.id}">${e.name}</a>
+            </p>
+            <p py:if="not len(list(past_events))">None</p>
+            </div>
+              
+            <div py:if="is_tracked">
+                <i>You are currently tracking this venue. You will receive weekly emails with
+                upcoming shows.</i>
+            </div>
+            <div py:if="not is_tracked">
+                <i>You are not tracking this venue.</i>
+            </div>
+            <br />
+         ${tg_ButtonWidget(action="/events/edit?venue_prefill=%s" % venue.id, label="Add a new event")}
 
         <div py:replace="edit_links(venue)" />
-    </div>
 </div>
 
 </body>
