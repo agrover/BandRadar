@@ -108,21 +108,39 @@ class Root(controllers.RootController):
             order by event.name
             """)
 
-        top_tracked_results = conn.queryAll("""
-            select artist.name, artist.id, COUNT(artist_user_acct.user_acct_id) as count
-            from artist, artist_user_acct
-            where artist.id = artist_user_acct.artist_id
-            group by artist.name, artist.id
+        top_artists = conn.queryAll("""
+            select a.name, a.id, COUNT(aua.user_acct_id) as count
+            from artist a, artist_user_acct aua
+            where a.id = aua.artist_id
+            group by a.name, a.id
             order by count desc, name
             limit 10
             """)
+        top_artists = [dict(name=a, id=b, count=c) for a, b, c in top_artists]
 
-        top_tracked = []
-        for name, id, count in top_tracked_results:
-            top_tracked.append(dict(name=name, id=id, count=count))
+        top_venues = conn.queryAll("""
+            select v.name, v.id, COUNT(uav.user_acct_id) as count
+            from venue v, user_acct_venue uav
+            where v.id = uav.venue_id
+            group by v.name, v.id
+            order by count desc, name
+            limit 10
+            """)
+        top_venues = [dict(name=a, id=b, count=c) for a, b, c in top_venues]
+
+        top_events = conn.queryAll("""
+            select e.name, e.id, COUNT(att.user_id) as count
+            from event e, attendance att
+            where e.id = att.event_id
+                and e.date >= CURRENT_DATE
+            group by e.name, e.id
+            order by count desc, name
+            limit 10
+            """)
+        top_events = [dict(name=a, id=b, count=c) for a, b, c in top_events]
 
         return dict(search_form=artist_search_form, events=events,
-            top_tracked=top_tracked)
+            top_artists=top_artists, top_venues=top_venues, top_events=top_events)
 
     artists = Artists()
     venues = Venues()
