@@ -7,9 +7,7 @@
 </head>
 
 <body>
-	<div class="topContainer">
-      <div id="wrapper">     
-      <div class="contentArea">
+   <div class="content">
 
     <h2>User List</h2>
 
@@ -18,8 +16,7 @@
     </p>
 
 
-   </div>
-  </div>
+   
   </div>    
 </body>
 </html>

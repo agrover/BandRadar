@@ -7,9 +7,7 @@
 </head>
 
 <body>
-   <div class="topContainer">
-      <div id="wrapper">     
-      <div class="contentArea">
+   <div class="content">
 
     <div id="searchbox">
         <h2>Search Events</h2>
@@ -21,8 +19,6 @@
     <p py:for="e in events">
         <p><b><a href="/events/${e.id}">${e.name}</a></b> ${e.date}</p>
     </p>
-</div>
-</div>
 </div>
 </body>
 </html>

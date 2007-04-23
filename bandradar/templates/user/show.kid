@@ -8,9 +8,7 @@
 
 <body>
 
- <div class="topContainer">
-      <div id="wrapper">     
-      <div class="contentArea">
+    <div class="content">
 
     <div id="userinfo">
         <h2>${user.user_name}</h2>
@@ -90,8 +88,7 @@ venues by-date
         </tr>
     </table>
 </div>
-</div>
-</div>
+
 
 </body>
 </html>

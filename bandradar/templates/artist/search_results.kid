@@ -8,9 +8,7 @@
 
 <body>
 
- <div class="topContainer">
-      <div id="wrapper">     
-      <div class="contentArea">
+   <div class="content">
       
     <div id="searchbox">
         <h2>Search Bands</h2>
@@ -26,8 +24,6 @@
     <p>
         ${tg_ButtonWidget(action="/artists/edit", label="Add a new Band")}
     </p>
-    </div>
-    </div>
     </div>
 </body>
 </html>

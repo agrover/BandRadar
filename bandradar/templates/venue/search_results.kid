@@ -7,9 +7,7 @@
 </head>
 
 <body>
-  <div class="topContainer">
-      <div id="wrapper">     
-      <div class="contentArea">
+ <div class="content">
     <div id="searchbox">
         <h2>Search Venues</h2>
         <?python from bandradar.artists import artist_search_form ?>
@@ -23,8 +21,6 @@
             <a href="/venues/${v.id}">${v.name}</a>
         </p>
     </p>
-   </div>
-   </div>
    </div> 
     
 </body>

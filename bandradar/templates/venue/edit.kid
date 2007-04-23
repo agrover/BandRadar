@@ -7,15 +7,11 @@
 </head>
 
 <body>
-<div class="topContainer">
-      <div id="wrapper">     
-      <div class="contentArea">
+ <div class="content">
     <h2>Edit a venue</h2>
 
     ${venue_form.display(value=form_vals, action="/venues/save")}
 
 	 </div>
-	</div>
-  </div>
 </body>
 </html>

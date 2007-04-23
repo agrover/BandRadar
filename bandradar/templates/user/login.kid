@@ -9,10 +9,9 @@
 </head>
 
  <body>
-    <div class="content">
       <div id="loginBox">
         <h2>Login</h2>
-        <p id="login_msg">${message}</p>
+        <!-- <p id="login_msg">${message}</p> -->
         <form action="${previous_url}" method="POST">
             <table>
                 <tr>
@@ -55,14 +54,13 @@
             <input py:for="name,value in original_parameters.items()"
                 type="hidden" name="${name}" value="${value}"/>
         </form>
-      </div>
     </div>
-   <div class="content">
+    
     <div id="newuserbox">
     <h2>New Login</h2>
-      <form> ${newuser_form(value=form_vals, action="/users/usercreate")}</form>
-    </div> 
-    </div>
+      ${newuser_form(value=form_vals, action="/users/usercreate")}
+      </div> 
+  
 
 </body>
 </html>

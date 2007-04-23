@@ -144,7 +144,7 @@ class Root(controllers.RootController):
     def privacy(self):
         return dict()
 
-    @expose(template=".templates.notimplemented")
+    @expose(template=".templates.contact")
     def contact(self):
         return dict()
 

@@ -8,16 +8,12 @@
 
 <body>
 
-<div class="topContainer">
-      <div id="wrapper">     
-      <div class="contentArea">
-    <h3>Please give us any comments you have on features you'd like to see, bugs
-    you found, or anything else you think of. If you're logged in, we can even
-    get back to you! Thanks -- BR Staff</h3>
+<div class="content">
+    <h2>So What Do You Think?</h2>
+    <p>Any <b>BandRadar</b> features you'd like to see, bugs you found, or other sorts of feedback.</p>
+    <p> If you're logged in we can even get back to you!</p>
 
     ${comment_form(action="/comments/save")}
-</div>
-</div>
 </div>
 
 </body>

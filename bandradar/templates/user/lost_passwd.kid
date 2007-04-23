@@ -7,14 +7,10 @@
 </head>
 
 <body>
-   <div class="topContainer">
-      <div id="wrapper">     
-      <div class="contentArea">
-    Please enter the email address you used to register, and an email will
+    <div class="content">
+   <p> Please enter the email address you used to register, and an email will
     be sent to that address with your password.
-    ${lost_passwd_form(action="/users/lost_passwd_send")}
-    </div>
-    </div>
+    ${lost_passwd_form(action="/users/lost_passwd_send")}</p>
     </div>
 </body>
 </html>

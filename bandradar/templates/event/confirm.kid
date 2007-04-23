@@ -7,13 +7,8 @@
 </head>
 
 <body>
-   <div class="topContainer">
-      <div id="wrapper">     
-      <div class="contentArea">
+ <div class="content">
     <h2>Adding event; look ok?</h2>
- 
- </div>
- </div>
  </div>
 
 </body>

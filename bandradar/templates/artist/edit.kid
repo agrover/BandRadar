@@ -6,9 +6,7 @@
     <title>BandRadar - Edit a new band</title>
 </head>
 <body>
-<div class="topContainer">
-      <div id="wrapper">     
-      <div class="contentArea">
+      <div class="content">
 
 
     <h2 py:if="'id' in form_vals">Edit a band</h2>
@@ -16,8 +14,6 @@
 
     ${artist_form(value=form_vals, action="/artists/save")}
     
-</div>
-</div>
 </div>
 
 </body>

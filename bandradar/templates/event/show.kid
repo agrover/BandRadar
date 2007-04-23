@@ -8,42 +8,43 @@
 </head>
 
 <body>
-   <div class="topContainer">
-    <div id="wrapper">     
-    <div class="contentArea">
-    <div id="body">
-
+    <div class="content">
         ${googlemap(venue=event.venue, width=250, height=200)}
 
-        <h2>Event: ${event.name}
-        <span py:if="event.ticket_url">${tg_ButtonWidget(action=event.ticket_url, label="Buy Tickets")}</span></h2>
+<h4>${event.name}
+             <span py:if="is_tracked">${tg_ButtonWidget(action="/events/%s/untrack?viewing=yes" % event.id, label="Untrack")}
+     </span>
+     <span py:if="not is_tracked">${tg_ButtonWidget(action="/events/%s/track?viewing=yes" % event.id,     label="Track")}</span>
+        <span py:if="event.ticket_url">${tg_ButtonWidget(action=event.ticket_url, label="Buy Tickets")}</span>      
 
-        <div id="details">
-            <p id="description" py:if="description">${XML(description)}</p>
-            <p>Date: ${event.date.strftime("%x")}</p>
-            <p py:if="event.time">Time: ${event.time}</p>
-            <p py:if="event.cost">Cost: ${event.cost}</p>
-            <p py:if="event.ages">Ages: ${event.ages}</p>
-            <p py:if="event.url">Website: <a href="${event.url}">${event.url}</a></p>
-            <p>Where: <a href="/venues/${event.venue.id}">${event.venue.name}</a>
+     
+</h4>
+   <div id="blurb">
+        <p id="description" py:if="description">${XML(description)}</p>
+  </div>    
+            <p><h5>Date:</h5> ${event.date.strftime("%x")}</p>
+            <p py:if="event.time"><h5>Time:</h5> ${event.time}</p>
+            <p py:if="event.cost"><h5>Cost:</h5> ${event.cost}</p>
+            <p py:if="event.ages"><h5>Ages:</h5> ${event.ages}</p>
+            <p py:if="event.url"><h5>Website:</h5> <a href="${event.url}">${event.url}</a></p>
+            <p><h5>Where:</h5> <a href="/venues/${event.venue.id}">${event.venue.name}</a>
                 <span id="address" py:if="event.venue.address">(${event.venue.address})</span>
             </p>
-            With: ${artist_list(artists=event.artists)}
+            <p><h5>With:</h5>  ${artist_list(artists=event.artists)}</p>
             <p py:if="not 'admin' in event.added_by.groups">
-            Added by: <a href="/users/${event.added_by.user_name}">
+            <h5>Added by:</h5> <a href="/users/${event.added_by.user_name}">
                 ${event.added_by.user_name}</a></p>
-            <p>Added: ${event.fcreated}</p>
-            <p>Changed: ${event.fupdated}</p>
+            <p><h5>Added:</h5> ${event.fcreated}</p>
+            <p><h5>Changed:</h5> ${event.fupdated}</p>
+            <br></br>
+            <br></br>
             <div py:if="is_tracked">
-                <i>currently being tracked by you.</i>
-                ${tg_ButtonWidget(action="/events/%s/untrack?viewing=yes" % event.id, label="Untrack")}
-            </div>
+               <i>You are tracking this event.</i>
+             </div>
             <div py:if="not is_tracked">
-                <i>not currently tracked by you.</i>
-                ${tg_ButtonWidget(action="/events/%s/track?viewing=yes" % event.id, label="Track")}
-            </div>
+             <i>You are not tracking this event.</i>
+             </div>
 
-        </div>
 
         <div py:if="'admin' in tg.identity.groups and event.sources.count()">
             From: ${",".join([s.name for s in event.sources])}
@@ -51,9 +52,6 @@
 
         <div py:replace="edit_links(event)" />
 
-    </div>
- </div>
- </div>
  </div>
 </body>
 </html>

@@ -27,7 +27,7 @@
         <li id="nav-events"><a href="/events/list">Events</a></li>
         <li id="nav-venues"><a href="/venues/list">Venues</a></li>
         <li id="nav-comments"><a href="/comments/add">Comments</a></li>
-        <li id="nav-addevent"><a href="/events/edit">Add an event</a></li>
+        <li id="nav-addevent"><a href="/events/edit">Add event</a></li>
         <li id="nav-logout"><span py:if="tg.identity.user">
             <a href="/users/logout">Logout</a>
         </span></li>
@@ -71,6 +71,7 @@
       <a href="http://bandradar.blogspot.com">blog</a> |
       <a href="/contact">contact</a> | 
       <a href="/feeds">rss</a>
+      <p>© Copyright 2007...Buunabet,LLC...All rights reserved.</p>
       </div> 
 </body> 
 </html>
