@@ -23,8 +23,10 @@
         <li><a href="/events/list/yesterday">Yesterday</a></li>
         <li><a href="/events/list/week">Upcoming week</a></li>
         <li><a href="/events/list/all">All upcoming</a></li>
-        <p><h5>Events: ${listby} <big>(${count})</big></h5></p>
+         <h5>Events: ${listby} <big>(${count})</big></h5>
         </ul>
+       
+        
   <div id="event">
     <table>
         <tr py:for="event_id, event_name, event_date, venue_name, is_tracked in events">

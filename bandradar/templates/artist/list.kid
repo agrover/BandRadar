@@ -27,8 +27,8 @@
         <li><a href="/artists/list/yesterday">Yesterday</a></li>
         <li><a href="/artists/list/week">Upcoming week</a></li>
         <li><a href="/artists/list/all">All upcoming</a></li>
-        <p><h5> Bands playing ${listby} <big>(${count})</big></h5></p>
-        </ul>
+       </ul>
+       <h5> Bands playing ${listby} <big>(${count})</big></h5>
         
       <div id="band">
       <table>

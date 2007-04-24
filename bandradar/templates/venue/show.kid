@@ -19,7 +19,7 @@
           
 
         
-            <div id="blub">            
+            <div id="blurb">            
             <p id="description" py:if="description">${XML(description)}</p>
             </div>           
             <p py:if="venue.address"><h5>Address: </h5><span id="address">${venue.address}</span></p>
@@ -53,15 +53,7 @@
             <p py:if="not len(list(past_events))">None</p>
             </div>
               
-            <div py:if="is_tracked">
-                <i>You are currently tracking this venue. You will receive weekly emails with
-                upcoming shows.</i>
-            </div>
-            <div py:if="not is_tracked">
-                <i>You are not tracking this venue.</i>
-            </div>
-            <br />
-         ${tg_ButtonWidget(action="/events/edit?venue_prefill=%s" % venue.id, label="Add a new event")}
+           ${tg_ButtonWidget(action="/events/edit?venue_prefill=%s" % venue.id, label="Add a new event")}
 
         <div py:replace="edit_links(venue)" />
 </div>

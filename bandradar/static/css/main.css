@@ -212,9 +212,13 @@ a:hover { color: #0a396b; text-decoration: underline; }
 
 #map {
     float:right;
+    text-align: right;
     border: 2px solid #bd2c00;
     margin-right: 4em;
     margin-top: 2em;
+    margin-left: 0px;
+    margin-right:50px;
+    width: 50%;
 }    
 
 #tagline {
@@ -309,6 +313,12 @@ h5 {display: inline;}
   border-left: none;
 }
 
+.content p{
+ margin:.25em 0 0 0;
+ 
+ 
+}
+
 #band a:link{
  color: #215309;
  font-weight: bold;
@@ -365,8 +375,12 @@ h5 {display: inline;}
 .event_list { 
   text-align: left;
   margin-left: 25px;
-  padding: 0em;
+  margin-bottom: 1em;
  }
+.event_list p{
+ margin:.25em 0 0 0;
+ }
+
 
 #venue { 
   table-layout: fixed;
@@ -385,6 +399,7 @@ h5 {display: inline;}
 #loginBox{
  margin-left: 25px;
  padding: 1em;
+ text-align: left;
 }
 #loginBox td{
   padding: .5em;
