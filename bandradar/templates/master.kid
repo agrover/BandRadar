@@ -63,8 +63,9 @@
 	 <a href="/"><img src="/static/images/banner.png" alt="BandRadar logo" /></a>
      </div>
      <div py:replace="nav()" /> 
-     <div py:replace="[item.text] + item[:]"/> 
      <div py:if="tg_flash" class="flash" py:content="tg_flash"></div>
+     <div py:replace="[item.text] + item[:]"/> 
+     
      <div class="footer">
       <a href="/about">about</a> |
       <a href="/privacy">privacy</a> |

@@ -9,8 +9,9 @@
 
 <body>
     <div class="content">
+     <div class="mapright">
         ${googlemap(venue=event.venue, width=250, height=200)}
-
+</div>
 <h4>${event.name}
              <span py:if="is_tracked">${tg_ButtonWidget(action="/events/%s/untrack?viewing=yes" % event.id, label="Untrack")}
      </span>
@@ -38,14 +39,7 @@
             <p><h5>Changed:</h5> ${event.fupdated}</p>
             <br></br>
             <br></br>
-            <div py:if="is_tracked">
-               <i>You are tracking this event.</i>
-             </div>
-            <div py:if="not is_tracked">
-             <i>You are not tracking this event.</i>
-             </div>
-
-
+           
         <div py:if="'admin' in tg.identity.groups and event.sources.count()">
             From: ${",".join([s.name for s in event.sources])}
         </div>

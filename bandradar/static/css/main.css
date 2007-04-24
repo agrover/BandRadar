@@ -59,15 +59,7 @@ a:hover { color: #0a396b; text-decoration: underline; }
 #navcon li:first-child a {
   border-left:3px solid #bd2c00;
 }
-#login #nav-login a,
-#bands #nav-bands a,
-#events #nav-events a,
-#venues #nav-venues a,
-#logout #nav-logout a,{ 
-  background:#0a396b;
-  color:#fff;
-  text-shadow:none;
-}
+
 #login #nav-login a:hover,
 #bands #nav-bands a:hover,
 #events #nav-events a:hover,
@@ -177,7 +169,7 @@ a:hover { color: #0a396b; text-decoration: underline; }
   top: 25px;
 }
 
-.rightbutton .button:form { display: inline;}
+.rightbutton .button{ display: inline;}
 .rightbutton .button {
    font-size: small;
    color: #0a396b;
@@ -277,7 +269,7 @@ h4 {
   color: #0a396b;
   font-size: large;
   padding-left: 1em;
-  width: 100;
+  width: 100%;
   margin-left: 0px;
 }
 h4 {display: inline;}
@@ -305,7 +297,6 @@ h5 {display: inline;}
 
  .content ul li a {
   padding: 0em 0.5em;
-  background-color: none;
   color: #0a396b;
   text-decoration: none;
   float: left;
@@ -511,7 +502,7 @@ textarea{
 }
 .fieldhelp { color: #91b023; }
 
-.button:form { display: inline;}
+.button { display: inline;}
 .button {
    font-size: x-small;
    color: #0a396b;

@@ -54,14 +54,7 @@
             </p>
             <p py:if="not len(list(past_events))">None</p>
         </div>
-      <div py:if="is_tracked">
-            <i>You are tracking this artist.</i>
-         </div>
-        <div py:if="not is_tracked">
-            <i>You are not tracking this artist</i>
-        </div>   
-
-        <div py:replace="edit_links(artist)" />
+       <div py:replace="edit_links(artist)" />
    
 </div>
 </body>

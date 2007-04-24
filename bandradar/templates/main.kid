@@ -18,9 +18,9 @@
                 
       <div class="rightcontent">
         <h3>Tonight</h3>
-     	<small><span py:for="event_id, event_name, venue_name in events">
+     	<small><p py:for="event_id, event_name, venue_name in events">
     	<a href="/events/${event_id}"><b>${event_name}</b>@${venue_name}</a>
-    	</span></small> 
+    	</p></small> 
        </div>	              
      
     <div id="tagline">
