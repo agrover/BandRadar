@@ -7,23 +7,22 @@
 </head>
 
 <body>
+  <div class="content">
     <div id="searchbox">
-        <h2>Search all Venues</h2>
+        <h3>Search all Venues</h3>
         <?python from bandradar.venues import venue_search_form ?>
         ${venue_search_form(action="/venues/search")}
     </div>
+   <p><em>When you track a venue, BandRadar sends you a weekly email with upcoming events.</em>
+    </p>
 
-    <div id="list_title">
-    </div>
-
-    <h3>Venues with upcoming events
+    <h5>Venues with upcoming events
         <span py:if="'admin' in tg.identity.groups">
             ${tg_ButtonWidget(action="/venues/edit", label="Add a new venue")}
         </span>
-    </h3>
-    <p><em>You will receive a weekly email with upcoming events at any tracked venues.</em>
-    </p>
-    <br />
+    </h5>
+
+   <div id="venue">
     <table>
     <tr py:for="v in venues">
         <td>
@@ -35,5 +34,7 @@
         </td>
     </tr>
     </table>
+    </div>
+    </div>
 </body>
 </html>

@@ -7,6 +7,8 @@
 </head>
 
 <body>
+   <div class="content">
+
     <div id="searchbox">
         <h2>Search Events</h2>
         <?python from bandradar.events import event_search_form ?>
@@ -17,6 +19,6 @@
     <p py:for="e in events">
         <p><b><a href="/events/${e.id}">${e.name}</a></b> ${e.date}</p>
     </p>
-
+</div>
 </body>
 </html>

@@ -7,16 +7,11 @@
 </head>
 
 <body>
+  <div class="content">
     <h2>Privacy</h2>
-    <p>
-    BandRadar intentionally limits the amount of personal information it collects
-    to that which it needs to provide its service. We will not expose email addresses
-    or other information to anyone else without explicit permission from you.
+    <p>BandRadar intentionally limits the amount of personal information collected to details that are needed to provide an effective event tracking service. We never expose email addresses or other information to anyone else without explicit permission from you.
     </p>
-    <br />
-    <p>
-    We are still working on a formal privacy policy, but it will follow the
-    informal guidelines above.
-    </p>
+    <p>At BandRadar, we hate spam as much you do. We run regular security audits to make sure the personal information you do provide is not vulnerable to malicious third-parties.</p>
+  </div>
 </body>
 </html>

@@ -7,6 +7,10 @@
 </head>
 
 <body>
+   <div class="topContainer">
+      <div id="wrapper">     
+      <div class="contentArea">
+
     <h3>Import WWeek?</h3>
 
     ${wweek_form(action="/importers/importwweek")}
@@ -34,6 +38,9 @@
     <form action="/importers/importticketswest" method="post" class="tableform" name="lastfm">        
         <input type="submit" class="submitbutton" value="Go" />
     </form>
+    </div>
+    </div>
+    </div>
 
 </body>
 </html>

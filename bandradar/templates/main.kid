@@ -7,35 +7,49 @@
 </head>
 
 <body>
-    <div id="tagline">
-        <h3>The easy way to track your favorite Portland bands!</h3>
-        <ul>
-            <li>Find out who's playing</li>
-            <li>Get notified when bands you like play live</li>
-            <li>Your band's gig not here? Add it!</li>
-        </ul>
-    </div>
 
-    <div id="searchbox">
-        <h2>Search Bands</h2>
+	 
+     <div class="content"> 
+     <div id="searchbox">
+      <h3>Search all Bands</h3>
         ${search_form(action="/artists/search")}
-    </div>
+        <?python from bandradar.artists import artist_search_form ?> 
+     </div>    
+                
+      <div class="rightcontent">
+        <h3>Tonight</h3>
+     	<small><p py:for="event_id, event_name, venue_name in events">
+    	<a href="/events/${event_id}"><b>${event_name}</b>@${venue_name}</a>
+    	</p></small> 
+       </div>	              
+     
+    <div id="tagline">
+              <h1>The easy way to track your favorite Portland bands!</h1>
+                <p>Always missing your favorite <a href="/artists/list"> band's</a> gig? Sign in to be alerted <a href="/events/list"> when</a> and <a href="/venues/list"> where</a> they play next.  Oh and you can also track that <a href="/venues/list"> bar</a> with the live music seeping out that you keep walking by on your way home. In a <a href="/artists/list"> band</a> not on BandRadar? Add your name to the artist list to let your fans know a gig is upcoming.</p>
+                <p>A special note to our friends running IE: Ok we know there are some issues especially on the pages with the maps. Working on them. In the meantime you could give Firefox a whirl!</p>
+     
+   </div> 
+     
+     <div id="bandstats">    
+        <p><h5>Top Tracked Bands</h5></p>
+        <span py:for="item in top_artists">
+        <a href="/artists/${item['id']}">${item['name']}</a></span>
+     </div>
+   
+     <div id="venuestats">    
+        <p><h5>Top Tracked Venues</h5>
+        <span py:for="item in top_venues">
+        <a href="/venues/${item['id']}">${item['name']}</a></span>
+        </p>
+     </div>		
+     
+     <div id="eventstats">
+     <p><h5>Top Tracked Events</h5></p>
+     <span py:for="item in top_events">
+        <a href="/events/${item['id']}">${item['name']}</a></span>
+     </div>
+     </div>          
+                
 
-    <hr />
-
-    <h4>
-        Tonight's events
-        ${tg_ButtonWidget(action="/events/edit", label="Add a new event")}
-    </h4>
-
-    <p py:for="event_id, event_name, venue_name in events">
-        <a href="/events/${event_id}">${event_name} @ ${venue_name}</a>
-    </p>
-
-    <h4>Top Tracked</h4>
-    <p py:for="item in top_tracked">
-        <a href="/artists/${item['id']}">${item['name']}</a>
-    </p>
-
-</body>
+ </body>
 </html>

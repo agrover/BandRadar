@@ -7,6 +7,8 @@
 </head>
 
 <body>
+   <div class="content">
+
     <div id="userinfo">
         <h2>${user.user_name}</h2>
         <p>Since: ${user.created.strftime("%x")}</p>
@@ -52,5 +54,6 @@ venues by-date
     </table>
 
 
+</div>
 </body>
 </html>

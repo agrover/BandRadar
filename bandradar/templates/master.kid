@@ -13,32 +13,37 @@
     </p>
 </div>
 
-<div py:def="header()">
-    <div id="header">
-        <span py:if="not tg.identity.user">
-            <a href="/users/login">Login/Register</a>
+<div py:def="nav()">
+    <div id="navcontainer">
+     <ul id="navlist">
+        <li id="login"><span py:if="not tg.identity.user">
+            <a href="/users/login">Come In!</a>
         </span>
         <span py:if="tg.identity.user">
-            <a href="/users/${tg.identity.user.user_name}">${tg.identity.user.user_name}'s Page</a>
-        </span>
-        <a href="/artists/list">Bands</a>
-        <a href="/events/list">Events</a>
-        <a href="/venues/list">Venues</a>
-        <a href="/comments/add">Comments?</a>
-        <span py:if="tg.identity.user">
+            <a href="/users/${tg.identity.user.user_name}">
+            ${tg.identity.user.user_name}'s Page</a>
+        </span></li>
+        <li id="nav-bands"><a href="/artists/list">Bands</a></li>
+        <li id="nav-events"><a href="/events/list">Events</a></li>
+        <li id="nav-venues"><a href="/venues/list">Venues</a></li>
+        <li id="nav-comments"><a href="/comments/add">Comments</a></li>
+        <li id="nav-addevent"><a href="/events/edit">Add event</a></li>
+        <li id="nav-logout"><span py:if="tg.identity.user">
             <a href="/users/logout">Logout</a>
-        </span>
-    </div>
-    <div id="admin_header" py:if="'admin' in tg.identity.groups">
+        </span></li>
+       </ul>
+      </div> 
+           
+  <div class="admin_nav" py:if="'admin' in tg.identity.groups">
         <a href="/importers/webimport">Import Events</a>
         <a href="/importers/review">Review Events</a>
         <a href="/importers/reviewdupes">Possible dupes</a>
         <a href="/comments/list">Comments</a>
         <a href="/list_update_log">Updates</a>
         <a href="/list_batch">Batches</a>
-    </div>
-</div>
+      </div> 
 
+</div>
 
 <head py:match="item.tag=='{http://www.w3.org/1999/xhtml}head'">
     <meta content="text/html; charset=UTF-8" http-equiv="content-type" />
@@ -52,29 +57,22 @@
     <meta py:replace="item[:]"/>
 </head>
 
-<body py:match="item.tag=='{http://www.w3.org/1999/xhtml}body'">
-
-    <div id="main_column">
-
-        <div id="logo">
-            <a href="/"><img src="/static/images/logo3md.png" alt="BandRadar logo" /></a>
-        </div>
-
-        <div py:replace="header()" />
-
-        <div py:if="tg_flash" class="flash" py:content="tg_flash"></div>
-
-        <div id="content">
-            <div py:replace="[item.text] + item[:]"/>
-        </div>
-
-        <div id="footer">
-            <a href="/about">about</a> |
-            <a href="/privacy">privacy</a> |
-            <a href="http://bandradar.blogspot.com">blog</a> |
-<!--            <a href="/contact">contact</a> | -->
-            <a href="/feeds">rss</a>
-        </div>
-    </div>
-</body>
+ <body py:match="item.tag=='{http://www.w3.org/1999/xhtml}body'">  
+          <!-- <img src="/static/images/top_bk.png"/> -->
+     <div id="banner">
+	 <a href="/"><img src="/static/images/banner.png" alt="BandRadar logo" /></a>
+     </div>
+     <div py:replace="nav()" /> 
+     <div py:if="tg_flash" class="flash" py:content="tg_flash"></div>
+     <div py:replace="[item.text] + item[:]"/> 
+     
+     <div class="footer">
+      <a href="/about">about</a> |
+      <a href="/privacy">privacy</a> |
+      <a href="http://bandradar.blogspot.com">blog</a> |
+      <a href="/contact">contact</a> | 
+      <a href="/feeds">rss</a>
+      <p>© Copyright 2007 Buunabet,LLC All rights reserved.</p>
+      </div> 
+</body> 
 </html>

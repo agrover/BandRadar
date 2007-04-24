@@ -7,9 +7,11 @@
 </head>
 
 <body>
+    <div class="content">
     <h2>${user_name}</h2>
 
     ${user_form(value=form_vals, action="/users/save")}
-
+   
+ </div>
 </body>
 </html>

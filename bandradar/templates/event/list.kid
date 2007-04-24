@@ -7,27 +7,27 @@
 </head>
 
 <body>
-    <div id="searchbox">
-        <h2>Search all Events</h2>
+   <div class="content">
+   <div id="searchbox">
+        <h3>Search all Events</h3>
         ${event_search_form(action="/events/search")}
     </div>
-
-    <div id="list_title">
-        Events: ${listby} (${count})
-        ${tg_ButtonWidget(action="/events/edit", label="Add a new event")}
+    <div class="rightbutton">
+     ${tg_ButtonWidget(action="/events/edit", label="Add a new event")}
     </div>
-
-    <div id="list_heading">
-    With shows:
+    </div>
+    <div class="content">
         <ul>
         <li><a href="/events/list/today">Today</a></li>
         <li><a href="/events/list/tomorrow">Tomorrow</a></li>
         <li><a href="/events/list/yesterday">Yesterday</a></li>
         <li><a href="/events/list/week">Upcoming week</a></li>
         <li><a href="/events/list/all">All upcoming</a></li>
+         <h5>Events: ${listby} <big>(${count})</big></h5>
         </ul>
-    </div>
-
+       
+        
+  <div id="event">
     <table>
         <tr py:for="event_id, event_name, event_date, venue_name, is_tracked in events">
             <td>
@@ -41,5 +41,7 @@
             </td>
         </tr>
     </table>
+ </div>   
+ </div>   
 </body>
 </html>

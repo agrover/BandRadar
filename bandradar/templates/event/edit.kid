@@ -7,6 +7,7 @@
 </head>
 
 <body>
+  <div class="content">
     <h2>Edit an event</h2>
 
     <script type="text/javascript">
@@ -14,6 +15,7 @@
     </script>
 
     ${event_form.display(form_vals, action="/events/save")}
-
+ 
+ </div>
 </body>
 </html>

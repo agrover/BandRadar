@@ -7,9 +7,12 @@
 </head>
 
 <body>
-    <div id="body">
-        <p class="name">${artist.name}
-            <span py:if="'admin' in tg.identity.groups">
+   <div class="content">
+     <p class="name"><h4>${artist.name}</h4>&nbsp;&nbsp;
+     <span py:if="is_tracked">${tg_ButtonWidget(action="/artists/%s/untrack?viewing=yes" % artist.id, label="Untrack")}
+     </span>
+     <span py:if="not is_tracked">${tg_ButtonWidget(action="/artists/%s/track?viewing=yes" % artist.id,     label="Track")}</span>
+        <span py:if="'admin' in tg.identity.groups">
                 ${tg_ButtonWidget(action="/artists/%s/split" % artist.id, label="Split")}
                 <form class="buttonform" action="/artists/${artist.id}/merge" method="POST">
                     <label style="font-size: x-small;font-weight: normal" for="other_id">Merge into:</label>
@@ -17,45 +20,26 @@
                     <input type="submit" class="button" value="Merge"/>
                 </form>
             </span>
-        </p>
+  <div id="blurb">
         <p id="description" py:if="description">${XML(description)}</p>
-        <p py:if="artist.url">Website: <a href="${artist.url}">${artist.url}</a></p>
-        <p py:if="artist.myspace">MySpace:
+  </div>    
+        <p py:if="artist.url"><h5>Website: </h5><a href="${artist.url}">${artist.url}</a></p>
+        <p py:if="artist.myspace"><h5>MySpace:</h5>
             <a href="http://myspace.com/${artist.myspace}">
                 http://myspace.com/${artist.myspace}</a>
         </p>
 
         <p py:if="not 'admin' in artist.added_by.groups">
-        Added by: <a href="/users/${artist.added_by.user_name}">
+        <h5>Added by:</h5><a href="/users/${artist.added_by.user_name}">
             ${artist.added_by.user_name}</a></p>
-        <p>Similar Bands: ${artist_list(artists=artist.similars)}</p>
-        <p>Added: ${artist.fcreated}</p>
-        <p>Changed: ${artist.fupdated}</p>
-        <p py:if="tracked_count">Users tracking: ${tracked_count}</p>
-        <div py:if="is_tracked">
-            <i>currently being tracked by you.</i>
-            ${tg_ButtonWidget(action="/artists/%s/untrack?viewing=yes" % artist.id, label="Untrack")}
-        </div>
-        <div py:if="not is_tracked">
-            <i>not currently tracked by you.</i>
-            ${tg_ButtonWidget(action="/artists/%s/track?viewing=yes" % artist.id, label="Track")}
-        </div>
-
-        <div id="list_title">
-            Events
-        </div>
-
-        <h3>Past events <span class="small">(<a href="?list_all=1">See all</a>)</span></h3>
-        <div class="event_list">
-            <p py:for="e in past_events">
-                ${e.fdate}: <a href="/events/${e.id}">${e.name}</a>
-            </p>
-            <p py:if="not len(list(past_events))">None</p>
-        </div>
-
-        <h3>Upcoming events 
+        <p><h5>Similar Bands:</h5> ${artist_list(artists=artist.similars)}</p>
+        <p><h5>Added:</h5> ${artist.fcreated}</p>
+        <p><h5>Changed:</h5> ${artist.fupdated}</p>
+        <p py:if="tracked_count"><h5>Users tracking:</h5> ${tracked_count}</p>
+        </p>
+       <p> <h5>Upcoming events 
             ${tg_ButtonWidget(action="/events/edit?artist_prefill=%s" % artist.id, label="Add a new event")}
-        </h3>
+        </h5></p>
         <div class="event_list">
             <p py:for="e in future_events">
                 ${e.fdate}: <a href="/events/${e.id}">${e.name}</a>
@@ -63,8 +47,15 @@
             </p>
             <p py:if="not len(list(future_events))">None</p>
         </div>
-
-        <div py:replace="edit_links(artist)" />
-    </div>
+      <h5>Past events <span class="small">(<a href="?list_all=1">See all</a>)</span></h5>
+        <div class="event_list">
+            <p py:for="e in past_events">
+                ${e.fdate}: <a href="/events/${e.id}">${e.name}</a>
+            </p>
+            <p py:if="not len(list(past_events))">None</p>
+        </div>
+       <div py:replace="edit_links(artist)" />
+   
+</div>
 </body>
 </html>

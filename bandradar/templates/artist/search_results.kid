@@ -7,6 +7,9 @@
 </head>
 
 <body>
+
+   <div class="content">
+      
     <div id="searchbox">
         <h2>Search Bands</h2>
         <?python from bandradar.artists import artist_search_form ?>
@@ -21,5 +24,6 @@
     <p>
         ${tg_ButtonWidget(action="/artists/edit", label="Add a new Band")}
     </p>
+    </div>
 </body>
 </html>

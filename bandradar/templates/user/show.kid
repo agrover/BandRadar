@@ -7,22 +7,22 @@
 </head>
 
 <body>
-    <div id="userinfo">
-        <h2>${user.user_name}</h2>
-        <p>Since: ${user.created.strftime("%x")}</p>
-        <p>Zip Code: ${user.zip_code}</p>
-        <p>Website: <a href="${user.url}">${user.url}</a></p>
-        <p>MySpace: <a py:if="user.myspace" href="http://myspace.com/${user.myspace}">
-                http://myspace.com/${user.myspace}</a>
-        </p>
 
-        <p id="description" py:if="description">${XML(description)}</p>
-
-        <div py:if="viewing_self">
+    <div class="content">
+        <h4>${user.user_name}</h4>
+        <span py:if="viewing_self">
             ${tg_ButtonWidget(action="/users/%s/edit" % user.user_name, label="Edit")}
-        </div>
-
-    </div>
+       </span>
+       <div id="blurb">
+       <p id="description" py:if="description">${XML(description)}</p>
+       </div>
+        <p><h5>Since:</h5> ${user.created.strftime("%x")}</p>
+        <p><h5>Zip Code:</h5> ${user.zip_code}</p>
+        <p><h5>Website:</h5> <a href="${user.url}">${user.url}</a></p>
+        <p><h5>MySpace: </h5><a py:if="user.myspace" href="http://myspace.com/${user.myspace}">
+                http://myspace.com/${user.myspace}</a>
+       </p>
+       
 <!--
 upcoming shows
 tracked
@@ -31,11 +31,12 @@ bands
 venues by-venue
 venues by-date
 -->
-    <h4>Bands Tracked: ${artists.count()}</h4>
-    <table>
+    <p><h5>Bands Tracked:</h5> ${artists.count()}</p>
+    <div id="bandstracked">  
+    <table py:if="artists.count()">
         <th>Band</th>
-        <th>Events Performed</th>
-        <th>Events Upcoming</th>
+        <th>Performed</th>
+        <th>Upcoming</th>
         <tr py:for="artist in artists">
             <td>
                 <a href="/artists/${artist.id}">${artist.name}</a>
@@ -48,12 +49,14 @@ venues by-date
             </td>
         </tr>
     </table>
-
-    <h4>Venues Tracked: ${venues.count()}</h4>
-    <table>
+    </div>  
+    
+    <h5>Venues Tracked:</h5> ${venues.count()}
+    <div id="venuestracked">   
+    <table py:if="venues.count()">
         <th>Venue</th>
-        <th>Past Events</th>
-        <th>Upcoming Events</th>
+        <th>Past</th>
+        <th>Upcoming</th>
         <tr py:for="venue in venues">
             <td>
                 <a href="/venues/${venue.id}">${venue.name}</a>
@@ -66,8 +69,11 @@ venues by-date
             </td>
         </tr>
     </table>
+    </div>
 
-    <h4>Attendances: ${attendances.count()}</h4>
+ 
+    <h5>Attendances:</h5> ${attendances.count()}
+    <div id="attendance">    
     <table py:if="attendances.count()">
         <th>Event Name</th>
         <th>Date</th>
@@ -84,6 +90,9 @@ venues by-date
             </td>
         </tr>
     </table>
+    </div>
+</div>
+
 
 </body>
 </html>

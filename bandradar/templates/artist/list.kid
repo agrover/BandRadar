@@ -7,32 +7,31 @@
 </head>
 
 <body>
-    <div id="searchbox">
-        <h2>Search all Bands</h2>
-        <?python from bandradar.artists import artist_search_form ?>
+     <div class="content">
+     <div id="searchbox">
+        <h3>Search all Bands</h3> 
         ${artist_search_form(action="/artists/search")}
-    </div>
-
-    <div id="list_title">
-        Bands playing: ${listby} (${count})
-        ${tg_ButtonWidget(action="/artists/edit", label="Add a new Band")}
-    </div>
-    <p><em>You will receive email when any tracked bands have shows added.</em>
-    </p>
-    <br />
-
-    <div id="list_heading">
-    With shows:
+        <?python from bandradar.artists import artist_search_form ?> 
+     </div>
+     <div class="rightbutton">     
+     ${tg_ButtonWidget(action="/artists/edit", label="Add a new Band")} 
+     <div/>
+   </div>
+    <p><em>BandRadar sends you an email when your tracked bands add shows.</em>
+    </p>  
+    <div class="content">
+     <h3>With Shows</h3>  
         <ul>
         <li><a href="/artists/list/today">Today</a></li>
         <li><a href="/artists/list/tomorrow">Tomorrow</a></li>
         <li><a href="/artists/list/yesterday">Yesterday</a></li>
         <li><a href="/artists/list/week">Upcoming week</a></li>
         <li><a href="/artists/list/all">All upcoming</a></li>
-        </ul>
-    </div>
-
-    <table>
+       </ul>
+       <h5> Bands playing ${listby} <big>(${count})</big></h5>
+        
+      <div id="band">
+      <table>
         <tr py:for="artist in artists">
             <td>
                 <b py:strip="not artist['is_tracked']">
@@ -42,5 +41,8 @@
             </td>
         </tr>
     </table>
+    </div>
+</div> 
+</div>
 </body>
 </html>

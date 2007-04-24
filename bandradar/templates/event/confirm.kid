@@ -7,7 +7,9 @@
 </head>
 
 <body>
+ <div class="content">
     <h2>Adding event; look ok?</h2>
+ </div>
 
 </body>
 </html>

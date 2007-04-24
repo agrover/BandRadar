@@ -8,10 +8,10 @@
     <title>Login</title>
 </head>
 
-<body>
-    <div id="loginBox">
+ <body>
+      <div id="loginBox">
         <h2>Login</h2>
-        <p id="login_msg">${message}</p>
+        <!-- <p id="login_msg">${message}</p> -->
         <form action="${previous_url}" method="POST">
             <table>
                 <tr>
@@ -41,23 +41,26 @@
 
                 <tr>
                     <td colspan="2" class="buttons">
-                        <input type="submit" name="login" value="Login"/>
+                        <input type="submit" name="login" value="Login"/>&nbsp;&nbsp;
+                        <a href="/users/lost_passwd">Forgot my password</a>
                     </td>
                 </tr>
+                <tr><td></td></tr>
             </table>
-
+           
             <input py:if="forward_url" type="hidden" name="forward_url"
                 value="${forward_url}"/>
                 
             <input py:for="name,value in original_parameters.items()"
                 type="hidden" name="${name}" value="${value}"/>
         </form>
-        <a href="/users/lost_passwd">Forgot my password</a>
     </div>
-    <hr />
+    
     <div id="newuserbox">
-        <h2>New Login</h2>
-        ${newuser_form(value=form_vals, action="/users/usercreate")}
-    </div>
+    <h2>New Login</h2>
+      ${newuser_form(value=form_vals, action="/users/usercreate")}
+      </div> 
+  
+
 </body>
 </html>
