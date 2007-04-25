@@ -13,6 +13,7 @@ page_url = "/Venue.aspx?ven="
 
 def events():
     for venue_name, code in venue_list:
+        print "doing %s" % venue_name
         usock = urllib.urlopen(base_url + page_url + code)
         soup = BeautifulSoup(usock.read())
         table = soup("table", attrs={"class":"eventDataGrid"})[0]
@@ -24,6 +25,8 @@ def events():
             event['artists'] = name_td.a.string.split("*")[0].split(",")
             event['name'] = ", ".join(event['artists'])
             date_td = tr("td", attrs={"class":"borderTopRight"})[0]
+            if not date_td.string:
+                continue
             weekday, date_str, time_str, ampm =  date_td.string.strip().split()
             event['date'] = datetime.date(*time.strptime(date_str, "%m/%d/%y")[:3])
             if time_str.endswith(":00"):
