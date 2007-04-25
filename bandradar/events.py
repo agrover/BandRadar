@@ -23,9 +23,9 @@ class EitherNameOrArtists(formencode.FancyValidator):
 class EventForm(w.WidgetsList):
     id = w.HiddenField(validator=v.Int)
     name = w.TextField(label="Event Name", help_text="If different from artists' names",
-        validator=v.String(strip=True), attrs=dict(size=40))
+        validator=v.UnicodeString(strip=True), attrs=dict(size=40))
     artists = w.TextArea(help_text="Enter artists, one per line", rows=4, cols=40,
-        validator=v.String(strip=True))
+        validator=v.UnicodeString(strip=True))
     venue = BRAutoCompleteField("/venues/dynsearch", label="Venue", take_focus=False)
     date = BRCalendarDatePicker(not_empty=True)
     time = w.TextField(attrs=dict(maxlength=40))
