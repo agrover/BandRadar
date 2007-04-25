@@ -57,6 +57,8 @@ def day_events(date):
             venue = {}
             event_dict = dict(source="wweek")
             div = anchor.parent
+            if not div.h2.string:
+                continue
             event_dict['name'], event_dict['artists'] = \
                 parse_event(div.h2.string.strip())
             venue["name"] = anchor.findNextSibling('b').string.strip()
@@ -118,7 +120,7 @@ def month_events(start_date):
 
 if __name__ == "__main__":
     #parse_day(datetime.date.today())
-    print len(list(day_events(datetime.date(2007, 4, 2))))
+    print len(list(day_events(datetime.date(2007, 4, 27))))
 
 #find named anchors
 # if a.parent = div class preview
