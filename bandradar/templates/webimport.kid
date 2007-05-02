@@ -7,9 +7,7 @@
 </head>
 
 <body>
-   <div class="topContainer">
-      <div id="wrapper">     
-      <div class="contentArea">
+   <div class="content">
 
     <h3>Import WWeek?</h3>
 
@@ -17,29 +15,27 @@
 
     <h3>Import Pollstar?</h3>
 
-    <form action="/importers/importpollstar" method="post" class="tableform" name="pollstar">        
+   <li> <form action="/importers/importpollstar" method="post" class="tableform" name="pollstar">        
         <input type="submit" class="submitbutton" value="Go" />
-    </form>
+    </form></li>
 
     <h3>Import Upcoming.org?</h3>
 
-    <form action="/importers/importupcoming" method="post" class="tableform" name="upcoming">        
+    <li><form action="/importers/importupcoming" method="post" class="tableform" name="upcoming">        
         <input type="submit" class="submitbutton" value="Go" />
-    </form>
+    </form></li>
 
     <h3>Import last.fm?</h3>
 
-    <form action="/importers/importlastfm" method="post" class="tableform" name="lastfm">        
+    <li><form action="/importers/importlastfm" method="post" class="tableform" name="lastfm">        
         <input type="submit" class="submitbutton" value="Go" />
     </form>
-
+</li>
     <h3>Import TicketsWest?</h3>
 
-    <form action="/importers/importticketswest" method="post" class="tableform" name="lastfm">        
+   <li> <form action="/importers/importticketswest" method="post" class="tableform" name="lastfm">        
         <input type="submit" class="submitbutton" value="Go" />
-    </form>
-    </div>
-    </div>
+    </form></li>
     </div>
 
 </body>

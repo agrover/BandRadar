@@ -8,9 +8,7 @@
 
 <body>
 
-<div class="topContainer">
-      <div id="wrapper">     
-      <div class="contentArea">
+    <div class="content">
     <h3>Dupes (${len(dupes)} out of ${dupe_count} potentials)</h3>
 
     <table py:for="dupe_group in dupes">
@@ -31,8 +29,6 @@
         </td>
     </tr><hr/>
     </table>
-    </div>
-    </div>
     </div>
 </body>
 </html>
