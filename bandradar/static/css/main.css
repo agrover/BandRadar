@@ -11,7 +11,7 @@ body {
 a { text-decoration: none; }
 a:link { color: #215309;}
 a:visited { color: #0a396b; }
-a:hover { color: #0a396b; text-decoration: underline; }
+a:hover { color: #bbbb00; text-decoration: underline; }
 
 #banner {
   padding-top:0;
@@ -19,6 +19,8 @@ a:hover { color: #0a396b; text-decoration: underline; }
   padding-left:20px;
   text-align: left;
   padding-bottom: 2em;
+  margin-bottom: 10px;
+ 
 } 
 #navcontainer{
   margin-left: auto;
@@ -45,7 +47,7 @@ a:hover { color: #0a396b; text-decoration: underline; }
 #navcontainer li a:visited{
   padding: 1px 2px;
   color: #000;
-  background: url("../images/nav_bak.png") ;
+  background: url("../images/nav_bak.png") repeat-x ;
   border: 1px solid black;
   text-decoration: none;
   font-weight: bold;
@@ -200,7 +202,7 @@ a:hover { color: #0a396b; text-decoration: underline; }
 }  
 .footer p{
  padding-top: 1em;
- color: #91b023;
+ color: #bbbb00;
 }
 
 .flash {
@@ -285,7 +287,7 @@ h4 {display: inline;}
 h5 {
  margin-bottom: 0;
  padding: 0;
- color: #91b023; 
+ color: #bbbb00; 
  text-transform: lowercase; 
  margin-left: 25px;
  text-align: left;
@@ -360,7 +362,7 @@ h5 {display: inline;}
  
 #band td {
   padding: .25em;
-  border-bottom: 1px dotted #91b023;
+  border-bottom: 1px dotted #bbbb00;
 }
 
 #event { 
@@ -374,7 +376,7 @@ h5 {display: inline;}
 }
 #event td {
   padding: .25em;
-  border-bottom: 1px dotted #91b023;
+  border-bottom: 1px dotted #bbbb00;
 }
 .event_list { 
   text-align: left;
@@ -397,7 +399,7 @@ h5 {display: inline;}
 }
 #venue td {
   padding: .25em;
-  border-bottom: 1px dotted #91b023;
+  border-bottom: 1px dotted #bbbb00;
 }
 
 #loginBox{
@@ -453,7 +455,7 @@ h5 {display: inline;}
 #bandstracked th {
 	padding: 0 0.5em;
 	text-align: left;
-	border-bottom: 1px solid #91b023;
+	border-bottom: 1px solid #bbbb00;
 	}
 #bandstracked td {
 	padding-left: 1em;
@@ -470,7 +472,7 @@ h5 {display: inline;}
 #venuestracked th {
 	padding: 0 0.5em;
 	text-align: left;
-	border-bottom: 1px solid #91b023;
+	border-bottom: 1px solid #bbbb00;
 	}
 #venuestracked td {
 	padding-left:1em;
@@ -486,7 +488,7 @@ h5 {display: inline;}
 
 #attendance th {
 	text-align: left;
-	border-bottom: 1px solid #91b023;
+	border-bottom: 1px solid #bbbb00;
 	}
 #attendance td {
     padding: 0 0.5em;
@@ -519,7 +521,7 @@ textarea{
   color: #bd2c00;
   margin-right:100px;
 }
-.fieldhelp { color: #91b023; }
+.fieldhelp { color: #bbbb00; }
 
 .button {
    font-size: x-small;
