@@ -11,7 +11,7 @@ body {
 a { text-decoration: none; }
 a:link { color: #215309;}
 a:visited { color: #0a396b; }
-a:hover { color: #bbbb00; text-decoration: underline; }
+a:hover { color: #bbbb00; text-decoration: none; }
 
 #banner {
   padding-top:0;
