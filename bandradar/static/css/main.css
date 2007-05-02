@@ -4,11 +4,13 @@ body {
     background: black url("../images/br_back.png") repeat-y center;
     margin: 0 auto 0 auto;
     width: 800px;
+    border: none
+    
 }
  
 a { text-decoration: none; }
 a:link { color: #215309;}
-a:visited { color: #bd2c00; }
+a:visited { color: #0a396b; }
 a:hover { color: #0a396b; text-decoration: underline; }
 
 #banner {
@@ -43,18 +45,16 @@ a:hover { color: #0a396b; text-decoration: underline; }
 #navcontainer li a:visited{
   padding: 1px 2px;
   color: #000;
-  background: #91b023; 
-  border: 1px solid #ccc;
+  background: url("../images/nav_bak.png") ;
+  border: 1px solid black;
   text-decoration: none;
+  font-weight: bold;
   text-transform:uppercase;
-  border-right: 3px solid #bd2c00;
-  border-top:3px solid #bd2c00;
-  border-bottom:3px solid #bd2c00;
-  border-left: 3px solid #bd2c00;
-}
+}  
+  
 #navcontainer ul li a:hover {
-  color:#f4f9e0;
-  background:#3b7120;
+  color:white;
+  background:#0a396b;
 }
 #navcon li:first-child a {
   border-left:3px solid #bd2c00;
@@ -100,7 +100,7 @@ a:hover { color: #0a396b; text-decoration: underline; }
   margin-left:25px;
   color: #215309;
   clear: both;
-  border-right: 2px dotted #215309;
+  
 } 
  #bandstats h5, 
  #bandstats p{
@@ -116,7 +116,7 @@ a:hover { color: #0a396b; text-decoration: underline; }
   margin-left:250px;
   color: #215309;
   clear: both;
-  border-right: 2px dotted #215309;
+ 
 } 
  #venuestats h5, 
  #venuestats p{
@@ -132,7 +132,7 @@ a:hover { color: #0a396b; text-decoration: underline; }
   margin-left:25px;
   color: #215309;
   clear: both;
-  border-right: 2px dotted #215309;
+  
 } 
  #eventstats h5, 
  #eventstats p{
@@ -144,7 +144,7 @@ a:hover { color: #0a396b; text-decoration: underline; }
   width: 200px;
   position: absolute;
   left: 500px;
-  border-left: #bd2c00 1px dashed;
+  border-left: #215309 1px solid;
   padding-left: 1em;
   padding-right: 1em;
   top: 20px;
@@ -175,7 +175,7 @@ a:hover { color: #0a396b; text-decoration: underline; }
    color: #0a396b;
    font-weight: bold;
    border: 3px solid #215309;
-   background-color: #f4f9e0;
+   background-color: white;
    padding: 0 .5em 0 .5em;
    text-transform: uppercase;
 }
@@ -213,8 +213,8 @@ a:hover { color: #0a396b; text-decoration: underline; }
 #map {
     float:right;
     text-align: right;
-    border: 2px solid #bd2c00;
-    margin-right: 4em;
+    border: 2px solid #0a396b;
+    margin-right: 5em;
     margin-top: 2em;
     margin-left: 0px;
     margin-right:50px;
@@ -223,13 +223,16 @@ a:hover { color: #0a396b; text-decoration: underline; }
 
 #tagline {
   position: relative;	    
-  border-left: 2px dotted #215309;
-  margin-top: 3.5em;
+  margin-top: 5em;
   width: 55%;
   clear: both;
   margin-right: .5em;
   padding-left: 1em;
   margin-bottom: 1.5em;
+}
+
+#tagline p{
+ text-indent: 1.5em;
 }
 
 
@@ -259,7 +262,7 @@ h2 {
 }
 
 h3 {
-    padding-left: .5em;   
+    padding-left: 0em;   
     font-size: small;
     text-align: left;
     color: #0a396b;
@@ -273,7 +276,7 @@ h4 {
   text-align: left;
   color: #0a396b;
   font-size: large;
-  padding-left: 1em;
+  padding-left: 0em;
   width: 100%;
   margin-left: 0px;
 }
@@ -430,7 +433,7 @@ h5 {display: inline;}
 #newuserbox input,
 #loginBox input{
  border: 2px solid #215309;
- background-color: #f4f9e0; 
+ background-color: white; 
  color: black;
 } 
 #newuserbox  {
@@ -495,13 +498,13 @@ h5 {display: inline;}
 input { 
   border: 4px solid #215309;
   padding: .2em;
-  background-color: #f4f9e0; 
+  background-color: white; 
   color: #001100;
 }
 
 textarea{ 
   border: 4px solid #215309; 
-  background-color: #f4f9e0;
+  background-color: white;
   padding: .25em;       
 }
 
@@ -523,7 +526,7 @@ textarea{
    color: #0a396b;
    font-weight: bold;
    border: 2px solid #215309;
-   background-color: #f4f9e0;
+   background-color: white;
    padding: 0 .5em 0 .5em;
 }
 .button:hover { cursor: pointer }

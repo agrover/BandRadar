@@ -13,11 +13,7 @@
         ${googlemap(venue=event.venue, width=250, height=200)}
 </div>
 <h4>${event.name}
-             <span py:if="is_tracked">${tg_ButtonWidget(action="/events/%s/untrack?viewing=yes" % event.id, label="Untrack")}
-     </span>
-     <span py:if="not is_tracked">${tg_ButtonWidget(action="/events/%s/track?viewing=yes" % event.id,     label="Track")}</span>
-        <span py:if="event.ticket_url">${tg_ButtonWidget(action=event.ticket_url, label="Buy Tickets")}</span>      
-
+             
      
 </h4>
    <div id="blurb">
@@ -39,6 +35,12 @@
             <p><h5>Changed:</h5> ${event.fupdated}</p>
             <br></br>
             <br></br>
+            
+            <span py:if="is_tracked">${tg_ButtonWidget(action="/events/%s/untrack?viewing=yes" % event.id, label="Untrack")}
+     </span>
+     <span py:if="not is_tracked">${tg_ButtonWidget(action="/events/%s/track?viewing=yes" % event.id,     label="Track")}</span>
+        <span py:if="event.ticket_url">${tg_ButtonWidget(action=event.ticket_url, label="Buy Tickets")}</span>      
+
            
         <div py:if="'admin' in tg.identity.groups and event.sources.count()">
             From: ${",".join([s.name for s in event.sources])}
