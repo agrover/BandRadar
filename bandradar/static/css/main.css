@@ -1,31 +1,22 @@
 body {
     font: normal small Verdana, Arial, Helvetica, sans-serif;
-	text-align: center;    
-    background: black url("../images/br_back.png") repeat-y center;
+	background: black url("../images/br_back.png") repeat-y center;
     margin: 0 auto 0 auto;
     width: 800px;
-    border: none
-    
+    padding: 0 0 0 0;
 }
- 
+
 a { text-decoration: none; }
 a:link { color: #215309;}
-a:visited { color: #0a396b; }
-a:hover { color: #bbbb00; text-decoration: none; }
+a:visited { color: #0a396b; font-weight: bold; }
+a:hover { color: #cc9900; text-decoration: underline; }
 
 #banner {
-  padding-top:0;
-  margin-top: 0;
-  padding-left:9px;
-  text-align: left;
-  padding-bottom: 2em;
-  margin-bottom: 10px;
- 
-} 
+  padding: 0 0 1em 9px;
+  margin: 0 0 2px 0px;
+ } 
 #navcontainer{
-  margin-left: auto;
-  margin-right: auto;
-  margin-bottom: 20px;
+  margin: 0 auto 20px auto;
   border-top: 4px solid #3b7120;
   z-index: 1;
   width: 90%;
@@ -33,7 +24,7 @@ a:hover { color: #bbbb00; text-decoration: none; }
 #navcontainer ul{
   list-style-type: none;
   text-align: center;
-  margin-top: -8px;
+  margin: -8px 0 0 0;
   padding: 0;
   position: relative;
   z-index: 2;
@@ -82,18 +73,27 @@ a:hover { color: #bbbb00; text-decoration: none; }
 
 .content {
   text-align: left;
-  width: 800px;
+  /*width: 800px;*/
   position: relative;
   padding: .25em;
   margin-left: 30px;
   color: #215309;
+  height: 1%;
 } 
 .content p {
- width: 90%;
+ /*width: 90%;*/
  color: #001100;
  padding-left: .5em;
  }
- 
+
+#help {
+text-align:left;
+clear: both;
+padding: .5em 0 1em .25em;
+color: black;
+font-weight: bold;
+}
+
  #bandstats {
   text-align: left;
   width: 200px;
@@ -118,19 +118,19 @@ a:hover { color: #bbbb00; text-decoration: none; }
   margin-left:250px;
   color: #215309;
   clear: both;
+  } 
  
-} 
  #venuestats h5, 
  #venuestats p{
- padding: 0em;
- margin: 0;
+ padding: 0 0 0 0;
+ margin: 0 0 0 0;
  }
 
 #eventstats {
   text-align: left;
   width: 200px;
   position: relative;
-  padding: .25em;
+  padding: .25em 0 .5em 0;
   margin-left:25px;
   color: #215309;
   clear: both;
@@ -163,24 +163,19 @@ a:hover { color: #bbbb00; text-decoration: none; }
 }
 
 .rightbutton{
-  width: 200px;
-  position: absolute;
-  left: 490px;
+  /*width: 200px;*/
   padding-left: 1em;
   padding-right: 1em;
-  top: 25px;
-}
+  }
 
 .rightbutton .button{ display: inline;}
 .rightbutton .button {
-   font-size: small;
    color: #0a396b;
    font-weight: bold;
-   border: 3px solid #215309;
-   background-color: white;
+   background-color: none;
    padding: 0 .5em 0 .5em;
-   text-transform: uppercase;
-}
+   float: right;
+ }
 .rightbutton .button:hover { cursor: pointer }
 
 .leftcontent{
@@ -202,7 +197,7 @@ a:hover { color: #bbbb00; text-decoration: none; }
 }  
 .footer p{
  padding-top: 1em;
- color: #bbbb00;
+ color: #cc9900;
 }
 
 .flash {
@@ -213,14 +208,9 @@ a:hover { color: #bbbb00; text-decoration: none; }
 }
 
 #map {
-    float:right;
-    text-align: right;
+    float: right;
     border: 2px solid #0a396b;
-    margin-right: 5em;
-    margin-top: 2em;
-    margin-left: 0px;
-    margin-right:50px;
-    width: 50%;
+    margin: 2em 5em 0 0;
 }    
 
 #tagline {
@@ -285,13 +275,13 @@ h4 {
 h4 {display: inline;}
 
 h5 {
- margin-bottom: 0;
- padding: 0;
- color: #bbbb00; 
+ margin: 0 0 0 0;
+ padding: 0 1em 0 0;
+ color: black; 
  text-transform: lowercase; 
- margin-left: 0px;
  text-align: left;
 }
+
 h5 {display: inline;}
 
 
@@ -352,7 +342,7 @@ h5 {display: inline;}
   width: 92%;
 }
 #blurb {
- width: 90%;
+ /*width: 90%;*/
  border-left: 2px dotted #0a396b;
  margin-left: .5em;
  margin-top: 1em;
@@ -362,7 +352,7 @@ h5 {display: inline;}
  
 #band td {
   padding: .25em;
-  border-bottom: 1px dotted #bbbb00;
+  border-bottom: 1px dotted #cc9900;
 }
 
 #event { 
@@ -376,13 +366,13 @@ h5 {display: inline;}
 }
 #event td {
   padding: .25em;
-  border-bottom: 1px dotted #bbbb00;
+  border-bottom: 1px dotted #cc9900;
 }
 .event_list { 
   text-align: left;
   margin-left: 25px;
   margin-bottom: 1em;
- }
+  }
 .event_list p{
  margin:.25em 0 0 0;
  }
@@ -399,7 +389,7 @@ h5 {display: inline;}
 }
 #venue td {
   padding: .25em;
-  border-bottom: 1px dotted #bbbb00;
+  border-bottom: 1px dotted #cc9900;
 }
 
 #loginBox{
@@ -455,7 +445,7 @@ h5 {display: inline;}
 #bandstracked th {
 	padding: 0 0.5em;
 	text-align: left;
-	border-bottom: 1px solid #bbbb00;
+	border-bottom: 1px solid #cc9900;
 	}
 #bandstracked td {
 	padding-left: 1em;
@@ -472,7 +462,7 @@ h5 {display: inline;}
 #venuestracked th {
 	padding: 0 0.5em;
 	text-align: left;
-	border-bottom: 1px solid #bbbb00;
+	border-bottom: 1px solid #cc9900;
 	}
 #venuestracked td {
 	padding-left:1em;
@@ -488,7 +478,7 @@ h5 {display: inline;}
 
 #attendance th {
 	text-align: left;
-	border-bottom: 1px solid #bbbb00;
+	border-bottom: 1px solid #cc9900;
 	}
 #attendance td {
     padding: 0 0.5em;
@@ -521,14 +511,14 @@ textarea{
   color: #bd2c00;
   margin-right:100px;
 }
-.fieldhelp { color: #bbbb00; }
+.fieldhelp { color: #cc9900; }
 
 .button {
    font-size: x-small;
    color: #0a396b;
    font-weight: bold;
    border: 2px solid #215309;
-   background-color: white;
+   background-color: none;
    padding: 0 .5em 0 .5em;
 }
 .button:hover { cursor: pointer }
