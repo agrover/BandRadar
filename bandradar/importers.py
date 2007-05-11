@@ -263,9 +263,9 @@ class Importers(controllers.Controller, identity.SecureResource):
                 artist.approved = now
 
     def delete_event(self, event):
-        for a in event.artists:
-            event.removeArtist(a)
-            a.destroy_if_unused()
+        # M:M links automatically cleaned up, but must clean up the rest
+        for att in event.attendances:
+            att.destroySelf()
         v = event.venue
         event.destroySelf()
         v.destroy_if_unused()
