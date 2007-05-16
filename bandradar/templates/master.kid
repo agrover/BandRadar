@@ -1,4 +1,5 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
 <?python import sitetemplate ?>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:py="http://purl.org/kid/ns#" py:extends="sitetemplate">
 
@@ -26,8 +27,8 @@
         <li id="nav-bands"><a href="/artists/list">Bands</a></li>
         <li id="nav-events"><a href="/events/list">Events</a></li>
         <li id="nav-venues"><a href="/venues/list">Venues</a></li>
-        <li id="nav-comments"><a href="/comments/add">Comments</a></li>
         <li id="nav-addevent"><a href="/events/edit">Add event</a></li>
+        <li id="nav-addevent"><a href="/artists/edit">Add band</a></li>
         <li id="nav-logout"><span py:if="tg.identity.user">
             <a href="/users/logout">Logout</a>
         </span></li>
@@ -55,7 +56,7 @@
     urchinTracker();
     </script>
     <meta py:replace="item[:]"/>
-</head>
+ </head>
 
  <body py:match="item.tag=='{http://www.w3.org/1999/xhtml}body'">  
           <!-- <img src="/static/images/top_bk.png"/> -->
@@ -70,8 +71,10 @@
       <a href="/about">about</a> |
       <a href="/privacy">privacy</a> |
       <a href="http://bandradar.blogspot.com">blog</a> |
-      <a href="/contact">contact</a> | 
+      <a href="/contact">contact</a> |
+      <a href="/comments/add">comments</a> |      
       <a href="/feeds">rss</a>
+      
       <p>© Copyright 2007 Buunabet,LLC All rights reserved.</p>
       </div> 
 </body> 

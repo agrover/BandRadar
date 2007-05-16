@@ -8,22 +8,22 @@
 
 <body>
   <div class="content">
+   <div id="help">When you track a venue, BandRadar sends you a weekly email with upcoming events.</div>   
     <div id="searchbox">
         <h3>Search all Venues</h3>
         <?python from bandradar.venues import venue_search_form ?>
         ${venue_search_form(action="/venues/search")}
     </div>
-   <p><em>When you track a venue, BandRadar sends you a weekly email with upcoming events.</em>
-    </p>
+ 
+    
 
+   <div id="venue">
+    <table>
     <h5>Venues with upcoming events
         <span py:if="'admin' in tg.identity.groups">
             ${tg_ButtonWidget(action="/venues/edit", label="Add a new venue")}
         </span>
     </h5>
-
-   <div id="venue">
-    <table>
     <tr py:for="v in venues">
         <td>
             <a href="/venues/${v['id']}">${v['name']}</a>

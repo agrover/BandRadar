@@ -8,22 +8,20 @@
 
 <body>
    <div class="content">
+   <div id="help">BandRadar sends you an email when your tracked events are upcoming.</div>
    <div id="searchbox">
         <h3>Search all Events</h3>
         ${event_search_form(action="/events/search")}
     </div>
-    <div class="rightbutton">
-     ${tg_ButtonWidget(action="/events/edit", label="Add a new event")}
-    </div>
-    </div>
-    <div class="content">
+  
         <ul>
+        <div class="eventstats"><h5>Events: ${listby} <big>(${count})</big></h5></div>
+        <br></br>
         <li><a href="/events/list/today">Today</a></li>
         <li><a href="/events/list/tomorrow">Tomorrow</a></li>
         <li><a href="/events/list/yesterday">Yesterday</a></li>
         <li><a href="/events/list/week">Upcoming week</a></li>
         <li><a href="/events/list/all">All upcoming</a></li>
-         <h5>Events: ${listby} <big>(${count})</big></h5>
         </ul>
        
         
