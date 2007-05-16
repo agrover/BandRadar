@@ -37,23 +37,42 @@
         <p><h5>Changed:</h5> ${artist.fupdated}</p>
         <p py:if="tracked_count"><h5>Users tracking:</h5> ${tracked_count}</p>
         </p>
-       <p> <h5>Upcoming events 
+        
+        <p><h5>Upcoming events:</h5></p>
+                <table class="upcoming" cellspacing="0" py:for="e in future_events">
+             <tr>
+             <td class="who" width="25%"> <a href="/events/${e.id}">${e.name}</a></td>
+             <td class="when" width="25%"> <a href="/events/${e.id}">${e.fdate}&nbsp;&nbsp;${e.time}</a></td>
+             </tr>             
+        </table>
+        <p py:if="not len(list(future_events))">None</p>
+        <br clear="all"></br>
+  
+           <h5> Past events <span class="small">(<a href="?list_all=1">See all</a>)</span></h5>
+            
+          <table class="past" cellspacing="0" py:for="e in past_events">
+             <tr>
+             <td class="who" width="25%"> <a href="/events/${e.id}">${e.name}</a></td>
+             <td class="when" width="25%"> <a href="/events/${e.id}">${e.fdate}</a></td>
+             </tr>             
+        </table>                    
+        
+        
+      <!--  <p> <h5>Upcoming events 
             ${tg_ButtonWidget(action="/events/edit?artist_prefill=%s" % artist.id, label="Add a new event")}
         </h5></p>
-        <div class="event_list">
+
             <p py:for="e in future_events">
                 ${e.fdate}: <a href="/events/${e.id}">${e.name}</a>
-                ${e.time} ${e.cost}
-            </p>
+                ${e.time} ${e.cost}            </p>
             <p py:if="not len(list(future_events))">None</p>
-        </div>
-      <h5>Past events <span class="small">(<a href="?list_all=1">See all</a>)</span></h5>
+        </div>      <h5>Past events <span class="small">(<a href="?list_all=1">See all</a>)</span></h5>
         <div class="event_list">
-            <p py:for="e in past_events">
+                    <p py:for="e in past_events">
                 ${e.fdate}: <a href="/events/${e.id}">${e.name}</a>
-            </p>
+            </p> -->
+            
             <p py:if="not len(list(past_events))">None</p>
-        </div>
        <div py:replace="edit_links(artist)" />
    
 </div>
