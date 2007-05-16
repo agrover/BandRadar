@@ -15,8 +15,8 @@
         <?python from bandradar.artists import artist_search_form ?>
         ${artist_search_form(action="/artists/search")}
     </div>
-
-    <h2>Artist Search Results</h2>
+<br clear="all"></br>
+  <h5>Artist Search Results</h5>
     <p py:for="a in artists">
         <p><b><a href="/artists/${a.id}">${a.name}</a></b></p>
     </p>

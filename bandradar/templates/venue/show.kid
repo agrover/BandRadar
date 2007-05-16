@@ -11,6 +11,7 @@
            ${googlemap(venue=venue, width=250, height=200)}
            
           <span id="name"><h4>${venue.name}</h4></span>
+          &nbsp;
           <span py:if="is_tracked">
                 ${tg_ButtonWidget(action="/venues/%s/untrack?viewing=yes" % venue.id, label="Untrack")}</span>
           
@@ -39,7 +40,7 @@
         <p><h5>Upcoming events</h5></p>
              <div class="event_list">  
              <p py:for="e in future_events">
-                ${e.fdate}: <a href="/events/${e.id}">${e.name}</a>
+                ${e.fdate}:&nbsp;&nbsp;<a href="/events/${e.id}">${e.name}</a>
                 ${e.time} ${e.cost}
             </p>
             <p py:if="not len(list(future_events))">None</p>
@@ -48,7 +49,7 @@
            <h5> Past events <span class="small">(<a href="?list_all=1">See all</a>)</span></h5>
             <div class="event_list">
             <p py:for="e in past_events">
-            ${e.fdate}: <a href="/events/${e.id}">${e.name}</a>
+            ${e.fdate}:&nbsp;&nbsp;<a href="/events/${e.id}">${e.name}</a>
             </p>
             <p py:if="not len(list(past_events))">None</p>
             </div>
