@@ -7,7 +7,7 @@ body {
 }
 
 a { text-decoration: none; }
-a:link { color: #0a396b;font-weight: bold;}
+a:link { color: #0a396b; font-weight: bold;}
 a:visited { color: #215309;}
 a:hover { color: #cc9900;  }
 
@@ -94,14 +94,12 @@ color: black;
 font-weight: bold;
 }
 
- #bandstats {
+#bandstats {
   text-align: left;
-  width: 200px;
   position: relative;
-  padding: .50em;
-  margin-left:25px;
+  float: left;
+  padding: .25em;
   color: #215309;
-  clear: both;
   
 } 
  #bandstats h5, 
@@ -112,10 +110,8 @@ font-weight: bold;
 
 #venuestats {
   text-align: left;
-  width: 200px;
   position: relative;
   padding: .25em;
-  margin-left:250px;
   color: #215309;
   clear: both;
   } 
@@ -133,7 +129,7 @@ font-weight: bold;
   padding: .25em 0 .5em 0;
   margin-left:25px;
   color: #215309;
-  clear: both;  
+  float: left;
 } 
  #eventstats h5, 
  #eventstats p{

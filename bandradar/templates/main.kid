@@ -26,27 +26,29 @@
     <div id="tagline">
               <h1>The easy way to track your favorite Portland bands!</h1>
                 <p>Always missing your favorite <a href="/artists/list"> band's</a> gig? Sign in to be alerted <a href="/events/list"> when</a> and <a href="/venues/list"> where</a> they play next.  Oh and you can also track that <a href="/venues/list"> bar</a> with the live music seeping out that you keep walking by on your way home.</p><p>In a <a href="/artists/list"> band</a> not on BandRadar? Add your name to the artist list to let your fans know a gig is upcoming.</p>
-                    
+              
    </div> 
      
+  
      <div id="bandstats">    
         <p><h5>Top Tracked Bands</h5></p>
         <p py:for="item in top_artists">
         <a href="/artists/${item['id']}">${item['name']}</a></p>
      </div>
    
-     <div id="venuestats">    
-        <p><h5>Top Tracked Venues</h5>
-        <p py:for="item in top_venues">
-        <a href="/venues/${item['id']}">${item['name']}</a></p>
-        </p>
-     </div>		
-     
      <div id="eventstats">
      <p><h5>Top Tracked Events</h5></p>
      <p py:for="item in top_events">
         <a href="/events/${item['id']}">${item['name']}</a></p>
      </div>
+     
+     <div id="venuestats">    
+        <p><h5>Top Tracked Venues</h5>
+        <p py:for="item in top_venues">
+        <a href="/venues/${item['id']}">${item['name']}</a></p>
+        </p>
+
+     </div>	
      </div>          
                 
 
