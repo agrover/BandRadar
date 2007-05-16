@@ -76,7 +76,7 @@ a:hover { color: #cc9900; text-decoration: underline; }
   /*width: 800px;*/
   position: relative;
   padding: .25em;
-  margin-left: 30px;
+  margin: 0 25px 0 30px;
   color: #215309;
   height: 1%;
 } 
@@ -387,6 +387,63 @@ h5 {display: inline;}
   padding: .25em;
   border-bottom: 1px dotted #cc9900;
 }
+
+table.upcoming{ 
+width: 580px;
+background-color: #fafafa;
+border: 1px #000000 solid;
+border-collapse: collapse;
+border-spacing: 0px; 
+}
+
+table.past{ 
+width: 580px;
+background-color: #fafafa;
+border: 1px #000000 solid;
+border-collapse: collapse;
+border-spacing: 0px; 
+}
+
+td.who
+{ border-bottom: 1px #6699CC dotted;
+text-align: left;
+font-family: Verdana, sans-serif, Arial;
+font-weight: normal;
+font-size: .7em;
+color: #404040;
+background-color: #fafafa;
+padding-top: 4px;
+padding-bottom: 4px;
+padding-left: 8px;
+padding-right: 0px; }
+
+td.when
+{ border-bottom: 1px #6699CC dotted;
+text-align: left;
+font-family: Verdana, sans-serif, Arial;
+font-weight: normal;
+font-size: .7em;
+color: #404040;
+background-color: #fafafa;
+padding-top: 4px;
+padding-bottom: 4px;
+padding-left: 8px;
+padding-right: 0px; }
+
+td.where
+{ border-bottom: 1px #6699CC dotted;
+text-align: left;
+font-family: Verdana, sans-serif, Arial;
+font-weight: normal;
+font-size: .7em;
+color: #404040;
+background-color: #fafafa;
+padding-top: 4px;
+padding-bottom: 4px;
+padding-left: 8px;
+padding-right: 0px; }
+
+
 
 #loginBox{
  margin-left: 25px;
