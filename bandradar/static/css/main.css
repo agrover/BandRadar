@@ -146,9 +146,8 @@ font-weight: bold;
   width: 200px;
   position: absolute;
   left: 500px;
-  border-left: #215309 1px solid;
-  padding-left: 1em;
-  padding-right: 1em;
+  border-left: #215309 1px dotted;
+  padding: 0 1em 1em 1em;
   top: 20px;
 }
 
