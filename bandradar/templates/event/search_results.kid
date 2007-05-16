@@ -14,8 +14,8 @@
         <?python from bandradar.events import event_search_form ?>
         ${event_search_form(action="/events/search")}
     </div>
-
-    <h2>Event Search Results</h2>
+<br clear="all"></br>
+    <h5>Event Search Results</h5>
     <p py:for="e in events">
         <p><b><a href="/events/${e.id}">${e.name}</a></b> ${e.date}</p>
     </p>

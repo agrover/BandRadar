@@ -146,9 +146,8 @@ font-weight: bold;
   width: 200px;
   position: absolute;
   left: 500px;
-  border-left: #215309 1px solid;
-  padding-left: 1em;
-  padding-right: 1em;
+  border-left: #215309 1px dotted;
+  padding: 0 1em 1em 1em;
   top: 20px;
 }
 
@@ -311,8 +310,6 @@ h5 {display: inline;}
 
 .content p{
  margin:.25em 0 0 0;
- 
- 
 }
 
 #band a:link{
@@ -344,8 +341,7 @@ h5 {display: inline;}
 #blurb {
  /*width: 90%;*/
  border-left: 2px dotted #0a396b;
- margin-left: .5em;
- margin-top: 1em;
+ margin: 2em 2em 1em .5em;
  text-align: left;
  padding-top: 0;
 }

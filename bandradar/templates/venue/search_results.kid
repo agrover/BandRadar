@@ -13,12 +13,11 @@
         <?python from bandradar.artists import artist_search_form ?>
         ${venue_search_form(action="/venues/search")}
     </div>
-
-    <h2>Venue Search Results</h2>
-
+ <br clear="all"></br>
+    <h5>Venue Search Results</h5>
     <p py:for="v in venues">
         <p>
-            <a href="/venues/${v.id}">${v.name}</a>
+         <a href="/venues/${v.id}">${v.name}</a>
         </p>
     </p>
    </div> 
