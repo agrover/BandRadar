@@ -19,14 +19,12 @@
    <div class="content">
    <div id="bandstats"><h5> Bands playing ${listby} <big>(${count})</big></h5></div>
         <ul>
-       <!--  <h3>With Shows</h3>&nbsp;&nbsp;  --> 
         <li><a href="/artists/list/today">Today</a></li>
         <li><a href="/artists/list/tomorrow">Tomorrow</a></li>
         <li><a href="/artists/list/yesterday">Yesterday</a></li>
         <li><a href="/artists/list/week">Upcoming week</a></li>
         <li><a href="/artists/list/all">All upcoming</a></li>
-       <!--  <li> <div class="rightbutton">${tg_ButtonWidget(action="/artists/edit", label="Add a new Band")}</div></li> -->
-       </ul>
+        </ul>
             
       <div id="band">
       <table>
