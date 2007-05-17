@@ -9,6 +9,24 @@
 </head>
 
  <body>
+   <div class="content">
+    <h4>Welcome to BandRadar!</h4>
+    <br clear="all"></br> 
+      <br clear="all"></br> 
+    <p>To add events, bands, make modifications to existing descriptions you need to create an account and log in. </p> <p>Creating an account also allows you to select bands, venues, or events to track on your personalized page and elect to have reminders emailed to you for upcoming events.</p>
+    <p>Of course, if you want to just browse no login is required.</p>
+    
+   
+   </div>
+    <div id="newuserbox">
+    <h2>New Login</h2>
+      ${newuser_form(value=form_vals, action="/users/usercreate")}
+      </div> 
+ 
+ <div class="content">
+ <h4>Already have a Bandradar Account?</h4>
+ <p>Thanks for Logging In!</p>
+ </div> 
       <div id="loginBox">
         <h2>Login</h2>
         <!-- <p id="login_msg">${message}</p> -->
@@ -56,10 +74,8 @@
         </form>
     </div>
     
-    <div id="newuserbox">
-    <h2>New Login</h2>
-      ${newuser_form(value=form_vals, action="/users/usercreate")}
-      </div> 
+ 
+  
   
 
 </body>

@@ -14,9 +14,9 @@
         ${event_search_form(action="/events/search")}
     </div>
   
+      
+        <div id="eventstats"><h5>Events: ${listby} <big>(${count})</big></h5></div>
         <ul>
-        <div class="eventstats"><h5>Events: ${listby} <big>(${count})</big></h5></div>
-        <br></br>
         <li><a href="/events/list/today">Today</a></li>
         <li><a href="/events/list/tomorrow">Tomorrow</a></li>
         <li><a href="/events/list/yesterday">Yesterday</a></li>

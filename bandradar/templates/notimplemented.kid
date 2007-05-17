@@ -7,6 +7,8 @@
 </head>
 
 <body>
-    Not implemented yet
-</body>
+ <div class="content">
+ <div id="help">On the List! </div>
+ </div>
+ </body>
 </html>
