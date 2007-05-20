@@ -13,9 +13,13 @@ page_url = "/Venue.aspx?ven="
 
 def events():
     for venue_name, code in venue_list:
+        print venue_name
         usock = urllib.urlopen(base_url + page_url + code)
         soup = BeautifulSoup(usock.read())
-        table = soup("table", attrs={"class":"eventDataGrid"})[0]
+        try:
+            table = soup("table", attrs={"class":"eventDataGrid"})[0]
+        except IndexError:
+            continue
         trs = table("tr")[1:-1]
         venue = dict(name=venue_name)
         for tr in trs:
