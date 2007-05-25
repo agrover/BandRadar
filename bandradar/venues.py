@@ -8,8 +8,9 @@ from model import Venue, Event, hub
 from sqlobject import SQLObjectNotFound, LIKE, func, AND
 from sqlobject.main import SQLObjectIntegrityError
 from datetime import date, datetime
-from bandradar import util
-from bandradar.widgets import BRAutoCompleteField, googlemap
+import util
+from widgets import BRAutoCompleteField, googlemap
+from importers import venue_fixup_dict
 
 class VenueForm(w.WidgetsList):
     id = w.HiddenField(validator=v.Int)
@@ -171,6 +172,20 @@ class Venues(controllers.Controller, util.RestAdapter):
         except SQLObjectNotFound:
             pass
         return ret
+
+    @expose()
+    @identity.require(identity.in_group("admin"))
+    def merge(self, id, other_id):
+        try:
+            old = Venue.get(id)
+            new = Venue.get(other_id)
+            Venue.merge(old, new)
+            # add this to fixup dict, so will never have to merge again
+            venue_fixup_dict[old.name] = new.name
+            turbogears.flash("%s merged into %s and learned" % (old.name, new.name))
+        except SQLObjectNotFound:
+            turbogears.flash("Could not move")
+        redirect(turbogears.url("/venues/%s") % other_id)
 
     @expose()
     @identity.require(identity.in_group("admin"))

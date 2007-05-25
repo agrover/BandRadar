@@ -16,7 +16,16 @@
                 ${tg_ButtonWidget(action="/venues/%s/untrack?viewing=yes" % venue.id, label="Untrack")}</span>
           
           <span py:if="not is_tracked">
-             ${tg_ButtonWidget(action="/venues/%s/track?viewing=yes" % venue.id, label="Track")}</span>
+             ${tg_ButtonWidget(action="/venues/%s/track?viewing=yes" % venue.id, label="Track")}
+          </span>
+          <span py:if="'admin' in tg.identity.groups">
+            <form class="buttonform" action="/venues/${venue.id}/merge" method="POST">
+                <label style="font-size: x-small;font-weight: normal" for="other_id">Merge into:</label>
+                <input type="text" id="other_id" name="other_id" size="8"/>
+                <input type="submit" class="button" value="Merge"/>
+            </form>
+          </span>
+
           
 
         

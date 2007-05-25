@@ -8,7 +8,7 @@ from model import Artist, Event, hub
 from sqlobject import SQLObjectNotFound, LIKE, func, AND
 from datetime import date, datetime, timedelta
 import util
-from importers import venue_fixup_dict, artist_fixup_dict
+from importers import artist_fixup_dict
 from widgets import BRAutoCompleteField, artist_list
 
 class ArtistForm(w.WidgetsList):

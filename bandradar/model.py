@@ -1,6 +1,7 @@
 from datetime import datetime, date, timedelta
 
 from sqlobject import *
+from sqlobject.joins import SORelatedJoin, SOMultipleJoin
 from turbogears.database import PackageHub
 from turbogears import identity
 
@@ -63,6 +64,41 @@ class BRMixin(object):
             return results[0]
         raise SQLObjectNotFound
 
+    @classmethod
+    def clone(cls, old, new):
+        """Copy all links from one venue to another.
+
+        new must already exist, and can have attrs/relations already.
+        """
+        if old == new:
+            raise Exception
+        # handle relatedjoins
+        for join in [j for j in cls.sqlmeta.joins if isinstance(j, SORelatedJoin)]:
+            add_func_name = "add" + join.addRemoveName
+            addfunc = getattr(new, add_func_name)
+            for item in getattr(old, join.joinMethodName):
+                if item not in getattr(new, join.joinMethodName):
+                    addfunc(item)
+        # handle multiplejoins
+        # we don't. broken for classes with MultipleJoins (another FK depends on)
+        #for join in [j for j in cls.sqlmeta.joins if isinstance(j, SOMultipleJoin)]:
+        #    q = "UPDATE %s SET %s = %s WHERE %s=%d" % \
+        #        (join.otherClass.sqlmeta.table, join.joinColumn, self.id)
+        #        self._connection.query(q)
+
+        for field in old.sqlmeta.columns.keys():
+            # only set if not set already
+            if not getattr(new, field, None) and getattr(old, field, None):
+                value = getattr(old, field)
+                setattr(new, field, value)
+
+    @classmethod
+    def merge(cls, old, new):
+        """Move relations from a duplicate entry to the real one, and
+        remove the duplicate.
+        """
+        cls.clone(old, new)
+        old.destroySelf()
 
 #
 # Classes inheriting from this will have changes stored in the UpdateLog table
@@ -161,6 +197,13 @@ class Venue(Journalled, BRMixin):
     users = SQLRelatedJoin('UserAcct')
     events = SQLMultipleJoin('Event')
 
+    @classmethod
+    def merge(cls, old, new):
+        # super handles everything but multiplejoins
+        for event in old.events:
+            event.venue = new
+        super(Venue, cls).merge(old, new)
+
     def _get_future_events(self):
         return self.events.filter(
             AND(Event.q.date >= date.today(), Event.q.approved != None))
@@ -187,34 +230,6 @@ class Artist(Journalled, BRMixin):
     is_dj = BoolCol(default=False)
     events = SQLRelatedJoin('Event')
     users = SQLRelatedJoin('UserAcct')
-
-    @classmethod
-    def clone(cls, old, new):
-        """Copy all links from one artist to another.
-
-        new must already exist, and can have attrs/relations already.
-        """
-        if old == new:
-            raise Exception
-        for event in old.events:
-            if event not in new.events:
-                new.addEvent(event)
-        for user in old.users:
-            if user not in new.users:
-                new.addUserAcct(user)
-        for field in old.sqlmeta.columns.keys():
-            # only set if not set already
-            if not getattr(new, field, None) and getattr(old, field, None):
-                value = getattr(old, field)
-                setattr(new, field, value)
-
-    @classmethod
-    def merge(cls, old, new):
-        """Move relations from a duplicate entry to the real one, and
-        remove the duplicate.
-        """
-        cls.clone(old, new)
-        cls.delete(old.id)
 
     def split_artist(self):
         u = identity.current.user

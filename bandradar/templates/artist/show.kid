@@ -20,9 +20,9 @@
                     <input type="submit" class="button" value="Merge"/>
                 </form>
             </span>
-  <div id="blurb">
+      <div id="blurb">
         <p id="description" py:if="description">${XML(description)}</p>
-  </div>    
+      </div>    
         <p py:if="artist.url"><h5>Website: </h5><a href="${artist.url}">${artist.url}</a></p>
         <p py:if="artist.myspace"><h5>MySpace:</h5>
             <a href="http://myspace.com/${artist.myspace}">
