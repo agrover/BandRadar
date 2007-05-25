@@ -13,7 +13,6 @@ page_url = "/Venue.aspx?ven="
 
 def events():
     for venue_name, code in venue_list:
-        print venue_name
         usock = urllib.urlopen(base_url + page_url + code)
         soup = BeautifulSoup(usock.read())
         try:

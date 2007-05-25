@@ -120,21 +120,21 @@ def send_email(start, finish):
 
         u = UserAcct.get(id)
 
-        event_text = ""
+        event_text = u""
         for event_name, venue_name in event_email.get(id, list()):
             event_text += "%s, at %s\n" % (event_name, venue_name)
         if event_text:
             hdr_txt = "These events you want to go to are TONIGHT!\n\n"
             event_text = hdr_txt + event_text + "\n"
 
-        artist_text = ""
+        artist_text = u""
         for event_name, date, venue_name in artist_email.get(id, list()):
             artist_text += "%s, %s at %s\n" % (event_name, date, venue_name)
         if artist_text:
             hdr_txt = "Newly added shows featuring artists you are tracking:\n\n"
             artist_text = hdr_txt + artist_text + "\n"
 
-        venue_text = ""
+        venue_text = u""
         for venue_name, event_list in venue_email.get(id, dict()).iteritems():
             venue_text += venue_name + "\n" + ("-"*len(venue_name)) + "\n"
             for name, date in event_list:
