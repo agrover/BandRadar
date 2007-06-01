@@ -68,6 +68,7 @@
      <div py:replace="[item.text] + item[:]"/> 
      
      <div class="footer">
+      <a href="/faq">faq</a> |
       <a href="/about">about</a> |
       <a href="/privacy">privacy</a> |
       <a href="http://bandradar.blogspot.com">blog</a> |

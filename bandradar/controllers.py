@@ -162,6 +162,10 @@ class Root(controllers.RootController):
     def privacy(self):
         return dict()
 
+    @expose(template=".templates.faq")
+    def faq(self):
+        return dict()
+
     @expose(template=".templates.contact")
     def contact(self):
         return dict()
