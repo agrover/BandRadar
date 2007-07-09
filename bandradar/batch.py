@@ -46,9 +46,9 @@ def task():
         current.destroySelf()
         hub.commit()
 
-    finally:
-        log.info("batch finished")
-        hub.end()
+#    finally: # comment out for python 2.4
+    log.info("batch finished")
+    hub.end()
 
 def send_email(start, finish):
     conn = hub.getConnection()
