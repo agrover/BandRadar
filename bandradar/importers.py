@@ -178,6 +178,15 @@ class Importers(controllers.Controller, identity.SecureResource):
         except SQLObjectNotFound:
             v = Venue(name=venue_name, added_by=identity.current.user)
             flag_for_review = True
+        if getattr(event['venue'], 'phone', None):
+            phone = event['venue']['phone']
+            if not length(phone) >= 8:
+                phone = "503-" + phone
+            p = v.PhoneNumber()
+            try:
+                event['venue']['phone'] = p.to_python(phone)
+            except:
+                event['venue']['phone'] = None
         self._set_optional_fields(v, event['venue'], ("address", "phone", "zip_code",
             "url", "description"))
 

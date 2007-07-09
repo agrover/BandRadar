@@ -11,8 +11,8 @@ venue_list = (("Doug Fir", "DFL"), ("Roseland", "ROS"),
 base_url = "http://ticketswest.rdln.com"
 page_url = "/Venue.aspx?ven="
 
-def events():
-    for venue_name, code in venue_list:
+def events(venues=venue_list):
+    for venue_name, code in venues:
         usock = urllib.urlopen(base_url + page_url + code)
         soup = BeautifulSoup(usock.read())
         try:
@@ -24,7 +24,12 @@ def events():
         for tr in trs:
             event = dict(source="ticketswest")
             name_td = tr("td", attrs={"class":"borderTopRight paddedLeft"})[0]
-            event['artists'] = name_td.a.string.split("*")[0].split(",")
+            name = name_td.a.string
+            match = re.compile(r' [Aa][Tt] ').search(name)
+            if match:
+                name = name[:match.start()]
+            event['artists'] = name.split("*")[0].split(",")
+            event['artists'] = [a.strip() for a in event['artists']]
             event['name'] = ", ".join(event['artists'])
             date_td = tr("td", attrs={"class":"borderTopRight"})[0]
             if not date_td.string:
@@ -40,5 +45,7 @@ def events():
             yield event
 
 if __name__ == "__main__":
-    result = list(events())
-    print len(result)
+    results = list(events(venues=[("Roseland", "ROS")]))
+    for result in results:
+        print result['name']
+    print len(results)
