@@ -14,9 +14,10 @@ from importers import venue_fixup_dict
 
 class VenueForm(w.WidgetsList):
     id = w.HiddenField(validator=v.Int)
-    name = w.TextField(validator=v.NotEmpty(strip=True))
-    description = w.TextArea(rows=6, cols=60)
-    address = w.TextField()
+    name = w.TextField(validator=v.NotEmpty(strip=True), attrs=dict(size=40))
+    description = w.TextArea(rows=6, cols=60,
+        validator=v.UnicodeString(strip=True))
+    address = w.TextField(attrs=dict(size=40))
     zip_code = w.TextField(label="Zip Code",
         attrs=dict(size=10, maxlength=10),
         validator=v.PostalCode(strip=True))
