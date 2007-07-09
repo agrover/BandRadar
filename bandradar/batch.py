@@ -35,6 +35,16 @@ def task():
 
         current.finished = datetime.datetime.now()
         hub.commit()
+    except Exception, inst:
+        import traceback
+        for admin in Group.by_group_name("admin").users:
+            email(admin.email_address, "BandRadar <events@bandradar.com>",
+                "batch error", "Batch failed, poke Andy!\n %s" % traceback.format_exc())
+
+        # duplicate emails are better than skipping some
+        # delete batchrecord so we can try again tomorrow
+        current.destroySelf()
+        hub.commit()
 
     finally:
         log.info("batch finished")
@@ -122,14 +132,14 @@ def send_email(start, finish):
 
         event_text = u""
         for event_name, venue_name in event_email.get(id, list()):
-            event_text += "%s, at %s\n" % (event_name, venue_name)
+            event_text += u"%s, at %s\n" % (event_name, venue_name)
         if event_text:
             hdr_txt = "These events you want to go to are TONIGHT!\n\n"
             event_text = hdr_txt + event_text + "\n"
 
         artist_text = u""
         for event_name, date, venue_name in artist_email.get(id, list()):
-            artist_text += "%s, %s at %s\n" % (event_name, date, venue_name)
+            artist_text += u"%s, %s at %s\n" % (event_name, date, venue_name)
         if artist_text:
             hdr_txt = "Newly added shows featuring artists you are tracking:\n\n"
             artist_text = hdr_txt + artist_text + "\n"
@@ -138,7 +148,7 @@ def send_email(start, finish):
         for venue_name, event_list in venue_email.get(id, dict()).iteritems():
             venue_text += venue_name + "\n" + ("-"*len(venue_name)) + "\n"
             for name, date in event_list:
-                venue_text += "%s: %s\n" % (date, name)
+                venue_text += u"%s: %s\n" % (date, name)
         if venue_text:
             hdr_txt = "Upcoming shows at the venues you are tracking:\n\n"
             venue_text = hdr_txt + venue_text + "\n"

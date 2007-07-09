@@ -13,8 +13,9 @@ from widgets import BRAutoCompleteField, artist_list
 
 class ArtistForm(w.WidgetsList):
     id = w.HiddenField(validator=v.Int)
-    name = w.TextField(validator=v.NotEmpty(strip=True))
-    description = w.TextArea(label="Description", rows=4)
+    name = w.TextField(validator=v.All(v.NotEmpty(strip=True),v.UnicodeString()))
+    description = w.TextArea(label="Description", rows=4,
+        validator=v.UnicodeString(strip=True))
     url = w.TextField(label="Website", attrs=dict(size=60),
         validator=v.Any(v.URL, v.Empty))
     myspace = w.TextField(label="MySpace", attrs=dict(maxlength=40),
