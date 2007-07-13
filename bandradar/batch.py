@@ -8,6 +8,8 @@ from imports import lastfm
 import time
 from imports import google
 
+unittest = False
+
 log = logging.getLogger("bandradar.batch")
 
 def task():
@@ -27,11 +29,11 @@ def task():
     hub.commit()
 
     try:
-        current.email_sent, current.artist_pings, current.venue_pings = \
-            send_email(from_when, last_handled)
         current.sims_updated = build_similars()
         current.geocodes_updated = build_geocodes()
         cleanup_db()
+        current.email_sent, current.artist_pings, current.venue_pings = \
+            send_email(from_when, last_handled)
 
         current.finished = datetime.datetime.now()
         hub.commit()
@@ -74,7 +76,7 @@ def send_email(start, finish):
         """ % (start, finish))
     for user_id, name, date, venue_name in results:
         evt_list = artist_email.get(user_id, list())
-        evt_list.append((name, date, venue_name))
+        evt_list.append((unicode(name, 'utf-8'), date, unicode(venue_name, 'utf-8')))
         artist_email[user_id] = evt_list
         users_to_email.add(user_id)
 
@@ -91,7 +93,7 @@ def send_email(start, finish):
         """)
     for event_id, event_name, user_id, venue_name in results:
         evt_list = event_email.get(user_id, list())
-        evt_list.append((event_name, venue_name))
+        evt_list.append((unicode(event_name, 'utf-8'), venue_name))
         event_email[user_id] = evt_list
         users_to_email.add(user_id)
 
@@ -115,7 +117,7 @@ def send_email(start, finish):
         for user_id, event_name, date, venue_name in results:
             venue_dict = venue_email.get(user_id, dict())
             venue = venue_dict.get(venue_name, list())
-            venue.append((event_name, date))
+            venue.append((unicode(event_name, 'utf-8'), date))
             venue_dict[venue_name] = venue
             venue_email[user_id] = venue_dict
             users_to_email.add(user_id)
@@ -130,21 +132,21 @@ def send_email(start, finish):
 
         u = UserAcct.get(id)
 
-        event_text = u""
+        event_text = ""
         for event_name, venue_name in event_email.get(id, list()):
             event_text += u"%s, at %s\n" % (event_name, venue_name)
         if event_text:
             hdr_txt = "These events you want to go to are TONIGHT!\n\n"
             event_text = hdr_txt + event_text + "\n"
 
-        artist_text = u""
+        artist_text = ""
         for event_name, date, venue_name in artist_email.get(id, list()):
             artist_text += u"%s, %s at %s\n" % (event_name, date, venue_name)
         if artist_text:
             hdr_txt = "Newly added shows featuring artists you are tracking:\n\n"
             artist_text = hdr_txt + artist_text + "\n"
 
-        venue_text = u""
+        venue_text = ""
         for venue_name, event_list in venue_email.get(id, dict()).iteritems():
             venue_text += venue_name + "\n" + ("-"*len(venue_name)) + "\n"
             for name, date in event_list:
@@ -160,7 +162,7 @@ def send_email(start, finish):
         msg_from = "BandRadar Events <events@bandradar.com>"
         body = pkg_resources.resource_string(__name__, 
                     'templates/new_event_email.txt')
-        body  = body % {'text': text, 'user_url': user_url}
+        body = body % {'text': text, 'user_url': user_url}
 
         email(msg_to, msg_from, "BandRadar upcoming events", body)
 
@@ -171,7 +173,10 @@ def email(msg_to, msg_from, subject, body):
     from email.MIMEText import MIMEText
     from email.Utils import make_msgid
 
-    msg = MIMEText(body)
+    if unittest:
+        msg_to = "andy@groveronline.com"
+
+    msg = MIMEText(body.encode('utf8'), 'plain', 'utf8')
     msg['To'] = msg_to
     msg['From'] = msg_from
     msg['Subject'] = subject
@@ -241,3 +246,6 @@ def cleanup_db():
             pass
         old_visit.destroySelf()
 
+if __name__ == "__main__":
+    unittest = True
+    task()
