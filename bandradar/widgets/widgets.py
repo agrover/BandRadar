@@ -92,27 +92,6 @@ class BRAutoCompleteField(w.AutoCompleteField):
             validator=AutoCompleteValidator(),
             attrs=dict(size=20), **kw)
 
-    template = """
-    <div xmlns:py="http://purl.org/kid/ns#">
-    <script language="JavaScript" type="text/JavaScript">
-        AutoCompleteManager${field_id} = new AutoCompleteManager('${field_id}',
-        '${text_field.field_id}', '${hidden_field.field_id}',
-        '${search_controller}', '${search_param}', '${result_name}',${str(only_suggest).lower()},
-        '${tg.url([tg.widgets, 'turbogears.widgets/spinner.gif'])}', ${complete_delay}, ${str(take_focus).lower()});
-        addLoadEvent(AutoCompleteManager${field_id}.initialize);
-    </script>
-
-    ${text_field.display(value_for(text_field), **params_for(text_field))}
-    <img name="autoCompleteSpinner${name}" id="autoCompleteSpinner${field_id}" src="${tg.url([tg.widgets, 'turbogears.widgets/spinnerstopped.png'])}" alt="" />
-    <div class="autoTextResults" id="autoCompleteResults${field_id}"/>
-    ${hidden_field.display(value_for(hidden_field), **params_for(hidden_field))}
-    </div>
-    """
-    javascript = [w.mochikit, w.JSLink("br","javascript/autocompletefield.js")]
-    params = ["take_focus"]
-    take_focus = True
-
-
 # Fix TG CalendarDatePicker, which returns a datetime, not a date
 class BRCalendarDatePicker(w.CalendarDatePicker):
     def __init__(self, **kw):
