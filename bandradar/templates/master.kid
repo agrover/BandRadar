@@ -60,6 +60,7 @@
 
  <body py:match="item.tag=='{http://www.w3.org/1999/xhtml}body'">  
           <!-- <img src="/static/images/top_bk.png"/> -->
+     ${tg_global_search_form(action="/artists/search")}
      <div id="banner">
 	 <a href="/"><img src="/static/images/banner.png" alt="BandRadar logo" /></a>
      </div>

@@ -92,6 +92,12 @@ class BRAutoCompleteField(w.AutoCompleteField):
             validator=AutoCompleteValidator(),
             attrs=dict(size=20), **kw)
 
+class SearchBox(w.WidgetsList):
+    search = BRAutoCompleteField("/artists/dynsearch")
+
+global_search_form = w.ListForm(fields=SearchBox(),
+    name="gsearch", submit_text="Search")
+
 # Fix TG CalendarDatePicker, which returns a datetime, not a date
 class BRCalendarDatePicker(w.CalendarDatePicker):
     def __init__(self, **kw):

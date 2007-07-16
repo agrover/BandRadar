@@ -27,9 +27,9 @@ from elementtree import ElementTree
 
 log = logging.getLogger("bandradar.controllers")
 
-#import webhelpers
+# ---------- Startup ----------
+
 def add_root_vars(root_dict):
-    #root_dict['wh'] = webhelpers
     pass
 
 def br_startup():
@@ -43,6 +43,8 @@ def br_shutdown():
 
 turbogears.startup.call_on_startup.append(br_startup)
 turbogears.startup.call_on_shutdown.append(br_shutdown)
+
+# ---------- Datagrids ----------
 
 def get_by(row):
     if row.table_name == "artist_event":
@@ -92,6 +94,8 @@ br_datagrid = w.PaginateDataGrid(fields=[
                 ("Sims Updated", "sims_updated"),
                 ("Geocodes Updated", "geocodes_updated"),
                 ])
+
+# ---------- Controller ----------
 
 class Root(controllers.RootController):
 
