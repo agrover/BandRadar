@@ -2,6 +2,7 @@ from datetime import datetime, date, timedelta
 
 from sqlobject import *
 from sqlobject.joins import SORelatedJoin, SOMultipleJoin
+from sqlobject.events import listen, RowUpdateSignal
 from turbogears.database import PackageHub
 from turbogears import identity
 
@@ -108,52 +109,38 @@ class Journalled(SQLObject):
     approved = DateTimeCol(default=None)
     last_updated = DateTimeCol(default=datetime.now)
 
-    def __setattr__(self, name, value):
-        if name in self.sqlmeta.columns.keys():
-            self._record_update({name:value})
-            super(Journalled, self).__setattr__('last_updated', datetime.now())
-        super(Journalled, self).__setattr__(name, value)
-
-    def set(self, **kw):
-        self._record_update(kw)
-        kw['last_updated'] = datetime.now()
-        super(Journalled, self).set(**kw)
-
-    def _record_update(self, updates):
-        # don't log changes until approved
-        if not getattr(self, "approved", None):
-            return
-        # don't log last_updated
-        updates.pop('last_updated', None)
-        updates.pop('approved', None)
-        updates.pop('sims_updated', None)
-        for name, value in updates.iteritems():
-            old_value = getattr(self, name, None)
-            if old_value != value:
-                try:
-                    current_user = identity.current.user.id
-                except:
-                    current_user = None
-                u = UpdateLog(
-                    changed_by=current_user,
-                    table_name=self.sqlmeta.table,
-                    table_id=self.id,
-                    attrib_name=name,
-                    attrib_old_value=old_value,
-                    attrib_new_value=value
-                    )
-            # this records all vals to UpdateLog
-            # super.set() can call our setattr() (overridden to update last_updated)
-            # if we don't update the value here to its new value,
-            #   the second call to _record_update will insert a duplicate row.
-            super(Journalled, self).__setattr__(name, value)
-
     def _get_fupdated(self):
         return fancy_date(self.last_updated)
 
     def _get_fcreated(self):
         return fancy_date(self.created)
 
+def update_listener(instance, kwargs):
+    # don't log changes until approved
+    if not instance.approved:
+        return
+    # don't save last_updated (&others) to update log, but do update it.
+    kwargs.pop('last_updated', None)
+    kwargs.pop('approved', None)
+    kwargs.pop('sims_updated', None)
+    for name, value in kwargs.iteritems():
+        old_value = getattr(instance, name, None)
+        if old_value != value:
+            try:
+                current_user = identity.current.user.id
+            except:
+                current_user = None
+            u = UpdateLog(
+                changed_by=current_user,
+                table_name=instance.sqlmeta.table,
+                table_id=instance.id,
+                attrib_name=name,
+                attrib_old_value=old_value,
+                attrib_new_value=value
+                )
+    kwargs['last_updated'] = datetime.now()
+
+listen(update_listener, Journalled, RowUpdateSignal)
 
 #
 # Keep track of all edits to Journalled objects, so in case of vandalism,
