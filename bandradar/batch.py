@@ -6,7 +6,7 @@ from model import (hub, BatchRecord, UserAcct, Event, Venue, Group,
 import datetime
 from imports import lastfm
 import time
-from imports import google
+import geo
 
 unittest = False
 
@@ -224,7 +224,7 @@ def build_geocodes():
             area = ", Portland, OR"
         if venue.address:
             try:
-                lat, lon = google.get_geocode(venue.address + area)
+                lat, lon = geo.get_geocode(venue.address + area)
                 venue.geocode_lat = lat
                 venue.geocode_lon = lon
             except IOError:

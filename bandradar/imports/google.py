@@ -1,6 +1,7 @@
 from turbogears import config
 from BeautifulSoup import BeautifulStoneSoup as bs
 import urllib
+from decimal import Decimal
 
 localhost_key = "ABQIAAAAl6v2YpcT3a-0chb1euUaRRR4EqRj3RNZnoYuzojShxUjcPQKRRSqdkDEb-kjqUA2B3UAs66NGlvjOA" 
 real_key = "ABQIAAAAl6v2YpcT3a-0chb1euUaRRRIOcczJVkwMVJxSoSbKoEvbYERDxTrKIpffL5C_3zzzlk1QmARAtbL2A"
@@ -19,4 +20,5 @@ def get_geocode(address):
     if soup.response.code.string != "200":
         raise IOError
     # return reversed for [lat, lon] instead if [x, y] (which is lon, lat)
-    return list(reversed(soup.response.placemark.point.coordinates.string.split(",")[:2]))
+    l = list(reversed(soup.response.placemark.point.coordinates.string.split(",")[:2]))
+    return [Decimal(c) for c in l]

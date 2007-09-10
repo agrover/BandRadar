@@ -191,9 +191,46 @@ class Venue(Journalled, BRMixin):
             event.venue = new
         super(Venue, cls).merge(old, new)
 
+    @classmethod
+    def closest(cls, location, count=5, with_event=False):
+        from operator import itemgetter
+        import geo
+        pdx_lat, pdx_lon = "45.511810", "-122.675680"
+        try:
+            # lat is +, lon is -, a bug if otherwise
+            lat, lon = geo.get_geocode(location)
+            if not geo.is_within_radius(pdx_lat, pdx_lon, 15, lat, lon):
+                return list()
+            dist = 0.2
+            got_result = False
+            while not got_result:
+                hi_lat, lo_lat, hi_lon, lo_lon = \
+                    geo.radius_to_ll_bounds(lat, lon, dist)
+                venues = Venue.select(AND(Venue.q.geocode_lat >= lo_lat,
+                    Venue.q.geocode_lat <= hi_lat, Venue.q.geocode_lon >= lo_lon,
+                    Venue.q.geocode_lon <= hi_lon))
+                venues = list(venues)
+                if with_event:
+                    venues = [v for v in venues if v.today_events.count()] 
+                if len(venues) >= count:
+                    got_result = True
+                else:
+                    dist *= 2
+        except IOError:
+            return list()
+
+        # sort by distance
+        lst = [(v, geo.distance(lat, lon, v.geocode_lat, v.geocode_lon)) for v in venues]
+        lst.sort(key=itemgetter(1))
+        return lst[:count]
+
     def _get_future_events(self):
         return self.events.filter(
             AND(Event.q.date >= date.today(), Event.q.approved != None))
+
+    def _get_today_events(self):
+        return self.events.filter(
+            AND(Event.q.date == date.today(), Event.q.approved != None))
 
     def _get_past_events(self):
         return self.events.filter(
