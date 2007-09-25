@@ -9,7 +9,6 @@ def recordings(name):
     """return names of albums by a given artist on cdbaby"""
     name = urllib.quote_plus(name)
     url = baseurl + "/found?artist=" + name
-    print url
     usock = urllib.urlopen(url)
     soup = bs(usock.read())
     albumlist = soup.find('ul', "albumlist")
