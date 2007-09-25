@@ -13,7 +13,7 @@ else:
 
 def get_geocode(address):
     base_req = "http://maps.google.com/maps/geo?"
-    address_enc = address.replace(" ", "+")
+    address_enc = urllib.quote_plus(address)
     full_req = base_req + "key=%s&" % key + "output=xml&" + "q=%s" % address_enc
     usock = urllib.urlopen(full_req)
     soup = bs(usock.read())
