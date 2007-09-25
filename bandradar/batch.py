@@ -27,7 +27,6 @@ def task():
 
     last_handled = datetime.datetime.now()
     current = BatchRecord(first_handled=from_when, last_handled=last_handled)
-    hub.commit()
 
     try:
         current.sims_updated = build_similars()
@@ -43,14 +42,9 @@ def task():
         import traceback
         for admin in Group.by_group_name("admin").users:
             email(admin.email_address, "BandRadar <events@bandradar.com>",
-                "batch error", "Batch failed, poke Andy!\n %s" % traceback.format_exc())
+                "batch error", "Batch failed, ping Andy!\n\n" + traceback.format_exc())
+        hub.rollback()
 
-        # duplicate emails are better than skipping some
-        # delete batchrecord so we can try again tomorrow
-        current.destroySelf()
-        hub.commit()
-
-#    finally: # comment out for python 2.4
     log.info("batch finished")
     hub.end()
 
