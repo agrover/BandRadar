@@ -18,11 +18,11 @@ def recordings(name):
     albums = albumlist.findAll('div', "albumbox")
     for album in albums:
         a = {}
-        a['name'] = album.a['title'].partition(": ")[2]
+        a['name'] = album.a['title'].split(": ")[1]
         a['url'] = baseurl + album.a['href']
         a['img_url'] = album.a.img['src']
         yield a
 
 
 if __name__ == "__main__":
-    print list(albums("the whispers"))
+    print list(recordings("the whispers"))
