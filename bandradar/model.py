@@ -13,7 +13,8 @@ __connection__ = hub
 
 soClasses = ('UserAcct', 'Group', 'Permission', 'Venue', 'Artist',
              'SimilarArtist', 'Event', 'BatchRecord', 'Attendance',
-             'Comment', 'UpdateLog', 'Source', 'ArtistNameFixup', 'VenueNameFixup')
+             'Comment', 'UpdateLog', 'Source', 'Recording',
+             'ArtistNameFixup', 'VenueNameFixup')
 
 def fancy_date(past_date):
     """Take a date in the past and return it pretty-printed, with elapsed time.
@@ -116,16 +117,13 @@ class Journalled(SQLObject):
         return fancy_date(self.created)
 
 def update_listener(instance, kwargs):
+    skip_attrs = ('last_updated', 'approved', 'sims_updated', 'recordings_updated')
     # don't log changes until approved
     if not instance.approved:
         return
-    # don't save last_updated (&others) to update log, but do update it.
-    kwargs.pop('last_updated', None)
-    kwargs.pop('approved', None)
-    kwargs.pop('sims_updated', None)
     for name, value in kwargs.iteritems():
         old_value = getattr(instance, name, None)
-        if old_value != value:
+        if old_value != value and name not in skip_attrs:
             try:
                 current_user = identity.current.user.id
             except:
@@ -251,9 +249,12 @@ class Artist(Journalled, BRMixin):
     myspace = UnicodeCol(length=50, default=None)
     added_by = ForeignKey('UserAcct', cascade=False)
     sims_updated = DateTimeCol(default=None)
+    recordings_updated = DateTimeCol(default=None)
     is_dj = BoolCol(default=False)
     events = SQLRelatedJoin('Event')
     users = SQLRelatedJoin('UserAcct')
+    recordings = SQLMultipleJoin("Recording", joinColumn="by__id")
+
 
     def split_artist(self):
         u = identity.current.user
@@ -395,6 +396,13 @@ class SimilarArtist(SQLObject):
     artist = ForeignKey('Artist', cascade=False)
     similar_artist = ForeignKey('Artist', cascade=False)
 
+class Recording(SQLObject):
+    created = DateTimeCol(default=datetime.now)
+    name = UnicodeCol(length=200)
+    by = ForeignKey('Artist', cascade=False)
+    url = UnicodeCol(length=256, default=None)
+    img_url = UnicodeCol(length=256, default=None)
+
 #
 # The most important class
 #
@@ -480,6 +488,7 @@ class BatchRecord(SQLObject):
     artist_pings = IntCol(default=0)
     venue_pings = IntCol(default=0)
     sims_updated = IntCol(default=0)
+    recordings_updated = IntCol(default=0)
     geocodes_updated = IntCol(default=0)
 
 #

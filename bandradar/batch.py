@@ -1,10 +1,11 @@
 import turbogears
 import logging
 from sqlobject.util.threadinglocal import local as threading_local
-from model import (hub, BatchRecord, UserAcct, Event, Venue, Group,
+from model import (hub, BatchRecord, UserAcct, Event, Venue, Group, Recording,
                   Artist, SimilarArtist, AND, SQLObjectNotFound)
 import datetime
 from imports import lastfm
+from imports import cdbaby
 import time
 import geo
 
@@ -31,6 +32,7 @@ def task():
     try:
         current.sims_updated = build_similars()
         current.geocodes_updated = build_geocodes()
+        current.recordings_updated = build_recordings()
         cleanup_db()
         current.email_sent, current.artist_pings, current.venue_pings = \
             send_email(from_when, last_handled)
@@ -230,6 +232,18 @@ def build_geocodes():
             except IOError:
                 pass
     return venues.count()
+
+def build_recordings(count=1000):
+    artists = Artist.select(Artist.q.recordings_updated == None)[:count]
+    artist_num = artists.count()
+    for artist in artists:
+        for recording in cdbaby.recordings(artist.name):
+            Recording(name=recording['name'], by=artist, url=recording['url'],
+                img_url=recording['img_url'])
+        artist.recordings_updated = datetime.datetime.now()
+        time.sleep(1)
+    return artist_num
+
 
 def cleanup_db():
     from model import VisitIdentity
