@@ -68,7 +68,7 @@ class BRMixin(object):
 
     @classmethod
     def clone(cls, old, new):
-        """Copy all links from one venue to another.
+        """Copy all links from one obj to another.
 
         new must already exist, and can have attrs/relations already.
         """
@@ -424,24 +424,16 @@ class Event(Journalled, BRMixin):
 
     @classmethod
     def merge(cls, old, new):
-        for artist in old.artists:
-            if artist not in new.artists:
-                new.addArtist(artist)
-        for source in old.sources:
-            new.addSource(source)
+        # super merge can't do multiplejoins
         for attendance in old.attendances:
             attendance.event = new
-        for field in old.sqlmeta.columns.keys():
-            # only set if not set already
-            if not getattr(new, field, None) and getattr(old, field, None):
-                value = getattr(old, field)
-                setattr(new, field, value)
+
         # even if set, conditionally override some fields
         if old.created < new.created:
             new.created = old.created
         if not "admin" in old.added_by.groups:
             new.added_by = old.added_by
-        old.destroySelf()
+        super(Event, cls).merge(old, new)
 
     def _get_attendees(self):
         user_ids = [att.user.id for att in self.attendances]
