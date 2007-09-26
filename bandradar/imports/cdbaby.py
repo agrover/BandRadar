@@ -7,7 +7,7 @@ baseurl = "http://cdbaby.com"
 
 def recordings(name):
     """return names of albums by a given artist on cdbaby"""
-    name = urllib.quote_plus(name)
+    name = urllib.quote_plus(name.encode('utf8'))
     url = baseurl + "/found?artist=" + name
     usock = urllib.urlopen(url)
     soup = bs(usock.read())
