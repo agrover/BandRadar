@@ -121,7 +121,7 @@ def update_listener(instance, kwargs):
     # don't log changes until approved
     if not instance.approved:
         return
-    for name, value in kwargs.iteritems():
+    for name, value in kwargs.items():
         old_value = getattr(instance, name, None)
         if old_value != value and name not in skip_attrs:
             try:
@@ -136,7 +136,7 @@ def update_listener(instance, kwargs):
                 attrib_old_value=old_value,
                 attrib_new_value=value
                 )
-    kwargs['last_updated'] = datetime.now()
+            kwargs['last_updated'] = datetime.now()
 
 listen(update_listener, Journalled, RowUpdateSignal)
 

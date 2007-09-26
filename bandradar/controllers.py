@@ -178,6 +178,10 @@ class Root(controllers.RootController):
     def feeds(self):
         return dict()
 
+    @expose(template=".templates.nearestvenues")
+    def nearestvenues(self, location):
+        pass
+
     @expose(template=".templates.datagrid")
     @identity.require(identity.in_group("admin"))
     @paginate("data", default_order="created", limit=25)
