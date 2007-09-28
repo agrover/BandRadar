@@ -20,6 +20,7 @@ def recordings(name, count=5):
     req['Operation'] = "ItemSearch"
     req['Version'] = "2007-07-16"
     req['ResponseGroup'] = "Images,Small"
+    req['Sort'] = 'salesrank'
     req['Artist'] = urllib.quote(name.encode('utf8'))
     params = "&".join([key+"="+value for key, value in req.items()])
     url = baseurl + "?" + params
@@ -31,12 +32,17 @@ def recordings(name, count=5):
     time = float(soup.itemsearchresponse.operationrequest.requestprocessingtime.string)
     items = soup.itemsearchresponse.items.findAll('item')
     for item in items[:count]:
+        if item.artist.string != name:
+            continue
         a = {}
         a['name'] = item.title.string
         a['url'] = item.detailpageurl.string
-        a['img_url'] = item.smallimage.url.string
+        try:
+            a['img_url'] = item.smallimage.url.string
+        except AttributeError:
+            a['img_url'] = None
         yield a
 
 if __name__ == "__main__":
-    print list(recordings("metallica", count=1))
+    print list(recordings("Metallica", count=1))
 
