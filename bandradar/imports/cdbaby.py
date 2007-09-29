@@ -1,7 +1,5 @@
 from BeautifulSoup import BeautifulSoup as bs
-from datetime import date
 import urllib
-import re
 
 baseurl = "http://cdbaby.com"
 affiliate_extension = "/from/bandradar"

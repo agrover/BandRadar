@@ -1,7 +1,5 @@
 from BeautifulSoup import BeautifulStoneSoup as bs
-from datetime import date
 import urllib
-import re
 
 baseurl = "http://ecs.amazonaws.com/onca/xml"
 access_key = "0S381N0APYWVHYRS8BR2"
