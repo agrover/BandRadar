@@ -229,8 +229,10 @@ def build_geocodes():
 def build_recordings(count=1000):
     refresh_days = 30*6 # ~6 months
     refresh_date = datetime.date.today() - datetime.timedelta(refresh_days)
-    artists = Artist.select(OR(Artist.q.recordings_updated == None,
-        Artist.q.recordings_updated < refresh_date))[:count]
+    artists = Artist.select(
+        AND(Artist.q.approved != None, 
+        OR(Artist.q.recordings_updated == None,
+           Artist.q.recordings_updated < refresh_date)))[:count]
     artist_num = artists.count()
     amazon_src = Source.byName("amazon")
     cdbaby_src = Source.byName("cdbaby")
