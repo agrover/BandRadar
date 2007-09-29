@@ -274,6 +274,13 @@ class Artist(Journalled, BRMixin):
             return {self.id:self.name}
 
     @classmethod
+    def merge(cls, old, new):
+        # super handles everything but multiplejoins
+        for recording in old.recordings:
+            recording.by = new
+        super(Artist, cls).merge(old, new)
+
+    @classmethod
     def megamerge(cls):
         artists = Artist.select()
         out = []
@@ -400,6 +407,7 @@ class Recording(SQLObject):
     created = DateTimeCol(default=datetime.now)
     name = UnicodeCol(length=200)
     by = ForeignKey('Artist', cascade=False)
+    source = ForeignKey('Source', cascade=False)
     url = UnicodeCol(length=256, default=None)
     img_url = UnicodeCol(length=256, default=None)
 

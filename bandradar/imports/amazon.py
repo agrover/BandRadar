@@ -32,7 +32,10 @@ def recordings(name, count=5):
     time = float(soup.itemsearchresponse.operationrequest.requestprocessingtime.string)
     items = soup.itemsearchresponse.items.findAll('item')
     for item in items[:count]:
-        if item.artist.string != name:
+        try:
+            if item.artist.string.lower() != name.lower():
+                continue
+        except:
             continue
         a = {}
         a['name'] = item.title.string

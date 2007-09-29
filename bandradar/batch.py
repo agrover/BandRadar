@@ -2,10 +2,9 @@ import turbogears
 import logging
 from sqlobject.util.threadinglocal import local as threading_local
 from model import (hub, BatchRecord, UserAcct, Event, Venue, Group, Recording,
-                  Artist, SimilarArtist, AND, SQLObjectNotFound)
+                  Source, Artist, SimilarArtist, AND, OR, SQLObjectNotFound)
 import datetime
-from imports import lastfm
-from imports import cdbaby
+from imports import cdbaby, amazon, lastfm
 import time
 import geo
 
@@ -228,12 +227,26 @@ def build_geocodes():
     return venues.count()
 
 def build_recordings(count=1000):
-    artists = Artist.select(Artist.q.recordings_updated == None)[:count]
+    refresh_days = 30*6 # ~6 months
+    refresh_date = datetime.date.today() - datetime.timedelta(refresh_days)
+    artists = Artist.select(OR(Artist.q.recordings_updated == None,
+        Artist.q.recordings_updated < refresh_date))[:count]
     artist_num = artists.count()
+    amazon_src = Source.byName("amazon")
+    cdbaby_src = Source.byName("cdbaby")
     for artist in artists:
+        # remove old entries
+        for record in Recording.selectBy(by=artist):
+            record.destroySelf()
+
+        # add new entries (if any)
         for recording in cdbaby.recordings(artist.name):
             Recording(name=recording['name'], by=artist, url=recording['url'],
-                img_url=recording['img_url'])
+                img_url=recording['img_url'], source=cdbaby_src)
+        for recording in amazon.recordings(artist.name):
+            Recording(name=recording['name'], by=artist, url=recording['url'],
+                img_url=recording['img_url'], source=amazon_src)
+
         artist.recordings_updated = datetime.datetime.now()
         time.sleep(1)
     return artist_num
