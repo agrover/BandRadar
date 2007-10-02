@@ -253,6 +253,17 @@ def build_recordings(count=1000):
         time.sleep(1)
     return artist_num
 
+def _foo():
+    """test, do not use"""
+    amazon_src = Source.byName("amazon")
+    done_artists = Artist.select(Artist.q.recordings_updated != None)
+    for artist in done_artists:
+        for record in artist.recordings:
+            if record.source == amazon_src:
+                record.destroySelf()
+        for recording in amazon.recordings(artist.name):
+            Recording(name=recording['name'], by=artist, url=recording['url'],
+                img_url=recording['img_url'], source=amazon_src)
 
 def cleanup_db():
     from model import VisitIdentity

@@ -17,7 +17,7 @@ def recordings(name, count=5):
     req['AssociateTag'] = affiliate_tag
     req['Operation'] = "ItemSearch"
     req['Version'] = "2007-07-16"
-    req['ResponseGroup'] = "Images,Small"
+    req['ResponseGroup'] = "Images,Medium"
     req['Sort'] = 'salesrank'
     req['Artist'] = urllib.quote(name.encode('utf8'))
     params = "&".join([key+"="+value for key, value in req.items()])
@@ -38,6 +38,11 @@ def recordings(name, count=5):
         a = {}
         a['name'] = item.title.string
         a['url'] = item.detailpageurl.string
+        try:
+            info = item.itemattributes.format.string
+            a['name'] += " (%s)" % info
+        except AttributeError:
+            pass
         try:
             a['img_url'] = item.smallimage.url.string
         except AttributeError:
