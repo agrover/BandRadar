@@ -97,8 +97,8 @@ class Importers(controllers.Controller, identity.SecureResource):
 
     def name_fix(self, name):
         name = " ".join(name.strip().split())
+        name = util.unescape(name)
         name = name.replace('"', "")
-        name = name.replace('&amp;', "&")
         name = name.replace("(Boxxes)", "")
         return name
 

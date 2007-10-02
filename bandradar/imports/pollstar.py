@@ -10,10 +10,6 @@ def get_url_base():
     url_base = "http://pollstar.com/tour/searchall.pl?By=City&Content=OR_Portland&PSKey=Y&Sort=Date&Date_From=Today&Date_To=%s&Market=N&Page="
     return url_base % future.strftime("%m-%d-%Y")
 
-def clean(string):
-    temp = string.strip().replace("&amp;", "&")
-    return " ".join(temp.split())
-
 def parse_page(num):
     usock = urllib.urlopen(get_url_base()+str(num))
     soup = BeautifulSoup(usock.read(), convertEntities=BeautifulSoup.HTML_ENTITIES)
@@ -25,9 +21,9 @@ def parse_page(num):
     for tr in start_tr.findNextSiblings():
         tds = tr.findAll("td")
         try:
-            date = datetime.date(*time.strptime(clean(tds[1].string), "%m/%d/%y")[:3])
-            artist = clean(tds[3].a.string)
-            venue = clean(tds[5].a.string)
+            date = datetime.date(*time.strptime(tds[1].string, "%m/%d/%y")[:3])
+            artist = tds[3].a.string
+            venue = tds[5].a.string
 
             event_artists = events.get((venue, date), list())
             event_artists.append(artist)
