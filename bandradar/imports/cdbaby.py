@@ -1,5 +1,6 @@
 from BeautifulSoup import BeautifulSoup as bs
 import urllib
+from bandradar import util
 
 baseurl = "http://cdbaby.com"
 affiliate_extension = "/from/bandradar"
@@ -16,7 +17,7 @@ def recordings(name):
     albums = albumlist.findAll('div', "albumbox")
     for album in albums:
         a = {}
-        a['name'] = album.a['title'].split(": ")[1]
+        a['name'] = util.unescape(album.a['title'].split(": ")[1])
         a['url'] = baseurl + album.a['href'] + affiliate_extension
         a['img_url'] = album.a.img['src']
         yield a

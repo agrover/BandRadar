@@ -1,9 +1,12 @@
 import turbogears
 import cherrypy
 import formencode
+import cgi
+import htmllib
 from turbogears import identity
 from turbogears import database
 from sqlobject import SQLObjectNotFound, LIKE, func, AND
+
 
 def dynsearch(model, name):
     result_cnt = 8
@@ -73,10 +76,18 @@ def can_delete(object):
 def desc_format(in_text):
     if not in_text:
         return ""
-    import cgi
-    out_text = cgi.escape(in_text)
+    out_text = escape(in_text)
     out_text = out_text.replace("\n", "<br />")
     return out_text
+
+def escape(text):
+    return cgi.escape(text)
+
+def unescape(text):
+    p = htmllib.HTMLParser(None)
+    p.save_bgn()
+    p.feed(text)
+    return p.save_end()
 
 def so_to_dict(sqlobj):
     return database.so_to_dict(sqlobj)

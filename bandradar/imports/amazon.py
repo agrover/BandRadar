@@ -1,5 +1,6 @@
 from BeautifulSoup import BeautifulStoneSoup as bs
 import urllib
+from bandradar import util
 
 baseurl = "http://ecs.amazonaws.com/onca/xml"
 access_key = "0S381N0APYWVHYRS8BR2"
@@ -43,6 +44,7 @@ def recordings(name, count=5):
             a['name'] += " (%s)" % info
         except AttributeError:
             pass
+        a['name'] = util.unescape(a['name'])
         try:
             a['img_url'] = item.smallimage.url.string
         except AttributeError:
