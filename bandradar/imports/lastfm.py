@@ -1,5 +1,5 @@
 import scrobxlib
-from BeautifulSoup import BeautifulSoup
+from BeautifulSoup import BeautifulSoup as bs
 from datetime import date
 import urllib
 import re
@@ -10,7 +10,7 @@ def user_top_artists(user_name, limit=10):
     return [artist['name'] for artist in scrobxlib.topArtists(user_name)[:limit]]
 
 def similar_artists(artist_name, limit=3):
-    artist_name = artist_name.replace(" ", "+")
+    artist_name = urllib.quote_plus(artist_name)
     try:
         similar_artists = scrobxlib.similar(artist_name)[:limit]
     except:
@@ -19,11 +19,11 @@ def similar_artists(artist_name, limit=3):
 
 def events():
     usock = urllib.urlopen(lastfm_event_url + "1")
-    soup = BeautifulSoup(usock.read())
+    soup = bs(usock.read(), convertEntities=bs.ALL_ENTITIES)
     pages =  int(soup("a", attrs={"class":"lastpage"})[0].string)
     for page in range(1, pages+1):
         usock = urllib.urlopen(lastfm_event_url + str(page))
-        soup = BeautifulSoup(usock.read())
+        soup = bs(usock.read(), convertEntities=bs.ALL_ENTITIES)
         for tr in soup("tr", attrs={"class":re.compile("vevent.*")}):
             event_dict = dict(source="lastfm")
             venue = dict()

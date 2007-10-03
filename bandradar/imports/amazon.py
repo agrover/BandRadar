@@ -24,7 +24,7 @@ def recordings(name, count=5):
     params = "&".join([key+"="+value for key, value in req.items()])
     url = baseurl + "?" + params
     usock = urllib.urlopen(url)
-    soup = bs(usock.read())
+    soup = bs(usock.read(), convertEntities=bs.ALL_ENTITIES)
     if soup.itemsearchresponse.items.request.isvalid.string != "True":
         return
     # do something if it took too long?
@@ -44,7 +44,6 @@ def recordings(name, count=5):
             a['name'] += " (%s)" % info
         except AttributeError:
             pass
-        a['name'] = util.unescape(a['name'])
         try:
             a['img_url'] = item.smallimage.url.string
         except AttributeError:

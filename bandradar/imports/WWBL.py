@@ -1,4 +1,4 @@
-from BeautifulSoup import BeautifulSoup
+from BeautifulSoup import BeautifulSoup as bs
 import urllib
 import datetime
 import time
@@ -48,7 +48,7 @@ def parse_preview_moreinfo(text):
 
 def day_events(date):
     usock = urllib.urlopen(date_to_url(date))
-    soup = BeautifulSoup(usock.read(), fromEncoding="mac-roman")
+    soup = bs(usock.read(), fromEncoding="mac-roman", convertEntities=bs.ALL_ENTITIES)
     #find all anchors with e.g. name="42820"
     anchors = soup('a', {'name':re.compile("\d+")})
     for anchor in anchors:
