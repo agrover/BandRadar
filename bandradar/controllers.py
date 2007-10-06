@@ -92,6 +92,7 @@ br_datagrid = w.PaginateDataGrid(fields=[
                 ("Events Pinged", "artist_pings"),
                 ("Venues Pinged", "venue_pings"),
                 ("Sims Updated", "sims_updated"),
+                ("Recs Updated", "recordings_updated"),
                 ("Geocodes Updated", "geocodes_updated"),
                 ])
 
