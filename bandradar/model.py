@@ -150,20 +150,9 @@ class UpdateLog(SQLObject):
     table_name = UnicodeCol(length=12)
     table_id = IntCol()
     attrib_name = UnicodeCol(length=20)
-    attrib_old_value = UnicodeCol()
-    attrib_new_value = UnicodeCol()
+    attrib_old_value = PickleCol()
+    attrib_new_value = PickleCol()
 
-    def _get_attrib_old_value(self):
-        return pickle.loads(str(self._SO_get_attrib_old_value()))
-    
-    def _set_attrib_old_value(self, value):
-        self._SO_set_attrib_old_value(pickle.dumps(value))
-
-    def _get_attrib_new_value(self):
-        return pickle.loads(str(self._SO_get_attrib_new_value()))
-    
-    def _set_attrib_new_value(self, value):
-        self._SO_set_attrib_new_value(pickle.dumps(value))
 
 #
 # Where events happen.
