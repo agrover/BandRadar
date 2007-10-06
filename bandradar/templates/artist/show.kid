@@ -7,22 +7,21 @@
 </head>
 
 <body>
-   <div class="content">
-     <p class="name"><h4>${artist.name}</h4>&nbsp;&nbsp;
-     <span py:if="is_tracked">${tg_ButtonWidget(action="/artists/%s/untrack?viewing=yes" % artist.id, label="Untrack")}
-     </span>
-     <span py:if="not is_tracked">${tg_ButtonWidget(action="/artists/%s/track?viewing=yes" % artist.id,     label="Track")}</span>
+    <div class="content">
+        <p class="name"><h4>${artist.name}</h4>&nbsp;&nbsp;
+        <span py:if="is_tracked">${tg_ButtonWidget(action="/artists/%s/untrack?viewing=yes" % artist.id, label="Untrack")}</span>
+        <span py:if="not is_tracked">${tg_ButtonWidget(action="/artists/%s/track?viewing=yes" % artist.id, label="Track")}</span>
         <span py:if="'admin' in tg.identity.groups">
-                ${tg_ButtonWidget(action="/artists/%s/split" % artist.id, label="Split")}
-                <form class="buttonform" action="/artists/${artist.id}/merge" method="POST">
-                    <label style="font-size: x-small;font-weight: normal" for="other_id">Merge into:</label>
+            ${tg_ButtonWidget(action="/artists/%s/split" % artist.id, label="Split")}
+            <form class="buttonform" action="/artists/${artist.id}/merge" method="POST">
+                <label style="font-size: x-small;font-weight: normal" for="other_id">Merge into:</label>
                     <input type="text" id="other_id" name="other_id" size="8"/>
                     <input type="submit" class="button" value="Merge"/>
-                </form>
-            </span>
-      <div id="blurb">
-        <p id="description" py:if="description">${XML(description)}</p>
-      </div>    
+            </form>
+        </span>
+        <div id="blurb">
+            <p id="description" py:if="description">${XML(description)}</p>
+        </div>    
         <p py:if="artist.url"><h5>Website: </h5><a href="${artist.url}">${artist.url}</a></p>
         <p py:if="artist.myspace"><h5>MySpace:</h5>
             <a href="http://myspace.com/${artist.myspace}">
@@ -39,42 +38,31 @@
         </p>
         
         <p><h5>Upcoming events:</h5></p>
-                <table class="upcoming" cellspacing="0" py:for="e in future_events">
-             <tr>
-             <td class="who" width="25%"> <a href="/events/${e.id}">${e.name}</a></td>
-             <td class="when" width="25%"> <a href="/events/${e.id}">${e.fdate}&nbsp;&nbsp;${e.time}</a></td>
+        <table class="upcoming" cellspacing="0">
+             <tr py:for="e in future_events">
+                 <td class="who" width="25%"><a href="/events/${e.id}">${e.name}</a></td>
+                 <td class="when" width="25%"><a href="/events/${e.id}">${e.fdate} ${e.time}</a></td>
              </tr>             
         </table>
         <p py:if="not len(list(future_events))">None</p>
         <br clear="all"></br>
-  
-           <h5> Past events <span class="small">(<a href="?list_all=1">See all</a>)</span></h5>
-            
-          <table class="past" cellspacing="0" py:for="e in past_events">
-             <tr>
-             <td class="who" width="25%"> <a href="/events/${e.id}">${e.name}</a></td>
-             <td class="when" width="25%"> <a href="/events/${e.id}">${e.fdate}</a></td>
-             </tr>             
-        </table>                    
-        
-        
-      <!--  <p> <h5>Upcoming events 
-            ${tg_ButtonWidget(action="/events/edit?artist_prefill=%s" % artist.id, label="Add a new event")}
-        </h5></p>
 
-            <p py:for="e in future_events">
-                ${e.fdate}: <a href="/events/${e.id}">${e.name}</a>
-                ${e.time} ${e.cost}            </p>
-            <p py:if="not len(list(future_events))">None</p>
-        </div>      <h5>Past events <span class="small">(<a href="?list_all=1">See all</a>)</span></h5>
-        <div class="event_list">
-                    <p py:for="e in past_events">
-                ${e.fdate}: <a href="/events/${e.id}">${e.name}</a>
-            </p> -->
-            
-            <p py:if="not len(list(past_events))">None</p>
-       <div py:replace="edit_links(artist)" />
-   
-</div>
+        <p><h5> Past events <span class="small">(<a href="?list_all=1">See all</a>)</span></h5></p>
+        <table class="past" cellspacing="0">
+            <tr py:for="e in past_events">
+                <td class="who" width="25%"> <a href="/events/${e.id}">${e.name}</a></td>
+                <td class="when" width="25%"> <a href="/events/${e.id}">${e.fdate}</a></td>
+            </tr>             
+        </table>
+        <p py:if="not len(list(past_events))">None</p>
+
+        <h5>Recordings</h5>
+        <table>
+            <tr py:for="r in artist.recordings">
+                <td><img src="${r.img_url}" width="50" py:if="r.img_url" /></td>
+                <td><a href="${r.url}">${r.name}</a></td>
+            </tr>
+        </table>
+    </div>
 </body>
 </html>
