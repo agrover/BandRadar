@@ -10,7 +10,7 @@ def user_top_artists(user_name, limit=10):
     return [artist['name'] for artist in scrobxlib.topArtists(user_name)[:limit]]
 
 def similar_artists(artist_name, limit=3):
-    artist_name = urllib.quote_plus(artist_name)
+    artist_name = urllib.quote_plus(artist_name.encode('utf8'))
     try:
         similar_artists = scrobxlib.similar(artist_name)[:limit]
     except:
