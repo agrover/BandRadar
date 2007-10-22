@@ -9,7 +9,11 @@ def recordings(name):
     """return names of albums by a given artist on cdbaby"""
     name = urllib.quote_plus(name.encode('utf8'))
     url = baseurl + "/found?artist=" + name
-    usock = urllib.urlopen(url)
+    try:
+        usock = urllib.urlopen(url)
+    except:
+        print "could not open url '%s'" % url
+        return
     soup = bs(usock.read())
     albumlist = soup.find('ul', "albumlist")
     if not albumlist or not albumlist.previousSibling.string.startswith("Exact"):
