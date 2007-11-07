@@ -14,37 +14,19 @@
     </p>
 </div>
 
-<div py:def="nav()">
-    <div id="navcontainer">
-     <ul id="navlist">
-        <li id="login"><span py:if="not tg.identity.user">
-            <a href="/users/login">Come In!</a>
-        </span>
-        <span py:if="tg.identity.user">
-            <a href="/users/${tg.identity.user.user_name}">
-            ${tg.identity.user.user_name}'s Page</a>
-        </span></li>
-        <li id="nav-bands"><a href="/artists/list">Bands</a></li>
-        <li id="nav-events"><a href="/events/list">Events</a></li>
-        <li id="nav-venues"><a href="/venues/list">Venues</a></li>
-        <li id="nav-addevent"><a href="/events/edit">Add event</a></li>
-        <li id="nav-addevent"><a href="/artists/edit">Add band</a></li>
-        <li id="nav-logout"><span py:if="tg.identity.user">
-            <a href="/users/logout">Logout</a>
-        </span></li>
-       </ul>
-      </div> 
+ <!-- <div py:def="nav()"> -->
+ 
            
   <div class="admin_nav" py:if="'admin' in tg.identity.groups">
         <a href="/importers/webimport">Import Events</a>
         <a href="/importers/review">Review Events</a>
         <a href="/importers/reviewdupes">Possible dupes</a>
-        <a href="/comments/list">Comments</a>
+                <a href="/comments/list">Comments</a>
         <a href="/list_update_log">Updates</a>
         <a href="/list_batch">Batches</a>
       </div> 
 
-</div>
+
 
 <head py:match="item.tag=='{http://www.w3.org/1999/xhtml}head'">
     <meta content="text/html; charset=UTF-8" http-equiv="content-type" />
@@ -61,14 +43,22 @@
  <body py:match="item.tag=='{http://www.w3.org/1999/xhtml}body'">  
           <!-- <img src="/static/images/top_bk.png"/> -->
 <!--     ${tg_global_search_form(action="/artists/search")}  -->
-     <div id="banner">
-	 <a href="/"><img src="/static/images/banner.png" alt="BandRadar logo" /></a>
-     </div>
-     <div py:replace="nav()" /> 
+
+
+    <!--   <div py:replace="nav()" /> -->
+    <div class="content">
+    
+    <div class ="leftcontent">
      <div py:if="tg_flash" class="flash" py:content="tg_flash"></div>
      <div py:replace="[item.text] + item[:]"/> 
+   
+	 </div>       
+	 </div>
+
+
+
      
-     <div class="footer">
+    <div class="footer">
       <a href="/faq">faq</a> |
       <a href="/about">about</a> |
       <a href="/privacy">privacy</a> |
@@ -76,8 +66,8 @@
       <a href="/contact">contact</a> |
       <a href="/comments/add">comments</a> |      
       <a href="/feeds">rss</a>
-      
+
       <p>© Copyright 2007 Buunabet,LLC All rights reserved.</p>
-      </div> 
+      </div>  
 </body> 
 </html>

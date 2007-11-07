@@ -110,7 +110,7 @@ class Root(controllers.RootController):
             where event.venue_id = venue.id
                 and event.date = CURRENT_DATE
                 and event.approved is not NULL
-            order by event.name
+            order by venue.name
             """)
 
         top_artists = conn.queryAll("""

@@ -1,88 +1,141 @@
 body {
     font: normal small Verdana, Arial, Helvetica, sans-serif;
-	background: black url("../images/br_back.png") repeat-y center;
+	/*background: black url("../images/br_back.png") repeat-y center;*/
     margin: 0 auto 0 auto;
-    width: 800px;
     padding: 0 0 0 0;
 }
 
 a { text-decoration: none; }
-a:link { color: #0a396b; font-weight: bold;}
-a:visited { color: #215309;}
-a:hover { color: #cc9900;  }
+a:link { color: black; font-weight: normal;}
+a:visited { color: #737373;}
+a:hover { color: #006699;  }
 
 #banner {
-  padding: 0 0 1em 9px;
-  margin: 0 0 2px 0px;
+  padding: 10px;
+  margin: 0 auto 0 auto;
+  text-align: center;
  } 
-#navcontainer{
-  margin: 0 auto 20px auto;
-  border-top: 4px solid #3b7120;
-  z-index: 1;
-  width: 90%;
-}
-#navcontainer ul{
-  list-style-type: none;
-  text-align: center;
-  margin: -8px 0 0 0;
-  padding: 0;
-  position: relative;
-  z-index: 2;
-}
-#navcontainer li{
-  display: inline;
-  text-align: center;
-  margin: 0 5px;
-}
-#navcontainer li a:link,
-#navcontainer li a:visited{
-  padding: 1px 2px;
-  color: #000;
-  background: url("../images/nav_bak.png") repeat-x ;
-  border: 1px solid black;
-  text-decoration: none;
-  font-weight: bold;
-  text-transform:uppercase;
-}  
-  
-#navcontainer ul li a:hover {
-  color:white;
-  background:#0a396b;
-}
-#navcon li:first-child a {
-  border-left:3px solid #bd2c00;
+
+
+#navcontainer { margin-left: 0px;
+               }
+
+#navcontainer ul
+{
+margin: 0;
+padding: 0;
+list-style-type: none;
+font-family: verdana, arial, sans-serif;
 }
 
-#login #nav-login a:hover,
-#bands #nav-bands a:hover,
-#events #nav-events a:hover,
-#venues #nav-venues a:hover,
-#logout #nav-logout a:hover,
-#add #nav-add a:hover {
-  background:#0a396b;
+#navcontainer li { margin: 0; }
+
+#navcontainer a
+{
+display: block;
+color: #333;
+background-color: transparent;
+width: 140px;
+padding: 2px 10px;
+text-decoration: none;
+border-top: 1px solid #aaa;
+border-bottom: 1px solid #aaa;
+border-left: 1px solid #aaa;
+font-size: 12px;
 }
-#navcontainer ul li a:active {
-  background:#0a396b;
-  color:#fff;
+
+#navcontainer a:hover
+{
+background-color: #ddd;
+color: #333;
+border-right: 10px solid #aaa;
+padding: 2px 1px 2px 10px;
 }
+
+#navcontainer ul ul
+{
+margin-left: 30px;
+padding: 0;
+list-style-type: none;
+}
+
+#navcontainer li li a
+{
+display: block;
+color: #333;
+background-color: transparent;
+width: 110px;
+padding: 2px 10px;
+margin: 0;
+border-top: none;
+border-bottom: none;
+border-left: 1px solid #aaa;
+text-decoration: none;
+font-size: 12px;
+}
+
+
 .admin_nav {
   text-align: center;
   padding: .5em;
   margin-bottom: .5em;
 }    
 
+
 .content {
-  text-align: left;
-  /*width: 800px;*/
-  position: relative;
-  padding: .25em;
-  margin: 0 25px 0 30px;
-  color: #215309;
-  height: 1%;
-} 
+  /*text-align: left;*/
+ width: 1200px;
+ margin: 0 auto 0 auto;
+ /* padding: .25em;
+    margin: 0 25px 0 30px;
+    color: #215309;
+    height: 1%;*/
+}
+
+#tonight {
+
+   text-align: left;
+   font-size: medium;
+   font-family: Courier New, sans-serif;
+   
+}
+
+#tonight ul{
+ float: left;
+ width: 750px;
+ margin: 0;
+ padding-top: 20px;
+ list-style: none;
+ margin-bottom: 20px;
+ }
+
+#tonight li {
+ float: left;
+ width: 350px;
+ margin: 0;
+ padding-left: 10px;
+ list-style: none;
+ border-bottom: #efefef 1px dashed;
+}
+ 
+#tonight h3 {
+ font-size: large;
+ text-align: center;
+ padding-bottom: 20px;
+ 
+
+ }
+
+
+#sitestats {
+ margin-left: 25px;
+ margin-top: 20px;
+
+}
+ 
 .content p {
  /*width: 90%;*/
- color: #001100;
+ color: black;
  padding-left: .5em;
  }
 
@@ -98,8 +151,9 @@ font-weight: bold;
   text-align: left;
   position: relative;
   float: left;
-  padding: .25em;
+  padding: 1em;
   color: #215309;
+  background: #efefef;
   
 } 
  #bandstats h5, 
@@ -108,27 +162,10 @@ font-weight: bold;
  margin: 0;
  }
 
-#venuestats {
-  text-align: left;
-  position: relative;
-  padding: .25em;
-  color: #215309;
-  clear: both;
-  width: 200px;
-  } 
- 
- #venuestats h5, 
- #venuestats p{
- padding: 0 0 0 0;
- margin: 0 0 0 0;
- }
-
 #eventstats {
   text-align: left;
-  width: 200px;
   position: relative;
-  padding: .25em 0 .5em 0;
-  margin-left:25px;
+  padding: 1em;
   color: #215309;
   float: left;  
 } 
@@ -138,13 +175,38 @@ font-weight: bold;
  margin: 0;
  }
 
-.rightcontent{
-  width: 200px;
-  position: absolute;
-  left: 500px;
-  border-left: #215309 1px dotted;
+#venuestats {
+  text-align: left;
+  position: relative;
+  padding: 1em;
+  color: #215309;
+  float: left;
+  background: #efefef;
+  } 
+ 
+
+ #venuestats h5, 
+ #venuestats p{
+ padding: 0 0 0 0;
+ margin: 0 0 0 0;
+ }
+
+
+.centercontent{
+height: auto;
+width: 800px;
+float: left;
+margin: 0px;
+
+}
+
+.rightcontent {
+ float: left;
+ width: 200px;
+  /*left: 500px;*/
+  /*border-left: #215309 1px dotted;
   padding: 0 1em 1em 1em;
-  top: 20px;
+  top: 20px;*/
 }
 
 .rightcontent h3 {
@@ -174,25 +236,23 @@ font-weight: bold;
 .rightbutton .button:hover { cursor: pointer }
 
 .leftcontent{
-  width: 48%;
-  position: relative;
-  top:0px;
-  left:0px;
-  padding: 0;
-  font-weight: 575;
+ margin: 0px;
+ width: 200px;
+ float: left;
+ padding-top: 0px;
 }
 
 .footer{
-  width: 750px;
+  width: 800px;
   font-size: x-small;
-  text-align: left;
-  margin-left: 40px;
+  text-align: center;
+  margin: 0 auto 0 auto;
   padding-top: 2em;
   clear: both;
 }  
 .footer p{
  padding-top: 1em;
- color: #cc9900;
+ color: #006699;
 }
 
 .flash {
@@ -210,8 +270,6 @@ font-weight: bold;
 
 #tagline {
   position: relative;	    
-  margin-top: 5em;
-  width: 55%;
   clear: both;
   margin-right: .5em;
   padding-left: 1em;
@@ -279,34 +337,6 @@ h5 {
 
 h5 {display: inline;}
 
-
-.content ul {
-   padding-left: 0;
-   margin-left: 20px;
-   color: #0a396b;  
-   float: left;
-   width: 85%;
-   padding-bottom: 0;
-}
- .content ul li { display: inline; }
-
- .content ul li a {
-  padding: 0em 0.5em;
-  color: #0a396b;
-  text-decoration: none;
-  float: left;
-  border-left: 1px solid #215309;
-  text-transform: uppercase;
-  font-size: x-small;
-  font-weight: bold;
-}
-.content li:first-child a {
-  border-left: none;
-}
-
-.content p{
- margin:.25em 0 0 0;
-}
 
 #band a:link{
  color: #215309;

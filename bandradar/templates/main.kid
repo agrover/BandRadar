@@ -8,49 +8,87 @@
 
 <body>
 
-	 
-     <div class="content"> 
-     <div id="searchbox">
-      <h3>Search all Bands</h3>
-        ${search_form(action="/artists/search")}
-        <?python from bandradar.artists import artist_search_form ?> 
-     </div>    
-                
-      <div class="rightcontent">
-        <h3>Tonight</h3>
-     	<small><p py:for="event_id, event_name, venue_name in events">
-    	<a href="/events/${event_id}"><b>${event_name}</b>@${venue_name}</a>
-    	</p></small> 
-       </div>	              
-     
-    <div id="tagline">
-              <h2>The easy way to track your favorite Portland bands!</h2>
-                <p>Always missing your favorite <a href="/artists/list"> band's</a> gig? Sign in to be alerted <a href="/events/list"> when</a> and <a href="/venues/list"> where</a> they play next.  Oh and you can also track that <a href="/venues/list"> bar</a> with the live music seeping out that you keep walking by on your way home.</p><p>In a <a href="/artists/list"> band</a> not on BandRadar? Add your name to the artist list to let your fans know a gig is upcoming.</p>  <p>Have some additional questions?  Check out the <a href="/faq"> faq.</a></p>
-              
-   </div> 
-     
+ <div class="content">   
+ 
+  <div class="leftcontent">
+
+ <div id="tagline">
+   <p>Track your favorite artists and venues! Get notified when new events come to town. blahahahahahahahah.</p>  
+  </div>
   
-     <div id="bandstats">    
-        <p><h5>Top Tracked Bands</h5></p>
+
+<div id="navcontainer">
+ <ul id="navlist">
+ <li id="login"><span py:if="not tg.identity.user">
+            <a href="/users/login">Come In!</a>
+        </span>
+        <span py:if="tg.identity.user">
+            <a href="/users/${tg.identity.user.user_name}">
+           ${tg.identity.user.user_name}'s Page</a>
+        </span></li>
+        
+        <li id="nav-bands"><a href="/artists/list">Bands</a></li>
+        <ul id="subnavlist">
+        <li id="subactive"><a href="/artists/edit" id="subcurrent">Add a Band</a></li>
+        </ul>        
+        <li id="nav-events"><a href="/events/list">Events</a></li>
+        <ul id="subnavlist">
+        <li id="subactive"><a href="/events/edit" id="subcurrent">Add an Event</a></li>
+        </ul>
+       
+        <li id="nav-venues"><a href="/venues/list">Venues</a></li>
+        <ul id="subnavlist">
+        <li id="subactive"><a href="/events/edit" id="subcurrent">Add a Venue</a></li>
+        </ul>
+        
+        <li id="nav-logout"><span py:if="tg.identity.user">
+           <a href="/users/logout">Logout</a>
+        </span></li>
+        </ul>
+       </div>
+ </div>  
+  
+  <div class="centercontent">
+  
+  <div id="banner">
+	<a href="/"><img src="/static/images/banner.png" alt="BandRadar logo" /></a>
+    </div>
+ 
+    <div id="tonight">
+     	<ul>
+        <li py:for="event_id,event_name,venue_name in events">
+    	<a href="/events/${event_id}"><b>${venue_name}</b>:  ${event_name}</a></li>
+    	</ul>
+    </div>	 
+    
+  </div>       
+	
+  
+ <div class="rightcontent">
+   ${tg_global_search_form(action="/artists/search")}
+
+       
+     <div id="sitestats">
+	    <div id="bandstats">    
+        <h5>Top Tracked Bands</h5>
         <p py:for="item in top_artists">
         <a href="/artists/${item['id']}">${item['name']}</a></p>
-     </div>
-   
-     <div id="eventstats">
-     <p><h5>Top Tracked Events</h5></p>
-     <p py:for="item in top_events">
+        </div>        
+        <div id="eventstats">
+        <h5>Top Tracked Events</h5>
+        <p py:for="item in top_events">
         <a href="/events/${item['id']}">${item['name']}</a></p>
-     </div>
-     
-     <div id="venuestats">    
-        <p><h5>Top Tracked Venues</h5>
+        </div>     
+        <div id="venuestats">    
+        <h5>Top Tracked Venues</h5>
         <p py:for="item in top_venues">
         <a href="/venues/${item['id']}">${item['name']}</a></p>
-        </p>
+        </div>	
+        </div>
+               
+         </div>  
+  
+ </div>
 
-     </div>	
-     </div>          
-                
-
- </body>
+</body>
 </html>
