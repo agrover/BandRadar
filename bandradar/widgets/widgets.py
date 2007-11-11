@@ -81,6 +81,20 @@ class AutoCompleteValidator(v.Schema):
         value['text'] = v.NotEmpty(strip=True).to_python(text)
         return value
 
+class TextFieldWithDisappearingDefault(w.TextField):
+    template = """
+    <input xmlns:py="http://purl.org/kid/ns#"
+        type="text"
+        name="${name}"
+        class="${field_class}"
+        id="${field_id}"
+        value="Enter Band or Venue"
+        py:attrs="attrs"
+        onclick="this.value=''"
+    />
+    """
+
+
 class BRAutoCompleteField(w.AutoCompleteField):
     def __init__(self, search_controller, label="", **kw):
         super(w.AutoCompleteField, self).__init__(
@@ -91,6 +105,7 @@ class BRAutoCompleteField(w.AutoCompleteField):
             only_suggest=True,
             validator=AutoCompleteValidator(),
             attrs=dict(size=20), **kw)
+        self.text_field = TextFieldWithDisappearingDefault(name='text')
 
 class SearchBox(w.WidgetsList):
     search = BRAutoCompleteField("/artists/dynsearch")
