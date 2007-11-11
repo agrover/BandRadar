@@ -63,6 +63,7 @@
                 <td><a href="${r.url}">${r.name}</a></td>
             </tr>
         </table>
+        <div py:replace="edit_links(artist)" />
     </div>
 </body>
 </html>
