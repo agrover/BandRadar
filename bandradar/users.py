@@ -55,9 +55,9 @@ class NewUserForm(w.WidgetsList):
     user_name = w.TextField(label="Login", help_text="letters, numbers, '_' or '-'",
         attrs=dict(size=16, maxlength=16),
         validator=v.All(UniqueUsername, v.PlainText(strip=True), v.NotEmpty))
-    email = w.TextField(label="Email",
+    email = w.TextField(label="Email", help_text="to notify you of your tracked events/bands/venues",
         validator=v.All(UniqueEmail, v.NotEmpty, v.Email(strip=True)))
-    zip_code = w.TextField(label="Zip Code",
+    zip_code = w.TextField(label="Zip Code", help_text="track bands in your area",
         attrs=dict(size=10, maxlength=10),
         validator=v.PostalCode(strip=True))
     pass1 = w.PasswordField(label="Password", help_text="Length 6-40 chars",

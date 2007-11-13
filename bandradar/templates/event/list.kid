@@ -8,7 +8,9 @@
 
 <body>
 
-   <div id="help"><p>BandRadar sends you an email when your tracked events are upcoming.</p><p><img src="/static/images/date_add.png"/><a href="/events/edit">Add an Event</a></p></div>
+   <div id="help"><p>BandRadar sends you an email when your tracked events are upcoming.</p></div>
+   <p><img src="/static/images/date_add.png"/><a href="/events/edit">Add an Event</a></p>   
+   
         <ul id="bandnavlist">    
         <li id ="active"><a href="/events/list/today" id="current">Today</a></li>
         <li><a href="/events/list/tomorrow">Tomorrow</a></li>
@@ -22,15 +24,16 @@
   <div id="event">
     <table>
         <tr py:for="event_id, event_name, event_date, venue_name, is_tracked in events">
+        <td>
+                ${tg_track_button(tracked=is_tracked, id=event_id, action="/events/dyntrack")}
+            </td>
             <td>
                 <a href="/events/${event_id}"><b>${event_name} </b>@${venue_name}</a>
             </td>
             <td>
                 ${event_date}
             </td>
-            <td>
-                ${tg_track_button(tracked=is_tracked, id=event_id, action="/events/dyntrack")}
-            </td>
+            
         </tr>
     </table>
  </div>   

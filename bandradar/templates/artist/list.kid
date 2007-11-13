@@ -8,8 +8,8 @@
 
 <body>
      <div id="help"><p>BandRadar sends you an email when your tracked bands add shows.</p>
-     <p><img src="/static/images/music.png"/><a href="/artists/edit">Add Band or Artist</a> </p>
-     </div>     
+     </div>
+     <p><img src="/static/images/music.png"/><a href="/artists/edit">Add Band or Artist</a> </p>     
   
 
         <ul id="bandnavlist">
@@ -28,7 +28,7 @@
         
             ${tg_track_button(tracked=artist['is_tracked'], id=artist['id'], action="/artists/dyntrack")}
             <b py:strip="not artist['is_tracked']">
-                <a href="/artists/${artist['id']}">${artist['name']}</a></b>
+                <a href="/artists/${artist['id']}"><b>${artist['name']}</b></a></b>
             
             </li>
            </ul>

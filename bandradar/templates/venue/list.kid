@@ -7,14 +7,14 @@
 </head>
 
   <body>
-    <div id="help"><p>When you track a venue, BandRadar sends you a weekly email with upcoming events.</p><p><img src="/static/images/building_add.png"/> <a href="/venues/edit">Add a Venue</a></p></div>   
-
+    <div id="help"><p>When you track a venue, BandRadar sends you a weekly email with upcoming events.</p></div>   
+<p><img src="/static/images/building_add.png"/> <a href="/venues/edit">Add a Venue</a></p>
       <div id="venue">
         <ul>
             <li py:for="v in venues">
               ${tg_track_button(tracked=v['id'] in tracked_venues, id=v['id'], action="/venues/dyntrack")}
      
-            <a href="/venues/${v['id']}">${v['name']}</a> <span py:if="v['eventcount']"> (${v['eventcount']} upcoming)</span>
+            <a href="/venues/${v['id']}"><b>${v['name']}</b></a> <span py:if="v['eventcount']"> (${v['eventcount']} upcoming)</span>
               </li>
  
             

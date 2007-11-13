@@ -1,8 +1,8 @@
 body {
     font: normal small Verdana, Arial, Helvetica, sans-serif;
-	/*background: black url("../images/br_back.png") repeat-y center;*/
-    margin: 0 auto 0 auto;
+	  margin: 0 auto 0 auto;
     padding: 0 0 0 0;
+    
 }
 
 a { text-decoration: none; }
@@ -18,7 +18,8 @@ a:hover { color: #006699;  }
 
 
 
-#navlist { list-style: none;
+#navlist { 
+   list-style: none;
 }
 
 
@@ -34,7 +35,8 @@ a:hover { color: #006699;  }
 .content {
  width: 1200px;
  margin: 0 auto 0 auto;
-}
+ 
+ }
 
 #tonight {
 
@@ -46,9 +48,9 @@ a:hover { color: #006699;  }
 
 #tonight ul{
  float: left;
- width: 850px;
+ width: 730px;
  margin: 0;
- padding-top: 20px;
+ padding: 20px 0 0 10px;
  list-style: none;
  margin-bottom: 20px;
  }
@@ -75,10 +77,10 @@ a:hover { color: #006699;  }
  
 #help {
 text-align:left;
-clear: both;
-padding: .5em 0 1em .25em;
-color: black;
-font-weight: bold;
+padding: 5px;
+color: #000;
+background: #efefef;
+
 }
 
 #bandstats {
@@ -154,7 +156,7 @@ margin-left: 20px;
 {
 padding: 3px 0;
 margin-left: 0;
-border-bottom: 1px solid #006699;
+/*border-bottom: 1px solid #006699;*/
 font: bold 12px Verdana, sans-serif;
 text-align: left;
 }
@@ -172,7 +174,7 @@ padding: 3px 0.5em;
 margin-left: 3px;
 border: 1px solid #778;
 border-bottom: none;
-background: #efefef;
+/*background: #efefef;*/
 text-decoration: none;
 }
 
@@ -205,6 +207,7 @@ border-bottom: 1px solid white;
    font-size: small;
    font-family: Courier New, sans-serif;
    
+   
 }
 
 #band ul{
@@ -214,11 +217,13 @@ border-bottom: 1px solid white;
  padding: 0px;
  list-style: none;
  margin-bottom: 0px;
+ font-size: 16px;
+ border: 1px #737373 dashed;
  }
 
 #band li {
  float: left;
- width: 230px;
+ width: 365px;
  margin: 0;
  padding-left: 0px;
  list-style: none;
@@ -273,12 +278,10 @@ border-bottom: 1px solid white;
   table-layout: fixed;
   border-spacing: 0;
   text-align: left;
-  margin-left: 0px;
-  margin-right: 0px;
-  float: left;
-  width: 92%;
-  font-size: small;
+  margin: 0px;
+  font-size: 14px;
   font-family: Courier New, sans-serif;
+  border: 1px #737373 dotted;
 }
 #event td {
   padding: .25em;
@@ -305,16 +308,19 @@ border-bottom: 1px solid white;
 
 #venue ul{
  float: left;
- width: 850px;
+ width: 730px;
  margin: 0;
- padding-top: 0px;
+ padding: 0px;
  list-style: none;
  margin-bottom: 0px;
+ border: 1px #737373 dotted;
+ font-size: 14px;
+
  }
 
 #venue li {
  float: left;
- width: 400px;
+ width: 365px;
  margin: 0;
  padding-left: 0px;
  list-style: none;
@@ -406,7 +412,7 @@ h2 {
     padding-left: .5em;   
     font-size: large;
     text-align: left;
-    color: #215309;
+    color: #006699;
     text-transform: lowercase;
 }
 
@@ -482,19 +488,28 @@ padding: 4px 0px 4px 0;
 
 
 #loginBox{
- margin-left: 25px;
+ margin-left: 0px;
  padding: 1em;
  text-align: left;
+ display: inline;
+ width: 100px;
+ 
 }
 #loginBox td{
   padding: .5em;
   border-bottom: 0;
+  background: #efefef;
 } 
+
+#loginBox tr {
+ width: 730px;
+}
+ 
 #loginBox a{
  clear: both;
 }
 #loginBox label{
- color: #0a396b;
+ color: #000;
  padding-right: .5em;
  text-transform: uppercase;
  font-size: x-small;
@@ -513,15 +528,16 @@ padding: 4px 0px 4px 0;
 */
 #newuserbox input,
 #loginBox input{
- border: 2px solid #215309;
+ border: 2px ridge #006699;
  background-color: white; 
  color: black;
 } 
 #newuserbox  {
   text-align: left;
-  margin-left: 25px;
+  margin-left: 0px;
   padding: 1em;
   clear: both;
+  background: #efefef;
 }
 
 #bandstracked table{ 
@@ -601,7 +617,7 @@ textarea{
   color: #bd2c00;
   margin-right:100px;
 }
-.fieldhelp { color: #cc9900; }
+.fieldhelp { color: #000; }
 
 
 
