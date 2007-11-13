@@ -9,16 +9,16 @@
 <body>
      <div id="help"><p>BandRadar sends you an email when your tracked bands add shows.</p>
      </div>
-     <p><img src="/static/images/music.png"/><a href="/artists/edit">Add Band or Artist</a> </p>     
-  
+     <p><img src="/static/images/music.png"/><a href="/artists/edit">Add Band or Artist</a></p>     
+    
 
         <ul id="bandnavlist">
         <li id="active"><a href="/artists/list/today" id="current">Today</a></li>
         <li><a href="/artists/list/tomorrow">Tomorrow</a></li>
         <li><a href="/artists/list/yesterday">Yesterday</a></li>
-        <li><a href="/artists/list/week">Upcoming week</a></li>
-        <li><a href="/artists/list/all">All upcoming</a></li>
-        <li>Bands playing ${listby} <big>(${count})</big></li>
+        <li><a href="/artists/list/week">Week</a></li>
+        <li><a href="/artists/list/all">Upcoming</a></li>
+        <li>Bands playing ${listby} <small>(${count})</small> </li>
         </ul>
             
       <div id="band">
@@ -28,7 +28,8 @@
         
             ${tg_track_button(tracked=artist['is_tracked'], id=artist['id'], action="/artists/dyntrack")}
             <b py:strip="not artist['is_tracked']">
-                <a href="/artists/${artist['id']}"><b>${artist['name']}</b></a></b>
+                <a href="/artists/${artist['id']}">${artist['name']}</a></b>
+                @ ${artist['venue_name']}
             
             </li>
            </ul>

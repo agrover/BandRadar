@@ -42,8 +42,9 @@
     <p><h5>Upcoming events:</h5></p>
     <table class="upcoming" cellspacing="0">
          <tr py:for="e in future_events">
-             <td class="who" width="25%"><a href="/events/${e.id}">${e.name}</a></td>
              <td class="when" width="25%"><a href="/events/${e.id}">${e.fdate} ${e.time}</a></td>
+             <td class="where" width="25%"> <a href="/events/${e.id}">${e.venue.name}</a></td>
+             <td class="who" width="25%"><a href="/events/${e.id}">${e.name}</a></td>
          </tr>             
     </table>
     <p py:if="not len(list(future_events))">None</p>
@@ -52,21 +53,21 @@
     <p><h5> Past events <span class="small">(<a href="?list_all=1">See all</a>)</span></h5></p>
     <table class="past" cellspacing="0">
         <tr py:for="e in past_events">
+            <td class="when" width="25%"> <a href="/events/${e.id}">${e.date}</a></td>
+            <td class="where" width="25%"> <a href="/events/${e.id}">${e.venue.name}</a></td>
             <td class="who" width="25%"> <a href="/events/${e.id}">${e.name}</a></td>
-            <td class="when" width="25%"> <a href="/events/${e.id}">${e.fdate}</a></td>
         </tr>             
     </table>
     <p py:if="not len(list(past_events))">None</p>
-
+    <div id="recordings">
     <h5>Recordings</h5>
-    <table>
-        <tr py:for="r in artist.recordings">
-            <td><img src="${r.img_url}" width="50" py:if="r.img_url" /></td>
-            <td><a href="${r.url}">${r.name} (${r.source.name})</a></td>
-        </tr>
-    </table>
-    <p py:if="not len(list(artist.recordings))">None</p>
+    <ul>
+        <li py:for="r in artist.recordings">
+           <img src="${r.img_url}" py:if="r.img_url" />
+           <p><a href="${r.url}">${r.name}<br></br>(${r.source.name})</a></p></li>
+      <p py:if="not len(list(artist.recordings))">None</p>
     <div py:replace="edit_links(artist)" />
-
+    </ul>
+    </div>
 </body>
 </html>

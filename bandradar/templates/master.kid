@@ -46,39 +46,40 @@
 
 
     <!--   <div py:replace="nav()" /> -->
+    
   <div class="content">
     
     <div class ="leftcontent">
-          
-         <div id="tagline">
-          <p>Track your favorite artists and venues! Get notified when new events
-              come to town. blahahahahahahahah.</p>  
-        </div>
       <div id="navcontainer">
         <ul id="navlist">
           <li id="login"><span py:if="not tg.identity.user">
-              <img src="/static/images/key.png"/><a href="/users/login">Come In!</a>
+              <img src="/static/images/key.png"/><a href="/users/login"> Come In!</a>
           </span>
           <span py:if="tg.identity.user"><img src="/static/images/user.png"/>
               <a href="/users/${tg.identity.user.user_name}">
               ${tg.identity.user.user_name}'s Page</a>
           </span></li>
           
-          <li><img src="/static/images/music.png"/><a href="/artists/list">Bands</a></li>                
+          <li><img src="/static/images/music.png"/><a href="/artists/list">  Bands</a></li>                
           <!-- <li id="nav-bands"><a href="/artists/list">Bands</a></li> -->
-          <li><img src="/static/images/calendar.png"/><a href="/events/list">Events</a></li> 
+          <li><img src="/static/images/calendar.png"/><a href="/events/list">  Events</a></li> 
           <!-- <li id="nav-events"><a href="/events/list">Events</a></li> -->
-          <li><img src="/static/images/building.png"/><a href="/venues/list">Venues</a></li>
+          <li><img src="/static/images/building.png"/><a href="/venues/list">  Venues</a></li>
           <!-- <li id="nav-venues"><a href="/venues/list">Venues</a></li> -->
           <li id="nav-logout"><span py:if="tg.identity.user"> <img src="/static/images/key_delete.png"/>
-              <a href="/users/logout">Logout</a>
+              <a href="/users/logout">  Logout</a>
           </span></li>
         </ul>
       </div>
       <div py:if="tg_flash" class="flash" py:content="tg_flash"></div>
+       <!-- <div id="tagline">
+          <p>Track your favorite artists and venues! Get notified when new events
+              come to town.blahahahahahahahah.</p>  
+        </div> -->
     </div> 
 
     <div class="centercontent">
+    
       <div id="banner">
   	  <a href="/"><img src="/static/images/banner.png" alt="BandRadar logo" /></a>
       </div>
@@ -88,9 +89,12 @@
     </div>
 
     <div class="rightcontent">
-      ${tg_global_search_form(action="/artists/search")}
+    <div id="search">
+    ${tg_global_search_form(action="/artists/search")}
+    </div>
+      <!-- ${tg_global_search_form(action="/artists/search")} -->
      
-   <!--  <div id="sitestats">
+   <!-- <div id="sitestats">
   	  <div id="bandstats">    
           <h5>Top Tracked Bands</h5>
           <p py:for="item in top_artists">
@@ -106,7 +110,7 @@
           <p py:for="item in top_venues">
           <a href="/venues/${item['id']}">${item['name']}</a></p>
         </div>	
-      </div>  -->
+      </div>   -->
                  
     </div>  
 

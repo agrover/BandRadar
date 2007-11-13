@@ -7,13 +7,17 @@
 </head>
 
 <body>
-
+  
   <div id="tonight">
     <ul>
       <li py:for="event_id,event_name,venue_name in events">
   	  <a href="/events/${event_id}"><b>${venue_name}</b>:  ${event_name}</a></li>
     </ul>
   </div>	 
+ 
+
+  
+
 
 </body>
 </html>

@@ -6,9 +6,58 @@ body {
 }
 
 a { text-decoration: none; }
-a:link { color: black; font-weight: normal;}
+a:link { color: #000033; font-weight: normal;}
 a:visited { color: #737373;}
 a:hover { color: #006699;  }
+
+.content {
+ width: 960px;
+ margin: 0 auto 0 auto;
+ 
+ }
+
+.leftcontent {
+     margin: 0px;
+     width: 175px;
+     float: left;
+     padding-top: 0px;
+     position: relative;
+    
+}
+
+#navcontainer {
+   color: #000033;
+   font-size: medium;
+   font-family: Courier New, sans-serif;
+   text-transform: uppercase;
+}
+
+#navlist { 
+   list-style: none;
+   color: #000033;
+   padding: 0px;
+   
+}
+
+#navlist li {
+   padding-bottom: 1.5em;
+   font-style: Courier New, sans-serif;
+}
+
+#navlist a:visited {
+   color: #000033;
+}   
+   
+
+.centercontent{
+      height: auto;
+      width: 520px;
+      float: left;
+     }
+      
+#search {
+    text-align: left;
+}
 
 #banner {
   padding: 10px;
@@ -16,11 +65,81 @@ a:hover { color: #006699;  }
   text-align: center;
  } 
 
+ 
+#tonight {
 
-
-#navlist { 
-   list-style: none;
+   text-align: left;
+   font-size: small;
+   font-family: Courier New, sans-serif;
+   
 }
+
+#tonight ul{
+ float: right;
+ width: 500px;
+ margin: 0;
+ padding: 0px 0 0 0px;
+ list-style: none;
+ margin-bottom: 20px;
+ }
+
+#tonight li {
+ float: left;
+ width: 250px;
+ margin: 0;
+ padding-left: 0px;
+ list-style: none;
+ border-bottom: #efefef 1px dashed;
+}
+ 
+#tonight h3 {
+ font-size: large;
+ text-align: center;
+ padding-bottom: 20px;
+ }
+ 
+      
+
+.rightcontent {
+       float: right;
+       width: 250px;
+      
+       
+}
+.rightcontent h3 {
+      padding-left: 0em;   
+      font-size: small;
+      text-align: left;
+      color: #0a396b;
+      text-transform: uppercase;
+      padding-bottom: 0;
+      margin-left:0px;
+}
+
+#sitestats {
+ margin-left: 0px;
+ margin-top: 20px;
+} 
+
+.footer{
+    width: 800px;
+    font-size: x-small;
+    text-align: center;
+    margin: 0 auto 0 auto;
+    padding-top: 2em;
+    clear: both;
+}  
+.footer p{
+     padding-top: 1em;
+     color: #006699;
+  }
+
+
+
+
+
+
+
 
 
 
@@ -32,48 +151,10 @@ a:hover { color: #006699;  }
   margin-bottom: .5em;
 }    
 
-.content {
- width: 1200px;
- margin: 0 auto 0 auto;
- 
- }
 
-#tonight {
 
-   text-align: left;
-   font-size: medium;
-   font-family: Courier New, sans-serif;
-   
-}
 
-#tonight ul{
- float: left;
- width: 730px;
- margin: 0;
- padding: 20px 0 0 10px;
- list-style: none;
- margin-bottom: 20px;
- }
 
-#tonight li {
- float: left;
- width: 350px;
- margin: 0;
- padding-left: 10px;
- list-style: none;
- border-bottom: #efefef 1px dashed;
-}
- 
-#tonight h3 {
- font-size: large;
- text-align: center;
- padding-bottom: 20px;
- }
-
-#sitestats {
- margin-left: 25px;
- margin-top: 20px;
-}
  
 #help {
 text-align:left;
@@ -127,38 +208,26 @@ background: #efefef;
  margin: 0 0 0 0;
  }
 
-.centercontent{
-height: auto;
-width: 730px;
-float: left;
-margin-left: 20px;
-}
 
-.rightcontent {
- float: left;
- width: 250px;
-}
 
-.rightcontent h3 {
-    padding-left: 0em;   
-    font-size: small;
-    text-align: left;
-    color: #0a396b;
-    text-transform: uppercase;
-    padding-bottom: 0;
-    margin-left:0px;
-}
+
 
 
 /*Artist Pages*/
 
 #bandnavlist
 {
-padding: 3px 0;
+padding: 0 0 5px 0;
 margin-left: 0;
-/*border-bottom: 1px solid #006699;*/
+border-bottom: 1px solid #efefef;
 font: bold 12px Verdana, sans-serif;
 text-align: left;
+font-family: Courier New, sans-serif;
+   text-transform: uppercase;
+}
+
+#bandnavlist ul{
+ padding: 0px;
 }
 
 #bandnavlist li
@@ -170,7 +239,7 @@ display: inline;
 
 #bandnavlist li a
 {
-padding: 3px 0.5em;
+padding: 3px 2px;
 margin-left: 3px;
 border: 1px solid #778;
 border-bottom: none;
@@ -205,32 +274,53 @@ border-bottom: 1px solid white;
 
    text-align: left;
    font-size: small;
-   font-family: Courier New, sans-serif;
-   
+  
    
 }
 
 #band ul{
  float: left;
- width: 730px;
  margin: 0;
  padding: 0px;
  list-style: none;
  margin-bottom: 0px;
  font-size: 16px;
- border: 1px #737373 dashed;
+ border-right: 1px #737373 dashed;
+ border-left: 1px #737373 dashed;
+ border-bottom: 1px #737373 dashed;
  }
 
 #band li {
  float: left;
- width: 365px;
+ width: 515px;
  margin: 0;
- padding-left: 0px;
+ padding-left: 20px;
+ padding-top: 10px;
  list-style: none;
  border-bottom: #efefef 1px dashed;
 }
 
+#recordings ul{
+ float: left;
+ margin: 0;
+ width: 510px;
+ padding: 0px;
+ list-style: none;
+ margin-bottom: 0px;
+ } 
+ 
+ #recordings li {
+ float: left;
+ width: 120px;
+ margin: 0;
+ padding-left: 20px;
+ padding-top: 10px;
+ list-style: none;
+}
 
+#recordings img {
+   border: 4px solid #efefef; 
+}
 /*Events Pages*/
 
 #eventnavlist
@@ -346,25 +436,9 @@ border-bottom: 1px solid white;
  }
 .rightbutton .button:hover { cursor: pointer }
 
-.leftcontent{
- margin: 0px;
- width: 200px;
- float: left;
- padding-top: 0px;
-}
 
-.footer{
-  width: 800px;
-  font-size: x-small;
-  text-align: center;
-  margin: 0 auto 0 auto;
-  padding-top: 2em;
-  clear: both;
-}  
-.footer p{
- padding-top: 1em;
- color: #006699;
-}
+
+
 
 .flash {
    color: #0a396b;    
@@ -502,7 +576,7 @@ padding: 4px 0px 4px 0;
 } 
 
 #loginBox tr {
- width: 730px;
+ width: 510px;
 }
  
 #loginBox a{
@@ -531,6 +605,7 @@ padding: 4px 0px 4px 0;
  border: 2px ridge #006699;
  background-color: white; 
  color: black;
+
 } 
 #newuserbox  {
   text-align: left;

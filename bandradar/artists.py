@@ -61,10 +61,11 @@ class Artists(controllers.Controller, util.RestAdapter):
                 where_clause = AND(where_clause, Event.q.date <= end_date)
 
             artists = conn.queryAll("""
-                select artist.id, artist.name
-                from artist, event, artist_event
+                select artist.id, artist.name, venue.name
+                from artist, event, artist_event, venue
                 where artist.id = artist_event.artist_id and
-                    artist_event.event_id = event.id and
+                    artist_event.event_id = event.id and 
+                    venue.id = event.venue_id and
                     %s
                 order by artist.name
                 """ % where_clause)
@@ -74,9 +75,9 @@ class Artists(controllers.Controller, util.RestAdapter):
                 tracked_artist_ids = [a.id for a in identity.current.user.artists]
             else:
                 tracked_artist_ids = []
-            for artist_id, artist_name in artists:
+            for artist_id, artist_name, venue_name in artists:
                 is_tracked = artist_id in tracked_artist_ids
-                day_result[artist_name] = (artist_id, is_tracked)
+                day_result[artist_name] = (artist_id, is_tracked, venue_name)
             return day_result
 
         if listby == "today":
@@ -96,8 +97,8 @@ class Artists(controllers.Controller, util.RestAdapter):
         # now, sort and put back in a list
         keys = result.keys()
         keys.sort()
-        result_list = [dict(name=key, id=result[key][0], is_tracked=result[key][1])
-            for key in keys]
+        result_list = [dict(name=key, id=result[key][0], is_tracked=result[key][1], 
+            venue_name=result[key][2]) for key in keys]
 
         return dict(artists=result_list, count=len(result),
             listby=listby, artist_search_form=artist_search_form)

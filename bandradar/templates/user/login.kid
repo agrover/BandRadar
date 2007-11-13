@@ -26,10 +26,7 @@
                  <!-- </td>
                  <td class="field"> -->
                  <input type="password" id="password" name="password"/>
-               <!--   </td> -->
-                 
-                  <!-- <td colspan="2" class="buttons"> -->
-                  <input type="submit" name="login" value="login"/>
+                 <input type="submit" name="login" value="login"/>
               <!--       --></td>
                                        
                 
