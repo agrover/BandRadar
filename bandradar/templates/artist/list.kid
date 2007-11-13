@@ -7,38 +7,32 @@
 </head>
 
 <body>
-     <div class="content">
-     <div id="help">BandRadar sends you an email when your tracked bands add shows.</div>
-     <div id="searchbox">
-        <h3>Search all Bands</h3> 
-        ${artist_search_form(action="/artists/search")}
-        <?python from bandradar.artists import artist_search_form ?> 
-     </div>
-      
+     <div id="help"><p>BandRadar sends you an email when your tracked bands add shows.</p>
+     <p><img src="/static/images/music.png"/><a href="/artists/edit">Add Band or Artist</a> </p>
+     </div>     
   
-   <div class="content">
-   <div id="bandstats"><h5> Bands playing ${listby} <big>(${count})</big></h5></div>
-        <ul>
-        <li><a href="/artists/list/today">Today</a></li>
+
+        <ul id="bandnavlist">
+        <li id="active"><a href="/artists/list/today" id="current">Today</a></li>
         <li><a href="/artists/list/tomorrow">Tomorrow</a></li>
         <li><a href="/artists/list/yesterday">Yesterday</a></li>
         <li><a href="/artists/list/week">Upcoming week</a></li>
         <li><a href="/artists/list/all">All upcoming</a></li>
+        <li>Bands playing ${listby} <big>(${count})</big></li>
         </ul>
             
       <div id="band">
-      <table>
-        <tr py:for="artist in artists">
-            <td>
-                <b py:strip="not artist['is_tracked']">
+       
+        <ul>       
+        <li py:for="artist in artists">
+        
+            ${tg_track_button(tracked=artist['is_tracked'], id=artist['id'], action="/artists/dyntrack")}
+            <b py:strip="not artist['is_tracked']">
                 <a href="/artists/${artist['id']}">${artist['name']}</a></b>
-            </td>
-            <td>${tg_track_button(tracked=artist['is_tracked'], id=artist['id'], action="/artists/dyntrack")}
-            </td>
-        </tr>
-    </table>
+            
+            </li>
+           </ul>
+  
     </div>
-</div> 
-</div>
 </body>
 </html>

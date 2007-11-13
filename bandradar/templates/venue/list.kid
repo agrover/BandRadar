@@ -6,35 +6,19 @@
     <title>BandRadar - Venue List</title>
 </head>
 
-<body>
-  <div class="content">
-   <div id="help">When you track a venue, BandRadar sends you a weekly email with upcoming events.</div>   
-    <div id="searchbox">
-        <h3>Search all Venues</h3>
-        <?python from bandradar.venues import venue_search_form ?>
-        ${venue_search_form(action="/venues/search")}
-    </div>
- 
-    
+  <body>
+    <div id="help"><p>When you track a venue, BandRadar sends you a weekly email with upcoming events.</p><p><img src="/static/images/building_add.png"/> <a href="/venues/edit">Add a Venue</a></p></div>   
 
-   <div id="venue">
-    <table>
-    <h5>Venues with upcoming events
-        <span py:if="'admin' in tg.identity.groups">
-            ${tg_ButtonWidget(action="/venues/edit", label="Add a new venue")}
-        </span>
-    </h5>
-    <tr py:for="v in venues">
-        <td>
-            <a href="/venues/${v['id']}">${v['name']}</a>
-            <span py:if="v['eventcount']"> (${v['eventcount']} upcoming)</span>
-        </td>
-        <td>
-            ${tg_track_button(tracked=v['id'] in tracked_venues, id=v['id'], action="/venues/dyntrack")}
-        </td>
-    </tr>
-    </table>
+      <div id="venue">
+        <ul>
+            <li py:for="v in venues">
+              ${tg_track_button(tracked=v['id'] in tracked_venues, id=v['id'], action="/venues/dyntrack")}
+     
+            <a href="/venues/${v['id']}">${v['name']}</a> <span py:if="v['eventcount']"> (${v['eventcount']} upcoming)</span>
+              </li>
+ 
+            
+     </ul>
     </div>
-    </div>
-</body>
+  </body>
 </html>

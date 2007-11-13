@@ -8,22 +8,13 @@
 
 <body>
 
-   <div class="content">
-      
-    <div id="searchbox">
-        <h2>Search Bands</h2>
-        <?python from bandradar.artists import artist_search_form ?>
-        ${artist_search_form(action="/artists/search")}
-    </div>
-<br clear="all"></br>
+  <div id="band">
   <h5>Artist Search Results</h5>
-    <p py:for="a in artists">
-        <p><b><a href="/artists/${a.id}">${a.name}</a></b></p>
-    </p>
-
-    <p>
-        ${tg_ButtonWidget(action="/artists/edit", label="Add a new Band")}
-    </p>
+  <ul>
+    <li py:for="a in artists">
+      <a href="/artists/${a.id}">${a.name}</a>
+     </li>
+    </ul>
     </div>
 </body>
 </html>

@@ -7,10 +7,11 @@
 </head>
 
 <body>
-    <div class="content">
+
         <p class="name"><h4>${artist.name}</h4>&nbsp;&nbsp;
         <span py:if="is_tracked">${tg_ButtonWidget(action="/artists/%s/untrack?viewing=yes" % artist.id, label="Untrack")}</span>
         <span py:if="not is_tracked">${tg_ButtonWidget(action="/artists/%s/track?viewing=yes" % artist.id, label="Track")}</span>
+        
         <span py:if="'admin' in tg.identity.groups">
             ${tg_ButtonWidget(action="/artists/%s/split" % artist.id, label="Split")}
             <form class="buttonform" action="/artists/${artist.id}/merge" method="POST">
@@ -19,6 +20,7 @@
                     <input type="submit" class="button" value="Merge"/>
             </form>
         </span>
+        
         <div id="blurb">
             <p id="description" py:if="description">${XML(description)}</p>
         </div>    

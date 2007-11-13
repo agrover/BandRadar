@@ -88,7 +88,7 @@ class TextFieldWithDisappearingDefault(w.TextField):
         name="${name}"
         class="${field_class}"
         id="${field_id}"
-        value="Enter Band or Venue"
+        value="    Search Band or Venue"
         py:attrs="attrs"
         onclick="this.value=''"
     />
@@ -105,13 +105,13 @@ class BRAutoCompleteField(w.AutoCompleteField):
             only_suggest=True,
             validator=AutoCompleteValidator(),
             attrs=dict(size=20), **kw)
-        self.text_field = TextFieldWithDisappearingDefault(name='text')
+        self.text_field = TextFieldWithDisappearingDefault(name='text', attrs=dict(size=20))
 
 class SearchBox(w.WidgetsList):
     search = BRAutoCompleteField("/artists/dynsearch")
 
 global_search_form = w.ListForm(fields=SearchBox(),
-    name="gsearch", submit_text="Search")
+    name="gsearch", submit_text="Go")
 
 # Fix TG CalendarDatePicker, which returns a datetime, not a date
 class BRCalendarDatePicker(w.CalendarDatePicker):

@@ -7,21 +7,15 @@
 </head>
 
 <body>
-   <div class="content">
-   <div id="help">BandRadar sends you an email when your tracked events are upcoming.</div>
-   <div id="searchbox">
-        <h3>Search all Events</h3>
-        ${event_search_form(action="/events/search")}
-    </div>
-  
-      
-        <div id="eventstats"><h5>Events: ${listby} <big>(${count})</big></h5></div>
-        <ul>
-        <li><a href="/events/list/today">Today</a></li>
+
+   <div id="help"><p>BandRadar sends you an email when your tracked events are upcoming.</p><p><img src="/static/images/date_add.png"/><a href="/events/edit">Add an Event</a></p></div>
+        <ul id="bandnavlist">    
+        <li id ="active"><a href="/events/list/today" id="current">Today</a></li>
         <li><a href="/events/list/tomorrow">Tomorrow</a></li>
         <li><a href="/events/list/yesterday">Yesterday</a></li>
         <li><a href="/events/list/week">Upcoming week</a></li>
         <li><a href="/events/list/all">All upcoming</a></li>
+        <li>Events: ${listby} <big>(${count})</big></li>
         </ul>
        
         
@@ -29,7 +23,7 @@
     <table>
         <tr py:for="event_id, event_name, event_date, venue_name, is_tracked in events">
             <td>
-                <a href="/events/${event_id}">${event_name} @ ${venue_name}</a>
+                <a href="/events/${event_id}"><b>${event_name} </b>@${venue_name}</a>
             </td>
             <td>
                 ${event_date}
@@ -40,6 +34,6 @@
         </tr>
     </table>
  </div>   
- </div>   
+
 </body>
 </html>
