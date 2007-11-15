@@ -23,7 +23,7 @@ import util
 
 import datetime
 
-from elementtree import ElementTree
+from xml.etree import ElementTree
 
 log = logging.getLogger("bandradar.controllers")
 

@@ -5,7 +5,7 @@ from turbogears import widgets as w
 from turbogears import validators as v
 from turbogears import paginate
 
-from elementtree import ElementTree
+from xml.etree import ElementTree
 
 from model import Comment
 import util
