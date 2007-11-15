@@ -124,9 +124,10 @@ class BRCalendarDatePicker(w.CalendarDatePicker):
 
 class TopArtistsWidget(w.Widget):
     template = "bandradar.widgets.templates.topartists"
-    params = ['top_artists',]
-    conn = hub.getConnection()
-    top_artists = conn.queryAll("""
+
+    def get_list(self):
+        conn = hub.getConnection()
+        top_artists = conn.queryAll("""
             select a.name, a.id, COUNT(aua.user_acct_id) as count
             from artist a, artist_user_acct aua
             where a.id = aua.artist_id
@@ -134,15 +135,16 @@ class TopArtistsWidget(w.Widget):
             order by count desc, name
             limit 10
             """)
-    top_artists = [dict(name=a, id=b, count=c) for a, b, c in top_artists]
+        return [dict(name=a, id=b, count=c) for a, b, c in top_artists]
     
 top_artists = TopArtistsWidget()
 
 class TopVenuesWidget(w.Widget):
     template = "bandradar.widgets.templates.topvenues"
-    params = ['top_venues']
-    conn = hub.getConnection()
-    top_venues = conn.queryAll("""
+
+    def get_list(self):
+        conn = hub.getConnection()
+        top_venues = conn.queryAll("""
             select v.name, v.id, COUNT(uav.user_acct_id) as count
             from venue v, user_acct_venue uav
             where v.id = uav.venue_id
@@ -150,7 +152,7 @@ class TopVenuesWidget(w.Widget):
             order by count desc, name
             limit 10
             """)
-    top_venues = [dict(name=a, id=b, count=c) for a, b, c in top_venues]
+        return [dict(name=a, id=b, count=c) for a, b, c in top_venues]
     
 top_venues = TopVenuesWidget()    
     

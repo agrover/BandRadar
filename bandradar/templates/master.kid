@@ -99,7 +99,7 @@
  <div id="sitestats">
   	  <div id="bandstats">    
           <h5>Top Tracked Bands</h5>
-          ${tg_TopArtistsWidget}
+          ${tg_top_artists()}
           <!-- <p py:for="item in top_artists">
           <a href="/artists/${item['id']}">${item['name']}</a></p> -->
           </div>     
@@ -110,7 +110,7 @@
           </div>   -->   
           <div id="venuestats">    
           <h5>Top Tracked Venues</h5>
-          ${tg_TopVenuesWidget}
+          ${tg_top_venues()}
           <!-- <p py:for="item in top_venues">
           <a href="/venues/${item['id']}">${item['name']}</a></p> -->
         </div>	
