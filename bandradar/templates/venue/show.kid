@@ -7,7 +7,6 @@
 </head>
 
 <body>
-<div class="content">
            ${googlemap(venue=venue, width=250, height=200)}
            
           <span id="name"><h4>${venue.name}</h4></span>
@@ -27,13 +26,14 @@
           </span>
 
           
-
-        
+      <li></li>       
             <div id="blurb">            
             <p id="description" py:if="description">${XML(description)}</p>
+             
             </div>           
             <p py:if="venue.address"><h5>Address: </h5><span id="address">${venue.address}</span></p>
             <p py:if="venue.phone"><h5>Phone: </h5><span id="phone">${venue.phone}</span></p>
+          
             <p py:if="venue.url"><h5>Website: </h5><a href="${venue.url}">${venue.url}</a></p>
             <p py:if="venue.myspace"><h5>MySpace:</h5>
                 <a href="http://myspace.com/${venue.myspace}">
@@ -70,6 +70,6 @@
            ${tg_ButtonWidget(action="/events/edit?venue_prefill=%s" % venue.id, label="Add a new event")}
 
         <div py:replace="edit_links(venue)"/>
-          </div>
+       
 </body>
 </html>

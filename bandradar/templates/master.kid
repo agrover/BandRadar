@@ -12,6 +12,7 @@
     <p py:if="can_delete(object)">
         ${tg_ButtonWidget(action="/%ss/%d/delete" % (clsname, object.id), label="Delete this %s" % clsname)}
     </p>
+    
 </div>
 
  <!-- <div py:def="nav()"> -->
@@ -48,8 +49,15 @@
     <!--   <div py:replace="nav()" /> -->
     
   <div class="content">
+  <left><h3>Never miss a live show again!</h3></left>
+   <div id="search">
+    ${tg_global_search_form(action="/artists/search")}
+    </div>
     
     <div class ="leftcontent">
+      <div id="tagline">
+           <p>To receive an email when your favorite artists, and venues add shows select <img src="/static/images/bullet_red.png"/>. Selecting <img src="/static/images/bullet_green.png"/> removes the item from your tracked list.  </p>  
+        </div> 
       <div id="navcontainer">
         <ul id="navlist">
           <li id="login"><span py:if="not tg.identity.user">
@@ -61,21 +69,15 @@
           </span></li>
           
           <li><img src="/static/images/music.png"/><a href="/artists/list">  Bands</a></li>                
-          <!-- <li id="nav-bands"><a href="/artists/list">Bands</a></li> -->
-          <li><img src="/static/images/calendar.png"/><a href="/events/list">  Events</a></li> 
-          <!-- <li id="nav-events"><a href="/events/list">Events</a></li> -->
-          <li><img src="/static/images/building.png"/><a href="/venues/list">  Venues</a></li>
-          <!-- <li id="nav-venues"><a href="/venues/list">Venues</a></li> -->
-          <li id="nav-logout"><span py:if="tg.identity.user"> <img src="/static/images/key_delete.png"/>
+         <li><img src="/static/images/calendar.png"/><a href="/events/list">  Events</a></li> 
+         <li><img src="/static/images/building.png"/><a href="/venues/list">  Venues</a></li>
+         <li id="nav-logout"><span py:if="tg.identity.user"> <img src="/static/images/key_delete.png"/>
               <a href="/users/logout">  Logout</a>
           </span></li>
         </ul>
       </div>
       <div py:if="tg_flash" class="flash" py:content="tg_flash"></div>
-       <!-- <div id="tagline">
-          <p>Track your favorite artists and venues! Get notified when new events
-              come to town.blahahahahahahahah.</p>  
-        </div> -->
+      
     </div> 
 
     <div class="centercontent">
@@ -83,34 +85,36 @@
       <div id="banner">
   	  <a href="/"><img src="/static/images/banner.png" alt="BandRadar logo" /></a>
       </div>
+       
   
      <!-- <div py:if="tg_flash" class="flash" py:content="tg_flash"></div> -->
      <div py:replace="[item.text] + item[:]"/> 
     </div>
 
-    <div class="rightcontent">
-    <div id="search">
-    ${tg_global_search_form(action="/artists/search")}
-    </div>
+  <div class="rightcontent">
+  
+   
       <!-- ${tg_global_search_form(action="/artists/search")} -->
      
-   <!-- <div id="sitestats">
+ <div id="sitestats">
   	  <div id="bandstats">    
           <h5>Top Tracked Bands</h5>
-          <p py:for="item in top_artists">
-          <a href="/artists/${item['id']}">${item['name']}</a></p>
-          </div>        
-          <div id="eventstats">
+          ${tg_TopArtistsWidget}
+          <!-- <p py:for="item in top_artists">
+          <a href="/artists/${item['id']}">${item['name']}</a></p> -->
+          </div>     
+          <!-- <div id="eventstats">
           <h5>Top Tracked Events</h5>
           <p py:for="item in top_events">
           <a href="/events/${item['id']}">${item['name']}</a></p>
-          </div>     
+          </div>   -->   
           <div id="venuestats">    
           <h5>Top Tracked Venues</h5>
-          <p py:for="item in top_venues">
-          <a href="/venues/${item['id']}">${item['name']}</a></p>
+          ${tg_TopVenuesWidget}
+          <!-- <p py:for="item in top_venues">
+          <a href="/venues/${item['id']}">${item['name']}</a></p> -->
         </div>	
-      </div>   -->
+      </div>  
                  
     </div>  
 

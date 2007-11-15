@@ -14,7 +14,7 @@
             <table>
               <h2>Please Login</h2>
                  <tr>
-                 <td class="label">
+                 <td class="label" valign="top">
                  <label for="user_name">User Name:</label>
                  <!-- </td>
                  <td class="field"> -->

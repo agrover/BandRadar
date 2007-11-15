@@ -2,6 +2,7 @@ from turbogears import widgets as w
 from turbogears import validators as v
 from cgi import escape
 from bandradar.imports import google
+from bandradar.model import hub
 
 w.register_static_directory("br", "bandradar/widgets")
 
@@ -67,7 +68,7 @@ class TrackButtonWidget(w.Widget):
     javascript = [w.mochikit, w.JSLink("br", 'javascript/trackbutton.js')]
     params = ["id", "action", "tracked", "text"]
     text = dict(off="Track", on="Untrack")
-
+    
     def track_str(self, tracked):
         if tracked:
             return "tracked"
@@ -120,3 +121,36 @@ class BRCalendarDatePicker(w.CalendarDatePicker):
         self.validator = v.DateConverter(format=self.format,
             not_empty=self.not_empty)
 
+
+class TopArtistsWidget(w.Widget):
+    template = "bandradar.widgets.templates.topartists"
+    params = ['top_artists',]
+    conn = hub.getConnection()
+    top_artists = conn.queryAll("""
+            select a.name, a.id, COUNT(aua.user_acct_id) as count
+            from artist a, artist_user_acct aua
+            where a.id = aua.artist_id
+            group by a.name, a.id
+            order by count desc, name
+            limit 10
+            """)
+    top_artists = [dict(name=a, id=b, count=c) for a, b, c in top_artists]
+    
+top_artists = TopArtistsWidget()
+
+class TopVenuesWidget(w.Widget):
+    template = "bandradar.widgets.templates.topvenues"
+    params = ['top_venues']
+    conn = hub.getConnection()
+    top_venues = conn.queryAll("""
+            select v.name, v.id, COUNT(uav.user_acct_id) as count
+            from venue v, user_acct_venue uav
+            where v.id = uav.venue_id
+            group by v.name, v.id
+            order by count desc, name
+            limit 10
+            """)
+    top_venues = [dict(name=a, id=b, count=c) for a, b, c in top_venues]
+    
+top_venues = TopVenuesWidget()    
+    

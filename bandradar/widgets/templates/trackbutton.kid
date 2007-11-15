@@ -7,6 +7,6 @@
 <span xmlns:py="http://purl.org/kid/ns#"
     onclick="button_pushed('${action}', '${id}', '${text['off']}', '${text['on']}'); return false;"
     class="button ${track_button.track_str(tracked)}" id="item_${id}">
-    <span py:if="not tracked"><img src="/static/images/bullet_red.png"></img></span>
-    <span py:if="tracked"><img src="/static/images/bullet_green.png"></img></span>
+    <span py:if="not tracked"><img src="/static/images/bullet_red.png" alt="track"></img></span>
+    <span py:if="tracked"><img src="/static/images/bullet_green.png" alt="untrack"></img></span>
 </span>

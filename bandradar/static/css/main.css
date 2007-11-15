@@ -2,6 +2,7 @@ body {
     font: normal small Verdana, Arial, Helvetica, sans-serif;
 	  margin: 0 auto 0 auto;
     padding: 0 0 0 0;
+
     
 }
 
@@ -14,6 +15,10 @@ a:hover { color: #006699;  }
  width: 960px;
  margin: 0 auto 0 auto;
  
+ }
+ 
+ .content h3 {
+   display: inline;
  }
 
 .leftcontent {
@@ -48,14 +53,23 @@ a:hover { color: #006699;  }
    color: #000033;
 }   
    
+#tagline {
+}
+
 
 .centercontent{
       height: auto;
-      width: 520px;
+      width: 550px;
       float: left;
      }
       
 #search {
+    text-align: right;
+    background: #efefef;
+    margin: 0;
+}
+
+#search h3{
     text-align: left;
 }
 
@@ -98,11 +112,16 @@ a:hover { color: #006699;  }
  padding-bottom: 20px;
  }
  
+.button {
+   padding: 0;
+}
+.button:hover { cursor: pointer } 
+ 
       
 
 .rightcontent {
        float: right;
-       width: 250px;
+       width: 230px;
       
        
 }
@@ -165,9 +184,9 @@ background: #efefef;
 }
 
 #bandstats {
-  text-align: left;
+  text-align: right;
   position: relative;
-  float: left;
+  float: right;
   padding: 1em;
   color: #215309;
   background: #efefef;
@@ -193,12 +212,11 @@ background: #efefef;
  }
 
 #venuestats {
-  text-align: left;
+  text-align: right;
   position: relative;
   padding: 1em;
   color: #215309;
-  float: left;
-  background: #efefef;
+  float: right;
   } 
  
 
@@ -264,10 +282,7 @@ background: white;
 border-bottom: 1px solid white;
 }
 
-.button {
-   padding: 0;
-}
-.button:hover { cursor: pointer }
+
 
 
 #band {
@@ -453,17 +468,7 @@ border-bottom: 1px solid white;
     margin: 2em .5em 0 0;
 }    
 
-#tagline {
-  position: relative;	    
-  clear: both;
-  margin-right: .5em;
-  padding-left: 1em;
-  margin-bottom: 1.5em;
-}
 
-#tagline p{
- text-indent: 1.5em;
-}
 
 #searchbox {
     margin: 0em;
@@ -492,7 +497,7 @@ h2 {
 
 h3 {
     padding-left: 0em;   
-    font-size: small;
+    font-size: x-small;
     text-align: left;
     color: #0a396b;
     text-transform: uppercase;
@@ -696,7 +701,11 @@ textarea{
 
 
 
-img { border-style: none; }
+img { border-style: none;
+     }
+
+li {list-style: none;
+}     
 
 .name {
     font-weight: bold;
