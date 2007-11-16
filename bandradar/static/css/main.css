@@ -361,7 +361,7 @@ border-bottom: 1px solid white;
 #recordings ul{
  float: left;
  margin: 0;
- width: 510px;
+ width: 519px;
  padding: 0px;
  list-style: none;
  margin-bottom: 0px;
@@ -369,11 +369,12 @@ border-bottom: 1px solid white;
  
  #recordings li {
  float: left;
- width: 120px;
+ width: 160px;
  margin: 0;
- padding-left: 20px;
+ padding-left: 0px;
  padding-top: 10px;
  list-style: none;
+ text-align: center;
 }
 
 #recordings img {

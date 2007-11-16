@@ -20,19 +20,20 @@
                  <td class="field"> -->
                  <input type="text" id="user_name" name="user_name"/>
                  </td>
+                 </tr>
                  
+                 <tr>
                  <td class="label">
                  <label for="password">Password:</label>
                  <!-- </td>
                  <td class="field"> -->
                  <input type="password" id="password" name="password"/>
                  <input type="submit" name="login" value="login"/>
-              <!--       --></td>
-                                       
-                
+              </td>
+                  </tr>                     
+                <tr>
                  <td><input type="checkbox" id="remember" name="remember"/>               
-                 <label for="remember">Remember me</label> 
-                 
+                 <label for="remember">Remember me</label>                  
                  </td>
                  
                 </tr>

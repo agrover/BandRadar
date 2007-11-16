@@ -64,8 +64,7 @@
     <h5>Recordings</h5>
     <ul>
         <li py:for="r in artist.recordings">
-           <img src="${r.img_url}" py:if="r.img_url" />
-           <p><a href="${r.url}">${r.name}<br></br>(${r.source.name})</a></p></li>
+         <a href="${r.url}"> <img src="${r.img_url}" py:if="r.img_url" alt="${r.name}"><p>(${r.source.name})</p></img></a></li>
       <p py:if="not len(list(artist.recordings))">None</p>
     <div py:replace="edit_links(artist)" />
     </ul>
