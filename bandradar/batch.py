@@ -9,10 +9,24 @@ import time
 import geo
 
 unittest = False
+#unittest = True
 
 log = logging.getLogger("bandradar.batch")
 
-def task():
+def hourly_task():
+    # notify admins of pending events added by users
+    events_pending = Event.select(Event.q.approved == None)
+    pending_count = events_pending.count()
+    unnotified = events_pending.filter(Event.q.admin_notified == False)
+    if unnotified.count():
+        for event in unnotified:
+            event.admin_notified = True;
+        for admin in Group.by_group_name("admin").users:
+            email(admin.email_address, "BandRadar <events@bandradar.com>",
+                "%d events in queue" % pending_count,
+                "There are events in the pending queue.")
+
+def nightly_task():
     log.info("batch started")
     hub.threadingLocal = threading_local()
     hub.begin()
@@ -117,11 +131,6 @@ def send_email(start, finish):
             venue_email[user_id] = venue_dict
             users_to_email.add(user_id)
 
-    if Event.select(Event.q.approved == None).count():
-        for admin in Group.by_group_name("admin").users:
-            email(admin.email_address, "BandRadar <events@bandradar.com>",
-                "events in queue", "There are events in the pending queue.")
-
     for id in users_to_email:
         import pkg_resources
 
@@ -170,6 +179,9 @@ def email(msg_to, msg_from, subject, body):
 
     if unittest:
         msg_to = "andy@groveronline.com"
+        log.info("Subject: " + subject)
+        log.info("Body: " + body)
+        return
 
     msg = MIMEText(body.encode('utf8'), 'plain', 'utf8')
     msg['To'] = msg_to
