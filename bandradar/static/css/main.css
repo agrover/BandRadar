@@ -1,5 +1,5 @@
 body {
-    font: normal small Verdana, Arial, Helvetica, sans-serif;
+    font: normal small Georgia, Verdana, Arial, Helvetica, sans-serif;
 	  margin: 0 auto 0 auto;
     padding: 0 0 0 0;
 
@@ -7,9 +7,13 @@ body {
 }
 
 a { text-decoration: none; }
-a:link { color: #000033; font-weight: normal;}
+a:link { color: #254117; font-weight: normal;}
 a:visited { color: #737373;}
-a:hover { color: #006699;  }
+a:hover { text-decoration: underline;  }
+
+p {
+   font-family: Verdana;
+ }
 
 .content {
  width: 960px;
@@ -21,6 +25,69 @@ a:hover { color: #006699;  }
    display: inline;
  }
 
+h1 { 
+  font-size: small;
+  text-transform: lowercase;
+}
+
+
+h2 {
+    padding-left: .5em;   
+    font-size: large;
+    text-align: left;
+    text-transform: lowercase;
+    font-family: Verdana;
+}
+
+h3 {
+    padding-left: 0em;   
+    font-size: x-small;
+    text-align: left;
+    text-transform: uppercase;
+    padding-bottom: 0;
+    margin-left:0px;
+}
+h3 {display: inline;}
+
+h4 {
+  text-align: left;
+  font-size: large;
+  padding-left: 0em;
+  width: 100%;
+  margin-left: 0px;
+  font-family: Verdana;
+}
+h4 {display: inline;}
+
+h5 {
+ margin: 0 0 0 0;
+ padding: 0 1em 0 0;
+ text-transform: uppercase; 
+ text-align: left;
+}
+
+h5 {display: inline;}
+
+input { 
+  border: 2px ridge #3E594F;
+  padding: 4px 0 4px 0;
+  background-color: #efefef; 
+  margin-top: 10px;
+}
+
+#search {
+    text-align: right;
+    margin: 0;
+}
+
+#search h3{
+    display: inline;
+    float: left;
+    font-size: x-small;
+    font-family: Verdana;
+}
+
+
 .leftcontent {
      margin: 0px;
      width: 175px;
@@ -31,29 +98,33 @@ a:hover { color: #006699;  }
 }
 
 #navcontainer {
-   color: #000033;
-   font-size: medium;
-   font-family: Courier New, sans-serif;
-   text-transform: uppercase;
+   font-family: Verdana;
+  
 }
 
 #navlist { 
    list-style: none;
-   color: #000033;
    padding: 0px;
+   background: none;
    
 }
 
 #navlist li {
    padding-bottom: 1.5em;
-   font-style: Courier New, sans-serif;
+   
 }
 
-#navlist a:visited {
-   color: #000033;
-}   
+
+#navlist a:hover {
+      text-decoration: none;
+}
+
+#navlist a:link, #navlist a:visited {
+      color: black;
+}      
    
 #tagline {
+     text-align: left;
 }
 
 
@@ -63,20 +134,13 @@ a:hover { color: #006699;  }
       float: left;
      }
       
-#search {
-    text-align: right;
-    background: #efefef;
-    margin: 0;
-}
 
-#search h3{
-    text-align: left;
-}
 
 #banner {
-  padding: 10px;
+  padding-bottom: 20px;
   margin: 0 auto 0 auto;
   text-align: center;
+
  } 
 
  
@@ -84,13 +148,13 @@ a:hover { color: #006699;  }
 
    text-align: left;
    font-size: small;
-   font-family: Courier New, sans-serif;
+   font-family: Georgia;
    
 }
 
 #tonight ul{
  float: right;
- width: 500px;
+ width: 519px;
  margin: 0;
  padding: 0px 0 0 0px;
  list-style: none;
@@ -101,7 +165,7 @@ a:hover { color: #006699;  }
  float: left;
  width: 250px;
  margin: 0;
- padding-left: 0px;
+ padding: 0px 7px 0 0;
  list-style: none;
  border-bottom: #efefef 1px dashed;
 }
@@ -114,6 +178,12 @@ a:hover { color: #006699;  }
  
 .button {
    padding: 0;
+   font-size: x-small;
+   border: solid 1px #254117;
+   padding: 2px;
+   background: #eee;
+   margin-right: 15px;
+   
 }
 .button:hover { cursor: pointer } 
  
@@ -187,9 +257,9 @@ background: #efefef;
   text-align: right;
   position: relative;
   float: right;
-  padding: 1em;
-  color: #215309;
-  background: #efefef;
+  padding: 1em 2em 2em 2em;
+  background: url(/static/images/side.png)no-repeat;
+ 
   
 } 
  #bandstats h5, 
@@ -198,25 +268,13 @@ background: #efefef;
  margin: 0;
  }
 
-#eventstats {
-  text-align: left;
-  position: relative;
-  padding: 1em;
-  color: #215309;
-  float: left;  
-} 
- #eventstats h5, 
- #eventstats p{
- padding: 0em;
- margin: 0;
- }
 
 #venuestats {
   text-align: right;
   position: relative;
-  padding: 1em;
-  color: #215309;
+  padding: 1em 2em 2em 2em;
   float: right;
+  background: url(/static/images/side.png)no-repeat;
   } 
  
 
@@ -232,20 +290,12 @@ background: #efefef;
 
 
 /*Artist Pages*/
-
 #bandnavlist
 {
-padding: 0 0 5px 0;
+padding: 5px 0 ;
 margin-left: 0;
-border-bottom: 1px solid #efefef;
-font: bold 12px Verdana, sans-serif;
-text-align: left;
-font-family: Courier New, sans-serif;
-   text-transform: uppercase;
-}
-
-#bandnavlist ul{
- padding: 0px;
+border-bottom: 1px solid #778;
+font: bold  Verdana, sans-serif;
 }
 
 #bandnavlist li
@@ -257,31 +307,27 @@ display: inline;
 
 #bandnavlist li a
 {
-padding: 3px 2px;
+padding: 3px 0.5em;
 margin-left: 3px;
-border: 1px solid #778;
-border-bottom: none;
-/*background: #efefef;*/
-text-decoration: none;
+background: #737373;
+color: black;
 }
 
 #bandnavlist li a:link { color: #448; }
 #bandnavlist li a:visited { color: #667; }
 
-#bandnavlist li a:hover
-{
-background-color: #006699;
+#bandnavlist li a:hover{
 color: #000;
-
-
+background: #eee;
+border-color: #227;
 }
+
 
 #bandnavlist li a#current
 {
 background: white;
 border-bottom: 1px solid white;
 }
-
 
 
 
@@ -300,14 +346,11 @@ border-bottom: 1px solid white;
  list-style: none;
  margin-bottom: 0px;
  font-size: 16px;
- border-right: 1px #737373 dashed;
- border-left: 1px #737373 dashed;
- border-bottom: 1px #737373 dashed;
  }
 
 #band li {
  float: left;
- width: 515px;
+ width: 520px;
  margin: 0;
  padding-left: 20px;
  padding-top: 10px;
@@ -385,8 +428,6 @@ border-bottom: 1px solid white;
   text-align: left;
   margin: 0px;
   font-size: 14px;
-  font-family: Courier New, sans-serif;
-  border: 1px #737373 dotted;
 }
 #event td {
   padding: .25em;
@@ -407,27 +448,25 @@ border-bottom: 1px solid white;
 
    text-align: left;
    font-size: small;
-   font-family: Courier New, sans-serif;
-   
+ 
 }
 
 #venue ul{
  float: left;
- width: 730px;
+ width: 519px;
  margin: 0;
  padding: 0px;
  list-style: none;
  margin-bottom: 0px;
- border: 1px #737373 dotted;
  font-size: 14px;
 
  }
 
 #venue li {
  float: left;
- width: 365px;
+ width: 519px;
  margin: 0;
- padding-left: 0px;
+ padding: 5px;
  list-style: none;
  border-bottom: #efefef 1px dashed;
 }
@@ -480,51 +519,6 @@ border-bottom: 1px solid white;
     margin-bottom: 0;
 }
 
-h1 { 
-  color: #215309;
-  font-size: small;
-  text-transform: lowercase;
-}
-
-
-h2 {
-    padding-left: .5em;   
-    font-size: large;
-    text-align: left;
-    color: #006699;
-    text-transform: lowercase;
-}
-
-h3 {
-    padding-left: 0em;   
-    font-size: x-small;
-    text-align: left;
-    color: #0a396b;
-    text-transform: uppercase;
-    padding-bottom: 0;
-    margin-left:0px;
-}
-h3 {display: inline;}
-
-h4 {
-  text-align: left;
-  color: #0a396b;
-  font-size: large;
-  padding-left: 0em;
-  width: 100%;
-  margin-left: 0px;
-}
-h4 {display: inline;}
-
-h5 {
- margin: 0 0 0 0;
- padding: 0 1em 0 0;
- color: black; 
- text-transform: lowercase; 
- text-align: left;
-}
-
-h5 {display: inline;}
 
 
 
@@ -672,13 +666,7 @@ padding: 4px 0px 4px 0;
 }
 
 
-input { 
-  border: 2px ridge #006699;
-  padding: 4px 0 4px 0;
-  background-color: #efefef; 
-  margin-top: 10px;
 
-}
 
 textarea{ 
   border: 4px solid #215309; 

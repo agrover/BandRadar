@@ -8,7 +8,7 @@
 
 <body>
 
-   <div id="help"><p>BandRadar sends you an email when your tracked events are upcoming.</p></div>
+   <!-- <div id="help"><p>BandRadar sends you an email when your tracked events are upcoming.</p></div> -->
    <p><img src="/static/images/date_add.png"/><a href="/events/edit">Add an Event</a></p>   
    
         <ul id="bandnavlist">    

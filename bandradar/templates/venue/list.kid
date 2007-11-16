@@ -6,8 +6,8 @@
     <title>BandRadar - Venue List</title>
 </head>
 
-  <body>
-    <div id="help"><p>When you track a venue, BandRadar sends you a weekly email with upcoming events.</p></div>   
+ <body>
+    <!--  <div id="help"><p>When you track a venue, BandRadar sends you a weekly email with upcoming events.</p></div>    -->
 <p><img src="/static/images/building_add.png"/> <a href="/venues/edit">Add a Venue</a></p>
       <div id="venue">
         <ul>

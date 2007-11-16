@@ -7,7 +7,8 @@
 </head>
 
 <body>
-
+    <br></br>
+    <br></br>
     <p class="name"><h4>${artist.name}</h4>&nbsp;&nbsp;
     <span py:if="is_tracked">${tg_ButtonWidget(action="/artists/%s/untrack?viewing=yes" % artist.id, label="Untrack")}</span>
     <span py:if="not is_tracked">${tg_ButtonWidget(action="/artists/%s/track?viewing=yes" % artist.id, label="Track")}</span>

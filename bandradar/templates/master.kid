@@ -49,15 +49,12 @@
     <!--   <div py:replace="nav()" /> -->
     
   <div class="content">
-  <left><h3>Never miss a live show again!</h3></left>
+  <left></left>
    <div id="search">
     ${tg_global_search_form(action="/artists/search")}
     </div>
     
-    <div class ="leftcontent">
-      <div id="tagline">
-           <p>To receive an email when your favorite artists, and venues add shows select <img src="/static/images/bullet_red.png"/>. Selecting <img src="/static/images/bullet_green.png"/> removes the item from your tracked list.  </p>  
-        </div> 
+        <div class ="leftcontent">
       <div id="navcontainer">
         <ul id="navlist">
           <li id="login"><span py:if="not tg.identity.user">
@@ -77,7 +74,10 @@
         </ul>
       </div>
       <div py:if="tg_flash" class="flash" py:content="tg_flash"></div>
-      
+<!-- 
+      <div id="tagline">
+           <p>To receive an email when your favorite artists, and venues add shows select <img src="/static/images/bullet_red.png"/>. Selecting <img src="/static/images/bullet_green.png"/> removes the item from your tracked list.  </p>  
+        </div>  -->
     </div> 
 
     <div class="centercontent">

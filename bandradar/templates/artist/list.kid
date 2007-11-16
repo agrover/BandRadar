@@ -7,20 +7,22 @@
 </head>
 
 <body>
-     <div id="help"><p>BandRadar sends you an email when your tracked bands add shows.</p>
-     </div>
-     <p><img src="/static/images/music.png"/><a href="/artists/edit">Add Band or Artist</a></p>     
-    
+<!--      <div id="help"><p>BandRadar sends you an email when your tracked bands add shows.</p>
+     </div> -->
 
+     <p><img src="/static/images/music.png"/><a href="/artists/edit">Add Band or Artist</a></p>     
+   
         <ul id="bandnavlist">
-        <li id="active"><a href="/artists/list/today" id="current">Today</a></li>
+        <li><a href="/artists/list/today">Today</a></li>
         <li><a href="/artists/list/tomorrow">Tomorrow</a></li>
         <li><a href="/artists/list/yesterday">Yesterday</a></li>
         <li><a href="/artists/list/week">Week</a></li>
         <li><a href="/artists/list/all">Upcoming</a></li>
         <li>Bands playing ${listby} <small>(${count})</small> </li>
         </ul>
-            
+
+
+                  
       <div id="band">
        
         <ul>       
