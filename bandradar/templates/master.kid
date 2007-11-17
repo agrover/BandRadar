@@ -12,15 +12,7 @@
     <p py:if="can_delete(object)">
         ${tg_ButtonWidget(action="/%ss/%d/delete" % (clsname, object.id), label="Delete this %s" % clsname)}
     </p>
-    
 </div>
-
-<!--  <div py:def="nav()">  -->
- 
-
-  
-
-
 
 <head py:match="item.tag=='{http://www.w3.org/1999/xhtml}head'">
     <meta content="text/html; charset=UTF-8" http-equiv="content-type" />
@@ -37,7 +29,6 @@
 <body py:match="item.tag=='{http://www.w3.org/1999/xhtml}body'">  
   
   <div class="content">
-  <left></left>
    <div id="search">
     ${tg_global_search_form(action="/artists/search")}
     </div>

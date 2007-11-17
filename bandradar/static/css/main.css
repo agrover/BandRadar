@@ -112,7 +112,9 @@ h5 {display: inline;}
 #navlist { 
    list-style: none;
    padding: 0px;
-   background: none;   
+   background: none;
+   text-align: right;
+   margin-right: 30px;   
 }
 
 #navlist li {
