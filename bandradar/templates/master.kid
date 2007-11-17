@@ -38,7 +38,7 @@
         <div id="navcontainer">
         <ul id="navlist">
           <li id="login"><span py:if="not tg.identity.user">
-              <img src="/static/images/key.png"/><a href="/users/login"> Come In!</a>
+              <img src="/static/images/key.png"/><a href="/users/login"> Log In</a>
           </span>
           <span py:if="tg.identity.user"><img src="/static/images/user.png"/>
               <a href="/users/${tg.identity.user.user_name}">
