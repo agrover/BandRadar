@@ -7,7 +7,6 @@
 </head>
 
 <body>
- <div class="content">
     <div id="searchbox">
         <h2>Search Venues</h2>
         <?python from bandradar.artists import artist_search_form ?>

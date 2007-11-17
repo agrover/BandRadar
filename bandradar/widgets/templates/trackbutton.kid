@@ -8,5 +8,5 @@
     onclick="button_pushed('${action}', '${id}', '${text['off']}', '${text['on']}'); return false;"
     class="button ${track_button.track_str(tracked)}" id="item_${id}">
     <span py:if="not tracked">Track</span>
-    <span py:if="tracked">Untrack></span>
+    <span py:if="tracked">Untrack</span>
 </span>

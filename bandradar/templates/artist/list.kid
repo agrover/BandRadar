@@ -9,16 +9,15 @@
 <body>
 <!--      <div id="help"><p>BandRadar sends you an email when your tracked bands add shows.</p>
      </div> -->
+     <img src="/static/images/music.png"/><a href="/artists/edit">Add Band or Artist</a>
+     <p><h5>Bands playing ${listby}<big> (${count})</big></h5></p>     
 
-     <p><img src="/static/images/music.png"/><a href="/artists/edit">Add Band or Artist</a></p>     
-   
-        <ul id="bandnavlist">
+        <ul id="listnavlist">
         <li><a href="/artists/list/today">Today</a></li>
         <li><a href="/artists/list/tomorrow">Tomorrow</a></li>
         <li><a href="/artists/list/yesterday">Yesterday</a></li>
         <li><a href="/artists/list/week">Week</a></li>
-        <li><a href="/artists/list/all">Upcoming</a></li>
-        <li>Bands playing ${listby} <small>(${count})</small> </li>
+        <li><a href="/artists/list/all">All Upcoming</a></li>
         </ul>
 
 

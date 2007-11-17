@@ -7,7 +7,6 @@
 </head>
 
 <body>
-   <div class="content">
 
     <div id="userinfo">
         <h2>${user.user_name}</h2>
@@ -22,15 +21,6 @@
             ${tg_ButtonWidget(action="/users/%s/edit" % user.user_name, label="Edit")}
         </div>
 
-    </div>
-<!--
-upcoming shows
-tracked
-related shows
-bands
-venues by-venue
-venues by-date
--->
     <h4>Bands Tracked: ${artists.count()}</h4>
     <table>
         <th>Band</th>
@@ -54,6 +44,5 @@ venues by-date
     </table>
 
 
-</div>
 </body>
 </html>

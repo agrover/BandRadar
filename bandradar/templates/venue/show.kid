@@ -45,27 +45,53 @@
             <p><h5>Added: </h5>${venue.fcreated}</p>
             <p><h5>Changed: </h5>${venue.fupdated}</p>
              <p py:if="tracked_count"><h5>Users tracking: </h5>${tracked_count}</p>
-              <p><h5>Upcoming events:</h5></p>
-                <table class="upcoming" cellspacing="0" py:for="e in future_events">
-             <tr>
-             <td class="who" width="25%"> <a href="/events/${e.id}">${e.name}</a></td>
-             <td class="when" width="25%"> <a href="/events/${e.id}">${e.fdate}&nbsp;&nbsp;${e.time}</a></td>
-             </tr>             
-        </table>
+                       
+         <div id="upcoming">
+             <p><h5>Upcoming events:</h5></p>
+             <table>
+                <colgroup>
+                <col id="when"/>
+                <col id="who"/> 
+                </colgroup>
+                <thead>
+                <tr>
+                <th when ="col">When</th>
+                <th who ="col">Who</th>              
+                </tr>   
+                </thead>      
+               <tbody>                      
+                 <tr py:for="e in future_events">
+                 <td class="when"><a href="/events/${e.id}">${e.fdate}&nbsp;&nbsp;${e.time}</a></td>
+                 <td class="who"><a href="/events/${e.id}">${e.name}</a></td>
+                 </tr>
+                 </tbody>               
+           </table>
         <p py:if="not len(list(future_events))">None</p>
         <br clear="all"></br>
-  
-           <h5> Past events <span class="small">(<a href="?list_all=1">See all</a>)</span></h5>
-            
-          <table class="past" cellspacing="0" py:for="e in past_events">
-             <tr>
-             <td class="who" width="25%"> <a href="/events/${e.id}">${e.name}</a></td>
-             <td class="when" width="25%"> <a href="/events/${e.id}">${e.fdate}</a></td>
-             </tr>             
+        </div>       
+       
+        <div id="past">
+           <h5> Past events (<a href="?list_all=1">See all</a>)</h5>
+           <table>
+              <colgroup>
+              <col id="when"/>
+              <col id="who"/> 
+              </colgroup>
+               <thead>
+                 <tr>
+                 <th when ="col">When</th>
+                 <th who ="col">Who</th>              
+                 </tr>   
+               </thead>      
+               <tbody> 
+               <tr py:for="e in past_events">
+               <td class="when"> <a href="/events/${e.id}">${e.fdate}</a></td>
+               <td class="who"> <a href="/events/${e.id}">${e.name}</a></td>
+               </tr>
+               </tbody>             
         </table>            
-            
             <p py:if="not len(list(past_events))">None</p>
-
+        </div>
               
            ${tg_ButtonWidget(action="/events/edit?venue_prefill=%s" % venue.id, label="Add a new event")}
 

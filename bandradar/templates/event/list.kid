@@ -9,16 +9,16 @@
 <body>
 
    <!-- <div id="help"><p>BandRadar sends you an email when your tracked events are upcoming.</p></div> -->
-   <p><img src="/static/images/date_add.png"/><a href="/events/edit">Add an Event</a></p>   
+   <p><img src="/static/images/date_add.png"/><a href="/events/edit">Add an Event</a></p>  
+   <h5>Events: ${listby} <big>(${count})</big> </h5>
    
-        <ul id="bandnavlist">    
-        <li id ="active"><a href="/events/list/today" id="current">Today</a></li>
+        <ul id="listnavlist">    
+        <li><a href="/events/list/today">Today</a></li>
         <li><a href="/events/list/tomorrow">Tomorrow</a></li>
         <li><a href="/events/list/yesterday">Yesterday</a></li>
         <li><a href="/events/list/week">Upcoming week</a></li>
         <li><a href="/events/list/all">All upcoming</a></li>
-        <li>Events: ${listby} <big>(${count})</big></li>
-        </ul>
+         </ul>
        
         
   <div id="event">
