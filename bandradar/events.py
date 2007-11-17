@@ -31,7 +31,7 @@ class EventForm(w.WidgetsList):
     time = w.TextField(attrs=dict(maxlength=40))
     cost = w.TextField(attrs=dict(maxlength=120))
     ages = w.TextField(attrs=dict(maxlength=40))
-    description = w.TextArea(rows=3, cols=60)
+    description = w.TextArea(rows=3, cols=40)
     url = w.TextField(label="Website", attrs=dict(size=50, maxlength=256),
         validator=v.Any(v.URL, v.Empty))
 

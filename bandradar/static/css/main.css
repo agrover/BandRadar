@@ -72,6 +72,8 @@ h5 {display: inline;}
      position: relative;
 }
 
+    
+
 .centercontent{
       height: auto;
       width: 550px;
@@ -109,12 +111,12 @@ h5 {display: inline;}
 
 /*Main and Admin Nav Bars*/
 
-#navlist { 
+#navlist ul { 
    list-style: none;
    padding: 0px;
    background: none;
-   text-align: right;
-   margin-right: 30px;   
+   float: left;
+   display: inline;   
 }
 
 #navlist li {
@@ -130,9 +132,12 @@ h5 {display: inline;}
 }      
 
 .admin_nav {
-  text-align: left;
-  padding: .5em;
-  margin-bottom: .5em;
+   list-style: none;
+   padding: 0px;
+   background: none;
+   text-align: right;
+   margin-right: 0px;
+   display: inline;   
 }    
    
 
@@ -548,10 +553,7 @@ td#performed{
 }
 
 
-textarea{ 
-  background-color: white;
-  padding: .25em;       
-}
+
 
 
 /*Random Things*/
@@ -595,6 +597,8 @@ textarea{
 }
 
 .content form {display: inline;}
+
+
 .listform { display: inline; }
 .listform ul {
     display: inline;
@@ -603,6 +607,13 @@ textarea{
 }
 .listform li { display: inline; }
 .listform li div { display: inline; }
+
+textarea{ 
+  background-color: #efefef;
+  padding: .25em;       
+}
+
+
 #list_title {
     font-size: medium;
     font-weight: bold;

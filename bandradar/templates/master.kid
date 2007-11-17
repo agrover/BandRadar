@@ -44,6 +44,7 @@
               <a href="/users/${tg.identity.user.user_name}">
               ${tg.identity.user.user_name}'s Page</a>
           </span></li>
+           
           
           <li><img src="/static/images/music.png"/><a href="/artists/list">  Bands</a></li>                
          <li><img src="/static/images/calendar.png"/><a href="/events/list">  Events</a></li> 
@@ -52,15 +53,16 @@
          <li id="nav-logout"><span py:if="tg.identity.user"> <img src="/static/images/key_delete.png"/>
               <a href="/users/logout">  Logout</a>
           </span></li>
-          
-          <div class="admin_nav" py:if="'admin' in tg.identity.groups">
+          <li><span py:if="'admin' in tg.identity.groups">
             <li><a href="/importers/webimport">Import Events</a></li>
             <li><a href="/importers/review">Review Events</a></li>
             <li><a href="/importers/reviewdupes">Possible dupes</a></li>
             <li><a href="/comments/list">Comments</a></li>
             <li><a href="/list_update_log">Updates</a></li>
             <li><a href="/list_batch">Batches</a></li>
-          </div> 
+          </span></li>
+          
+         
          </ul>
         </div>
      </div> 
