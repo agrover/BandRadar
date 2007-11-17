@@ -57,6 +57,7 @@
           <li><img src="/static/images/music.png"/><a href="/artists/list">  Bands</a></li>                
          <li><img src="/static/images/calendar.png"/><a href="/events/list">  Events</a></li> 
          <li><img src="/static/images/building.png"/><a href="/venues/list">  Venues</a></li>
+         <li><img src="/static/images/lightbulb.png"/><a href="/faq">  faq</a></li>
          <li id="nav-logout"><span py:if="tg.identity.user"> <img src="/static/images/key_delete.png"/>
               <a href="/users/logout">  Logout</a>
           </span></li>

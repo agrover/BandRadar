@@ -8,9 +8,14 @@
 
 <body>
 
-<div class="content">
+<h2>Do I have to create a Login to use BandRadar?</h2>
+<p>Nope. However, if you'd like to receive emails about upcoming shows and make modifications to areas like artists descriptions, add new artists, or new events then you'll need a login.</p>
+
+<h2>What does "track" and "untrack" mean?</h2>
+<p>Tracking an event, band, or venue adds that venue, event or band to your personalized dashboard, and signs you up for alert emails when shows are upcoming.</p>
+
    
-<h2> Why only Portland Shows?</h2>
+<h2> Why only Portland shows?</h2>
 
 <p>Current trends dictate that web-based tracking sites cover the globe, meaning
 only the most popular venues, bands, or events get coverage.  At BandRadar we
@@ -30,10 +35,8 @@ going to need to seek some sponsors, but we promise the acknowledgments will
 be tasteful and hopefully informative.</p>
 
 <h2>What's with the design?</h2>
-<p>The concept is of a live music show poster.  Sort of like the olden days.
-Eventually we plan to reve the site design every few months – with a new poster
-style.  Maybe even hold a design contest.  
-</p>
+<p>We are mostly back-end developers and have rudimentary front-end design skills (and no, we don't believe that "it's really simple to design a good webside layout"). Are you a graphic artist who'd like to chip and and help make the site pretty? Let us know!</p>
+
 <h2>How is BandRadar different from MySpace?</h2>
 
 <p>BandRadar is not a social site.  We are a site for tracking live music. 
@@ -89,6 +92,6 @@ similar to BandRadar.  Can you help me?</h2>
 
 <p>Absolutely.  Email us at hello@buunabet.com</p>
 
-</div>
+
 </body>
 </html>

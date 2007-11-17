@@ -19,11 +19,9 @@ h1 {
 }
 
 h2 {
-    padding-left: .5em;   
-    font-size: large;
+    font-size: small;
     text-align: left;
-    text-transform: lowercase;
-    font-family: Verdana;
+    color: #737373;
 }
 
 h3 {
@@ -97,12 +95,12 @@ h5 {display: inline;}
 }
 
 .footer{
-    width: 520px;
     font-size: x-small;
     text-align: center;
     margin: 0 auto 0 auto;
     padding-top: 2em;
     clear: both;
+    padding-right: 50px;
 }  
 .footer p{
      padding-top: 1em;
