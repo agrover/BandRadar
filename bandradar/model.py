@@ -412,6 +412,8 @@ class Event(Journalled, BRMixin):
     ages = UnicodeCol(length=40, default=None)
     url = UnicodeCol(length=256, default=None)
     ticket_url = UnicodeCol(length=256, default=None)
+    admin_notified = BoolCol(default=False)
+
     venue = ForeignKey('Venue', cascade=False)
     added_by = ForeignKey('UserAcct', cascade=False)
     artists = SQLRelatedJoin('Artist')
