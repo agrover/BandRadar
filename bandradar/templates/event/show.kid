@@ -8,7 +8,6 @@
 </head>
 
 <body>
-    <div class="content">
      <div class="mapright">
         ${googlemap(venue=event.venue, width=250, height=200)}
 </div>
@@ -48,6 +47,5 @@
 
         <div py:replace="edit_links(event)" />
 
- </div>
 </body>
 </html>

@@ -7,7 +7,6 @@
 </head>
 
 <body>
-
     <p class="name"><h4>${artist.name}</h4>&nbsp;&nbsp;
     <span py:if="is_tracked">${tg_ButtonWidget(action="/artists/%s/untrack?viewing=yes" % artist.id, label="Untrack")}</span>
     <span py:if="not is_tracked">${tg_ButtonWidget(action="/artists/%s/track?viewing=yes" % artist.id, label="Track")}</span>
@@ -38,36 +37,71 @@
     <p><h5>Changed:</h5> ${artist.fupdated}</p>
     <p py:if="tracked_count"><h5>Users tracking:</h5> ${tracked_count}</p>
     </p>
-
+    
+    <div id="upcoming">
     <p><h5>Upcoming events:</h5></p>
-    <table class="upcoming" cellspacing="0">
+    <table>
+      <colgroup>
+      <col id="when"/>
+      <col id="where"/>
+      <col id="who"/> 
+      </colgroup>
+       <thead>
+         <tr>
+         <th when ="col">When</th>
+         <th where ="col">Where</th>
+         <th who ="col">Who</th>              
+         </tr>   
+         </thead>      
+         <tbody>
          <tr py:for="e in future_events">
-             <td class="when" width="25%"><a href="/events/${e.id}">${e.fdate} ${e.time}</a></td>
-             <td class="where" width="25%"> <a href="/events/${e.id}">${e.venue.name}</a></td>
-             <td class="who" width="25%"><a href="/events/${e.id}">${e.name}</a></td>
-         </tr>             
+             <td class="when"><a href="/events/${e.id}">${e.fdate} ${e.time}</a></td>
+             <td class="where"> <a href="/events/${e.id}">${e.venue.name}</a></td>
+             <td class="who"><a href="/events/${e.id}">${e.name}</a></td>
+         </tr>
+         </tbody>             
     </table>
     <p py:if="not len(list(future_events))">None</p>
     <br clear="all"></br>
-
+    </div>
+    
+    <div id="past">
     <p><h5> Past events <span class="small">(<a href="?list_all=1">See all</a>)</span></h5></p>
-    <table class="past" cellspacing="0">
+    <table>
+      <colgroup>
+      <col id="when"/>
+      <col id="where"/>
+      <col id="who"/> 
+      </colgroup>
+       <thead>
+         <tr>
+         <th when ="col">When</th>
+         <th where ="col">Where</th>
+         <th who ="col">Who</th>              
+         </tr>   
+         </thead>      
+         <tbody>
         <tr py:for="e in past_events">
-            <td class="when" width="25%"> <a href="/events/${e.id}">${e.date}</a></td>
-            <td class="where" width="25%"> <a href="/events/${e.id}">${e.venue.name}</a></td>
-            <td class="who" width="25%"> <a href="/events/${e.id}">${e.name}</a></td>
-        </tr>             
+            <td class="when"><a href="/events/${e.id}">${e.date}</a></td>
+            <td class="where"><a href="/events/${e.id}">${e.venue.name}</a></td>
+            <td class="who"><a href="/events/${e.id}">${e.name}</a></td>
+        </tr>    
+        </tbody>         
     </table>
     <p py:if="not len(list(past_events))">None</p>
+    </div>
+    
+    
     <div id="recordings">
+    
     <h5>Recordings</h5>
     <ul>
         <li py:for="r in artist.recordings">
-           <img src="${r.img_url}" py:if="r.img_url" />
-           <p><a href="${r.url}">${r.name}<br></br>(${r.source.name})</a></p></li>
+         <a href="${r.url}"> <img src="${r.img_url}" py:if="r.img_url" alt="${r.name}"><p>(${r.source.name})</p></img></a></li>
       <p py:if="not len(list(artist.recordings))">None</p>
-    <div py:replace="edit_links(artist)" />
+   
     </ul>
     </div>
+     <div py:replace="edit_links(artist)" />
 </body>
 </html>

@@ -7,12 +7,10 @@
 </head>
 
 <body>
-  <div class="content">
     <h2>Give us a Shout</h2>
     <p>For more information about BandRadar, including press, news and sponsorship opportunties:</p>
     <p> 503.806.4928</p>
     <p><a href="mailto:info@bandradar.com">info@bandradar.com</a> </p>
     <p>Mailing Address:  11820 SW 11th Street, Beaverton, OR 97005</p>
-  </div>    
 </body>
 </html>

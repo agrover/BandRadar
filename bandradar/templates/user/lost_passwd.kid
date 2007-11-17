@@ -7,7 +7,7 @@
 </head>
 
 <body>
-    <div class="content">
+    <div id ="help">
    <p> Please enter the email address you used to register, and an email will
     be sent to that address with your password.
     ${lost_passwd_form(action="/users/lost_passwd_send")}</p>

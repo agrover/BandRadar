@@ -15,17 +15,10 @@
     
 </div>
 
- <!-- <div py:def="nav()"> -->
+<!--  <div py:def="nav()">  -->
  
-           
-  <div class="admin_nav" py:if="'admin' in tg.identity.groups">
-        <a href="/importers/webimport">Import Events</a>
-        <a href="/importers/review">Review Events</a>
-        <a href="/importers/reviewdupes">Possible dupes</a>
-                <a href="/comments/list">Comments</a>
-        <a href="/list_update_log">Updates</a>
-        <a href="/list_batch">Batches</a>
-      </div> 
+
+  
 
 
 
@@ -42,23 +35,16 @@
  </head>
 
 <body py:match="item.tag=='{http://www.w3.org/1999/xhtml}body'">  
-          <!-- <img src="/static/images/top_bk.png"/> -->
-<!--     ${tg_global_search_form(action="/artists/search")}  -->
-
-
-    <!--   <div py:replace="nav()" /> -->
-    
+  
   <div class="content">
-  <left><h3>Never miss a live show again!</h3></left>
+  <left></left>
    <div id="search">
     ${tg_global_search_form(action="/artists/search")}
     </div>
     
-    <div class ="leftcontent">
-      <div id="tagline">
-           <p>To receive an email when your favorite artists, and venues add shows select <img src="/static/images/bullet_red.png"/>. Selecting <img src="/static/images/bullet_green.png"/> removes the item from your tracked list.  </p>  
-        </div> 
-      <div id="navcontainer">
+     <div class ="leftcontent">
+        <div py:if="tg_flash" class="flash" py:content="tg_flash"></div>
+        <div id="navcontainer">
         <ul id="navlist">
           <li id="login"><span py:if="not tg.identity.user">
               <img src="/static/images/key.png"/><a href="/users/login"> Come In!</a>
@@ -71,52 +57,42 @@
           <li><img src="/static/images/music.png"/><a href="/artists/list">  Bands</a></li>                
          <li><img src="/static/images/calendar.png"/><a href="/events/list">  Events</a></li> 
          <li><img src="/static/images/building.png"/><a href="/venues/list">  Venues</a></li>
+         <li><img src="/static/images/lightbulb.png"/><a href="/faq">  faq</a></li>
          <li id="nav-logout"><span py:if="tg.identity.user"> <img src="/static/images/key_delete.png"/>
               <a href="/users/logout">  Logout</a>
           </span></li>
-        </ul>
-      </div>
-      <div py:if="tg_flash" class="flash" py:content="tg_flash"></div>
-      
-    </div> 
+          
+          <div class="admin_nav" py:if="'admin' in tg.identity.groups">
+            <li><a href="/importers/webimport">Import Events</a></li>
+            <li><a href="/importers/review">Review Events</a></li>
+            <li><a href="/importers/reviewdupes">Possible dupes</a></li>
+            <li><a href="/comments/list">Comments</a></li>
+            <li><a href="/list_update_log">Updates</a></li>
+            <li><a href="/list_batch">Batches</a></li>
+          </div> 
+         </ul>
+        </div>
+     </div> 
 
-    <div class="centercontent">
-    
-      <div id="banner">
-  	  <a href="/"><img src="/static/images/banner.png" alt="BandRadar logo" /></a>
-      </div>
-       
-  
-     <!-- <div py:if="tg_flash" class="flash" py:content="tg_flash"></div> -->
-     <div py:replace="[item.text] + item[:]"/> 
-    </div>
+     <div class="centercontent">
+        <div id="banner">
+    	  <a href="/"><img src="/static/images/banner.png" alt="BandRadar logo" /></a>
+        </div>     
+        <div py:replace="[item.text] + item[:]"/> 
+       </div>
 
-  <div class="rightcontent">
-  
-   
-      <!-- ${tg_global_search_form(action="/artists/search")} -->
-     
- <div id="sitestats">
-  	  <div id="bandstats">    
-          <h5>Top Tracked Bands</h5>
-          ${tg_top_artists()}
-          <!-- <p py:for="item in top_artists">
-          <a href="/artists/${item['id']}">${item['name']}</a></p> -->
-          </div>     
-          <!-- <div id="eventstats">
-          <h5>Top Tracked Events</h5>
-          <p py:for="item in top_events">
-          <a href="/events/${item['id']}">${item['name']}</a></p>
-          </div>   -->   
-          <div id="venuestats">    
-          <h5>Top Tracked Venues</h5>
-          ${tg_top_venues()}
-          <!-- <p py:for="item in top_venues">
-          <a href="/venues/${item['id']}">${item['name']}</a></p> -->
-        </div>	
-      </div>  
-                 
-    </div>  
+    <div class="rightcontent">  
+        <div id="sitestats">
+      	   <div id="bandstats">    
+           <h5>Top Tracked Bands</h5>
+           ${tg_top_artists()}
+           </div>     
+           <div id="venuestats">    
+           <h5>Top Tracked Venues</h5>
+           ${tg_top_venues()}
+           </div>	
+        </div>                   
+   </div>  
 
 
   </div>
@@ -128,9 +104,7 @@
     <a href="http://bandradar.blogspot.com">blog</a> |
     <a href="/contact">contact</a> |
     <a href="/comments/add">comments</a> |      
-    <a href="/feeds">rss</a>
-
-    <p>© Copyright 2007 Buunabet,LLC All rights reserved.</p>
+    <p>© Copyright 2007 <a href ="http://buunabet.com">Buunabet,LLC</a>  All rights reserved.</p>
   </div>
   
 </body> 
