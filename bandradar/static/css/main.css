@@ -1,5 +1,5 @@
 body {
-    font: normal small Verdana, Georgia,Arial, Helvetica, sans-serif;
+    font: normal small Geneva, Arial, Tahoma, sans-serif;
 	  margin: 0 auto 0 auto;
     padding: 0 0 0 0;
 
@@ -40,8 +40,8 @@ h4 {
   padding-left: 0em;
   width: 100%;
   margin-left: 0px;
-  font-family: Verdana;
 }
+
 h4 {display: inline;}
 
 h5 {
@@ -71,21 +71,20 @@ h5 {display: inline;}
      padding-top: 0px;
      position: relative;
 }
-
-    
-
+  
 .centercontent{
       height: auto;
       width: 550px;
       float: left;
+    
 }
 
 .rightcontent {
        float: right;
        width: 230px;
-      
-       
+     
 }
+
 .rightcontent h3 {
       padding-left: 0em;   
       font-size: small;
@@ -111,10 +110,14 @@ h5 {display: inline;}
 
 /*Main and Admin Nav Bars*/
 
+#navcontainer {
+ font-size: medium;
+ }
+
 #navlist ul { 
    list-style: none;
    padding: 0px;
-   background: none;
+   background: #efefef;
    float: left;
    display: inline;   
 }
@@ -185,13 +188,14 @@ background: #efefef;
 #tonight {
    text-align: left;
    font-size: small; 
+  
 }
 
 #tonight ul{
  float: right;
  width: 519px;
  margin: 0;
- padding: 0px 0 0 0px;
+ padding: 0px 0px 0 0px;
  list-style: none;
  margin-bottom: 20px;
  }
@@ -200,7 +204,7 @@ background: #efefef;
  float: left;
  width: 250px;
  margin: 0;
- padding: 0px 7px 0 0;
+ padding: 0px 7px 0 2px;
  list-style: none;
  border-bottom: #efefef 1px dashed;
 }
@@ -222,7 +226,6 @@ background: #efefef;
   position: relative;
   float: right;
   padding: 1em 2em 2em 2em;
-  background: url(/static/images/side.png)no-repeat;
 } 
 
 #bandstats h5, 
@@ -236,7 +239,7 @@ background: #efefef;
   position: relative;
   padding: 1em 2em 2em 2em;
   float: right;
-  background: url(/static/images/side.png)no-repeat;
+  margin-top: 5px;
   } 
 
 #venuestats h5, 
@@ -319,7 +322,7 @@ border-bottom: 1px solid white;
 
 #newuserbox input,
 #loginBox input{
- border: 2px ridge #006699;
+ border: 2px ridge #737373;
  background-color: white; 
  color: black;
 }
@@ -439,8 +442,8 @@ border-bottom: 1px solid white;
   border-spacing: 0;
   text-align: left;
   margin: 0px;
-  font-size: 14px;
 }
+
 #event td {
   padding: .25em;
   border-bottom: 1px dotted #efefef;
@@ -577,7 +580,6 @@ td#performed{
 
 
 .fieldlabel {
- color: #0a396b;
  padding-right: .5em;
  text-transform: uppercase;
  font-size: x-small;
@@ -609,7 +611,6 @@ td#performed{
 .listform li div { display: inline; }
 
 textarea{ 
-  background-color: #efefef;
   padding: .25em;       
 }
 
