@@ -442,8 +442,8 @@ border-bottom: 1px solid white;
   border-spacing: 0;
   text-align: left;
   margin: 0px;
-  font-size: 14px;
 }
+
 #event td {
   padding: .25em;
   border-bottom: 1px dotted #efefef;

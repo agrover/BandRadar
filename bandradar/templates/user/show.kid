@@ -8,8 +8,7 @@
 
 <body>
 
-        <h4>${user.user_name}</h4>
-        <span py:if="viewing_self">
+        <h4>${user.user_name}</h4>  <span py:if="viewing_self">
             ${tg_ButtonWidget(action="/users/%s/edit" % user.user_name, label="Edit")}
        </span>
        <div id="blurb">
