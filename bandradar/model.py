@@ -248,7 +248,7 @@ class Artist(Journalled, BRMixin):
     def split_artist(self):
         u = identity.current.user
         import importers
-        i = importers.Importers()
+        i = importers.ImporterController()
         new = list(i.artists_clean([self.name]))
         if len(new) > 1:
             a0 = Artist.byNameI(new[0])
@@ -256,8 +256,8 @@ class Artist(Journalled, BRMixin):
                 a1 = Artist.byNameI(new[1])
             except SQLObjectNotFound:
                 a1 = Artist(name=new[1], added_by=u)
-            Artist.clone(self.id, a1.id)
-            Artist.merge(self.id, a0.id)
+            Artist.clone(self, a1)
+            Artist.merge(self, a0)
             return {a0.id:a0.name,a1.id:a1.name}
         else:
             return {self.id:self.name}
