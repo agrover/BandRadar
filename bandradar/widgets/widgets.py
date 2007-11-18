@@ -76,12 +76,6 @@ class TrackButtonWidget(w.Widget):
 
 track_button = TrackButtonWidget()
 
-class AutoCompleteValidator(v.Schema):
-    def _to_python(self, value, state):
-        text = value['text']
-        value['text'] = v.NotEmpty(strip=True).to_python(text)
-        return value
-
 class TextFieldWithDisappearingDefault(w.TextField):
     template = """
     <input xmlns:py="http://purl.org/kid/ns#"
@@ -96,9 +90,16 @@ class TextFieldWithDisappearingDefault(w.TextField):
     """
 
 
+class AutoCompleteValidator(v.Schema):
+    def _to_python(self, value, state):
+        text = value['text']
+        value['text'] = v.NotEmpty(strip=True).to_python(text)
+        return value
+
+# BR's base AC widget, with a bunch of params set
 class BRAutoCompleteField(w.AutoCompleteField):
     def __init__(self, search_controller, label="", **kw):
-        super(w.AutoCompleteField, self).__init__(
+        super(BRAutoCompleteField, self).__init__(
             label=label,
             search_controller=search_controller,
             search_param="name",
@@ -106,12 +107,17 @@ class BRAutoCompleteField(w.AutoCompleteField):
             only_suggest=True,
             validator=AutoCompleteValidator(),
             attrs=dict(size=20), **kw)
+
+# Global search uses custom TextField subwidget
+class BRGlobalSearch(BRAutoCompleteField):
+    def __init__(self, *args, **kw):
+        super(BRGlobalSearch, self).__init__(*args, **kw)
         self.text_field = TextFieldWithDisappearingDefault(name='text', attrs=dict(size=20))
 
-class SearchBox(w.WidgetsList):
-    search = BRAutoCompleteField("/artists/dynsearch")
+class GlobalSearchBox(w.WidgetsList):
+    search = BRGlobalSearch("/dynmultisearch")
 
-global_search_form = w.ListForm(fields=SearchBox(),
+global_search_form = w.ListForm(fields=GlobalSearchBox(),
     name="gsearch", submit_text="Go")
 
 # Fix TG CalendarDatePicker, which returns a datetime, not a date

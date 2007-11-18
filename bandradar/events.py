@@ -20,11 +20,25 @@ class EitherNameOrArtists(formencode.FancyValidator):
                 error_dict = {'name':"Please give either event name or artists"})
 
 
+class TextAreaWithHelpAbove(w.TextArea):
+    template =  """
+        <span xmlns:py="http://purl.org/kid/ns#">
+        Enter only artist names, one per line<br/>
+        <textarea
+        name="${name}"
+        class="${field_class}"
+        id="${field_id}"
+        rows="${rows}"
+        cols="${cols}"
+        py:attrs="attrs"
+        py:content="value"/></span>
+        """
+
 class EventForm(w.WidgetsList):
     id = w.HiddenField(validator=v.Int)
     name = w.TextField(label="Event Name", help_text="If different from artists' names",
         validator=v.UnicodeString(strip=True), attrs=dict(size=40))
-    artists = w.TextArea(help_text="Enter artists, one per line", rows=4, cols=40,
+    artists = TextAreaWithHelpAbove(rows=4, cols=40,
         validator=v.UnicodeString(strip=True))
     venue = BRAutoCompleteField("/venues/dynsearch", label="Venue", take_focus=False)
     date = BRCalendarDatePicker(not_empty=True)

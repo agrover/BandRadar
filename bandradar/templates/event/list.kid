@@ -28,7 +28,7 @@
                 ${tg_track_button(tracked=is_tracked, id=event_id, action="/events/dyntrack")}
             </td>
             <td>
-                <a href="/events/${event_id}"><b>${event_name} </b>@${venue_name}</a>
+                <a href="/events/${event_id}"><b>${event_name}</b> @ ${venue_name}</a>
             </td>
             <td>
                 ${event_date}
