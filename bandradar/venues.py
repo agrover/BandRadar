@@ -59,7 +59,6 @@ class VenueController(controllers.Controller, util.RestAdapter):
         for id, name, count in results:
             venue_list.append(dict(name=name, id=id, eventcount=count))
         return dict(venues=venue_list, count=len(venue_list),
-            venue_search_form=venue_search_form,
             tracked_venues=tracked_venues)
 
     @expose(template=".templates.venue.show")
@@ -74,7 +73,6 @@ class VenueController(controllers.Controller, util.RestAdapter):
         past_events = v.past_events.orderBy('-date')
         if not list_all:
             past_events = past_events[:5]
-        past_events = list(reversed(list(past_events)))
         future_events = v.future_events.orderBy('date')
 
         return dict(venue=v, past_events=past_events, future_events=future_events,

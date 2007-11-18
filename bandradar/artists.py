@@ -83,8 +83,7 @@ class ArtistController(controllers.Controller, util.RestAdapter):
         result_list = [dict(name=key, id=result[key][0], is_tracked=result[key][1], 
             venue_name=result[key][2]) for key in keys]
 
-        return dict(artists=result_list, count=len(result),
-            listby=listby, artist_search_form=artist_search_form)
+        return dict(artists=result_list, count=len(result), listby=listby)
 
     @expose(template=".templates.artist.show")
     def show(self, id, list_all=0):
@@ -101,7 +100,6 @@ class ArtistController(controllers.Controller, util.RestAdapter):
         past_events = a.events.filter(Event.q.date < date.today()).orderBy('-date')
         if not list_all:
             past_events = past_events[:5]
-        past_events = list(reversed(list(past_events)))
         future_events = a.events.filter(Event.q.date >= date.today()).orderBy('date')
         return dict(artist=a, past_events=past_events, future_events=future_events,
             tracked_count=a.users.count(), is_tracked=is_tracked,

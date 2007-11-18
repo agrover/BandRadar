@@ -119,8 +119,7 @@ class EventController(controllers.Controller, util.RestAdapter):
             result = events_in_period(0, 0)
         result = list(result)
 
-        return dict(events=result, count=len(result),
-            listby=listby, event_search_form=event_search_form)
+        return dict(events=result, count=len(result), listby=listby)
 
     @expose(template=".templates.event.show")
     def show(self, id):
