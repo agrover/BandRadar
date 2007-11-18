@@ -29,24 +29,7 @@ class ArtistSchema(v.Schema):
 artist_form = w.TableForm(fields=ArtistForm(), name="artist", submit_text="Save",
                             validator=ArtistSchema())
 
-class SearchBox(w.WidgetsList):
-    search = BRAutoCompleteField("/artists/dynsearch")
-
-artist_search_form = w.ListForm(fields=SearchBox(), name="search",
-    submit_text="Search")
-
-
 class ArtistController(controllers.Controller, util.RestAdapter):
-
-    @expose(allow_json=True)
-    def dynsearch(self, name):
-        return util.dynsearch(Artist, name)
-
-    @expose(template=".templates.artist.search_results")
-    @turbogears.validate(form=artist_search_form)
-    def search(self, search, tg_errors=None):
-        results = util.search(Artist, search['text'], tg_errors)
-        return dict(artists=results, artist_search_form=artist_search_form)
 
     @expose(template=".templates.artist.list")
     def list(self, listby="today", orderby="alpha"):

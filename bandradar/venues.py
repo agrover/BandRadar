@@ -33,24 +33,11 @@ class VenueSchema(v.Schema):
 venue_form = w.TableForm(fields=VenueForm(), name="venue", submit_text="Save",
                             validator=VenueSchema())
 
-class SearchBox(w.WidgetsList):
-    search = BRAutoCompleteField("/venues/dynsearch")
-
-venue_search_form = w.ListForm(fields=SearchBox(), name="search",
-    submit_text="Search")
-
-
 class VenueController(controllers.Controller, util.RestAdapter):
 
     @expose(allow_json=True)
     def dynsearch(self, name):
-        return util.dynsearch(Venue, name)
-
-    @expose(template=".templates.venue.search_results")
-    @turbogears.validate(form=venue_search_form)
-    def search(self, search, tg_errors=None):
-        results = util.search(Venue, search['text'], tg_errors)
-        return dict(venues=results, venue_search_form=venue_search_form)
+        return dict(results=util.dynsearch(Venue, name))
 
     @expose(template=".templates.venue.list")
     def list(self):

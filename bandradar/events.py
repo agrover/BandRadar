@@ -20,25 +20,46 @@ class EitherNameOrArtists(formencode.FancyValidator):
                 error_dict = {'name':"Please give either event name or artists"})
 
 
-class TextAreaWithHelpAbove(w.TextArea):
+class HelpAboveTableForm(w.TableForm):
     template =  """
-        <span xmlns:py="http://purl.org/kid/ns#">
-        Enter only artist names, one per line<br/>
-        <textarea
+    <form xmlns:py="http://purl.org/kid/ns#"
         name="${name}"
-        class="${field_class}"
-        id="${field_id}"
-        rows="${rows}"
-        cols="${cols}"
-        py:attrs="attrs"
-        py:content="value"/></span>
-        """
+        action="${action}"
+        method="${method}"
+        class="tableform"
+        py:attrs="form_attrs"
+        >
+        <div py:for="field in hidden_fields" 
+            py:replace="field.display(value_for(field), **params_for(field))" 
+        />
+        <table border="0" cellspacing="0" cellpadding="2" py:attrs="table_attrs">
+            <tr py:for="i, field in enumerate(fields)" 
+                class="${i%2 and 'odd' or 'even'}"
+            >
+                <th>
+                    <label class="fieldlabel" for="${field.field_id}" py:content="field.label" />
+                </th>
+                <td>
+                    <span py:if="field.help_text" class="fieldhelp" py:content="field.help_text" />
+                    <br py:if="field.help_text" />
+                    <span py:replace="field.display(value_for(field), **params_for(field))" />
+                    <span py:if="error_for(field)" class="fielderror" py:content="error_for(field)" />
+                </td>
+            </tr>
+            <tr>
+                <td> </td>
+                <td py:content="submit.display(submit_text)" />
+            </tr>
+        </table>
+    </form>
+    """
+    
 
-class EventForm(w.WidgetsList):
+class EventWidgetList(w.WidgetsList):
     id = w.HiddenField(validator=v.Int)
     name = w.TextField(label="Event Name", help_text="If different from artists' names",
         validator=v.UnicodeString(strip=True), attrs=dict(size=40))
-    artists = TextAreaWithHelpAbove(rows=4, cols=40,
+    artists = w.TextArea(help_text="Enter only artist names, one per line", rows=4, cols=40,
         validator=v.UnicodeString(strip=True))
     venue = BRAutoCompleteField("/venues/dynsearch", label="Venue", take_focus=False)
     date = BRCalendarDatePicker(not_empty=True)
@@ -52,26 +73,10 @@ class EventForm(w.WidgetsList):
 class EventSchema(v.Schema):
     chained_validators = [EitherNameOrArtists(strip=True)]
 
-event_form = w.TableForm(fields=EventForm(), name="event", submit_text="Save",
+event_form = HelpAboveTableForm(fields=EventWidgetList(), name="event", submit_text="Save",
                          validator=EventSchema())
 
-class SearchBox(w.WidgetsList):
-    search = BRAutoCompleteField("/events/dynsearch")
-
-event_search_form = w.ListForm(fields=SearchBox(), name="search",
-    submit_text="Search")
-
 class EventController(controllers.Controller, util.RestAdapter):
-
-    @expose(allow_json=True)
-    def dynsearch(self, name):
-        return util.dynsearch(Event, name)
-
-    @expose(template=".templates.event.search_results")
-    @validate(form=event_search_form)
-    def search(self, search, tg_errors=None):
-        results = util.search(Event, search['text'], tg_errors)
-        return dict(events=results, event_search_form=event_search_form)
 
     @expose(template=".templates.event.list")
     def list(self, listby="today", orderby="alpha"):
