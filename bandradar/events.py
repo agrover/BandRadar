@@ -47,7 +47,7 @@ class SearchBox(w.WidgetsList):
 event_search_form = w.ListForm(fields=SearchBox(), name="search",
     submit_text="Search")
 
-class Events(controllers.Controller, util.RestAdapter):
+class EventController(controllers.Controller, util.RestAdapter):
 
     @expose(allow_json=True)
     def dynsearch(self, name):

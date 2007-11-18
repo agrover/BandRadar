@@ -22,32 +22,30 @@ def dynsearch(model, name):
         # then go all out
         like_str = "%%%s%%" % unicode(name).lower()
         names = set([a.name for a in my_search(like_str)])
-    return dict(results=list(names))
+    return list(names)
 
-def search(model, name, tg_errors=None):
+def dynmultisearch(models, name):
+    results = []
+    for model in models:
+        x = dynsearch(model, name)
+        results.extend(x)
+    return dict(results=results)
+
+def search(model, name, limit=100, tg_errors=None):
     if tg_errors:
         redirect_previous()
 
     name_str = "%s" % unicode(name).lower()
     result = model.select(
         AND(LIKE(func.LOWER(model.q.name), name_str), model.q.approved != None),
-        orderBy=model.q.name)
+        orderBy=model.q.name)[:limit]
     result_cnt = result.count()
     if not result_cnt:
         name_str = "%%%s%%" % unicode(name).lower()
         result = model.select(
             AND(LIKE(func.LOWER(model.q.name), name_str), model.q.approved != None),
-            orderBy=model.q.name)
-        result_cnt = result.count()
-
-    if not result_cnt:
-        turbogears.flash("Not Found")
-        redirect_previous()
-    elif result_cnt == 1:
-        item = result[0]
-        redirect("/%ss/%s" % (model.__name__.lower(), str(item.id)))
-    else:
-        return result
+            orderBy=model.q.name)[:limit]
+    return result
 
 def redirect_previous():
     forward_url= cherrypy.request.headers.get("Referer", "/")

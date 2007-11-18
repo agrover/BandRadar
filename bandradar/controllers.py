@@ -101,6 +101,31 @@ br_datagrid = w.PaginateDataGrid(fields=[
 
 class Root(controllers.RootController):
 
+    artists = ArtistController()
+    venues = VenueController()
+    events = EventController()
+    users = UserController()
+    importers = ImporterController()
+    comments = CommentController()
+
+    @expose(allow_json=True)
+    def dynmultisearch(self, name):
+        return util.dynmultisearch((Venue, Artist), name)
+
+    @expose(template=".templates.search_results")
+    @turbogears.validate(form=global_search_form)
+    def search(self, search, tg_errors=None):
+        venues = util.search(Venue, search['text'], tg_errors)
+        artists = util.search(Artist, search['text'], tg_errors)
+
+        # if only one search result, redirect to it immediately
+        if venues.count() == 1 and artists.count() == 0:
+            redirect("/venues/%d" % venues[0].id)
+        if venues.count() == 0 and artists.count() == 1:
+            redirect("/artists/%d" % artists[0].id)
+
+        return dict(venues=venues, artists=artists)
+
     @expose(template=".templates.main")
     def index(self):
         conn = hub.getConnection()

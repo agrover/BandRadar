@@ -30,7 +30,7 @@
   
   <div class="content">
    <div id="search">
-    ${tg_global_search_form(action="/artists/search")}
+    ${tg_global_search_form(action="/search")}
     </div>
     
      <div class ="leftcontent">
