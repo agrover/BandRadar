@@ -96,7 +96,7 @@
     <a href="/privacy">privacy</a> |
     <a href="http://bandradar.blogspot.com">blog</a> |
     <a href="/contact">contact</a> |
-    <a href="/comments/add">comments</a> |      
+    <a href="/comments/add">comments</a>
     <p>© Copyright 2007 <a href ="http://buunabet.com">Buunabet,LLC</a>  All rights reserved.</p>
   </div>
   
