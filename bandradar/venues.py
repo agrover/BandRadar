@@ -40,7 +40,7 @@ venue_search_form = w.ListForm(fields=SearchBox(), name="search",
     submit_text="Search")
 
 
-class Venues(controllers.Controller, util.RestAdapter):
+class VenueController(controllers.Controller, util.RestAdapter):
 
     @expose(allow_json=True)
     def dynsearch(self, name):

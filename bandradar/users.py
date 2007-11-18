@@ -110,7 +110,7 @@ lost_passwd_form = w.TableForm(fields=LostPasswdForm(), submit_text="Send")
 # CONTROLLER
 #
 
-class Users(controllers.Controller, util.RestAdapter):
+class UserController(controllers.Controller, util.RestAdapter):
 
     @expose(template=".templates.user.login")
     def login(self, *args, **kw):

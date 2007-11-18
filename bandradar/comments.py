@@ -28,7 +28,7 @@ datagrid = w.PaginateDataGrid(fields=[
                 w.DataGrid.Column("comment", options=dict(sortable=True)),
                 w.DataGrid.Column("By", get_by)])
 
-class Comments(controllers.Controller):
+class CommentController(controllers.Controller):
 
     @expose(template=".templates.datagrid")
     @identity.require(identity.in_group("admin"))

@@ -31,7 +31,7 @@ venue_fixup_dict = util.PersistentDict(VenueNameFixup)
 artist_fixup_dict = util.PersistentDict(ArtistNameFixup)
 
 
-class Importers(controllers.Controller, identity.SecureResource):
+class ImporterController(controllers.Controller, identity.SecureResource):
     require = identity.in_group("admin")
 
     @expose(template=".templates.webimport")

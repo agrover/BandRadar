@@ -10,13 +10,14 @@ from turbogears import paginate
 from turbogears.view import root_variable_providers
 from sqlobject import AND, NOT, IN, SQLObjectNotFound
 
-from artists import Artists, artist_search_form
-from venues import Venues
-from events import Events
-from users import Users
-from importers import Importers
-from comments import Comments
-from model import Event, UpdateLog, UserAcct, BatchRecord, Group, hub
+from artists import ArtistController
+from venues import VenueController
+from events import EventController
+from users import UserController
+from importers import ImporterController
+from comments import CommentController
+from model import Event, UpdateLog, UserAcct, BatchRecord, Group, Artist, Venue, hub
+from widgets import global_search_form
 import batch
 import saved_visit
 import util

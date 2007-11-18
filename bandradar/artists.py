@@ -36,7 +36,7 @@ artist_search_form = w.ListForm(fields=SearchBox(), name="search",
     submit_text="Search")
 
 
-class Artists(controllers.Controller, util.RestAdapter):
+class ArtistController(controllers.Controller, util.RestAdapter):
 
     @expose(allow_json=True)
     def dynsearch(self, name):
