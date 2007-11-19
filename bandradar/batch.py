@@ -29,7 +29,7 @@ def nightly_task():
     hub.threadingLocal = threading_local()
     hub.begin()
 
-    last = BatchRecord.select(orderBy=BatchRecord.q.last_handled).reversed()[:1]
+    last = BatchRecord.select(orderBy=BatchRecord.q.last_handled).reversed()
     if last.count():
         last_rec = last[0]
         from_when = last_rec.last_handled
@@ -197,9 +197,9 @@ def build_similars(count=3600):
     admin = UserAcct.get(1)
     # Do 3600 artists at a time, only hitting last.fm for an hour...
     artists = Artist.select(
-        AND(Artist.q.approved != None, Artist.q.sims_updated == None))[:count]
-    artist_num = artists.count()
-    for artist in artists:
+        AND(Artist.q.approved != None, Artist.q.sims_updated == None))
+    count = min(artists.count(), count)
+    for artist in artists[:count]:
         sims_objs = []
         sims_names = lastfm.similar_artists(artist.name)
         for artist_name in sims_names:
@@ -215,7 +215,7 @@ def build_similars(count=3600):
         artist.similars = sims_objs
         artist.sims_updated = datetime.datetime.now()
         time.sleep(1)
-    return artist_num
+    return count
 
 def build_geocodes():
     venues = Venue.selectBy(geocode_lat=None)
@@ -239,11 +239,11 @@ def build_recordings(count=1000):
     artists = Artist.select(
         AND(Artist.q.approved != None, 
         OR(Artist.q.recordings_updated == None,
-           Artist.q.recordings_updated < refresh_date)))[:count]
-    artist_num = artists.count()
+           Artist.q.recordings_updated < refresh_date)))
+    count = min(artists.count(), count)
     amazon_src = Source.byName("amazon")
     cdbaby_src = Source.byName("cdbaby")
-    for artist in artists:
+    for artist in artists[:count]:
         # remove old entries
         for record in Recording.selectBy(by=artist):
             record.destroySelf()
@@ -258,7 +258,7 @@ def build_recordings(count=1000):
 
         artist.recordings_updated = datetime.datetime.now()
         time.sleep(1)
-    return artist_num
+    return count
 
 def _foo():
     """test, do not use"""
