@@ -10,8 +10,9 @@
   
     <h2>User List</h2>
 
-    <p py:for="u in users"></p>
-        <p><a href="/users/${u.user_name}">${u.user_name}</a> tracking ${u.artists.count()}, added ${u.fcreated}</p>
+    <p py:for="u in users">
+        <a href="/users/${u.user_name}">${u.user_name}</a> tracking ${u.artists.count()}, added ${u.fcreated}
+    </p>
 
 
 </body>
