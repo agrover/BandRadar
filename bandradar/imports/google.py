@@ -1,15 +1,15 @@
-from turbogears import config
 from BeautifulSoup import BeautifulStoneSoup as bs
 import urllib
 from decimal import Decimal
+from bandradar import util
 
 localhost_key = "ABQIAAAAl6v2YpcT3a-0chb1euUaRRR4EqRj3RNZnoYuzojShxUjcPQKRRSqdkDEb-kjqUA2B3UAs66NGlvjOA" 
 real_key = "ABQIAAAAl6v2YpcT3a-0chb1euUaRRRIOcczJVkwMVJxSoSbKoEvbYERDxTrKIpffL5C_3zzzlk1QmARAtbL2A"
 
-if config.get("server.environment", "development") == "development":
-    key = localhost_key
-else:
+if util.is_production():
     key = real_key
+else:
+    key = localhost_key
 
 def get_geocode(address):
     base_req = "http://maps.google.com/maps/geo?"

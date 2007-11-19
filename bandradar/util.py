@@ -5,6 +5,7 @@ import cgi
 import htmllib
 from turbogears import identity
 from turbogears import database
+from turbogears import config
 from sqlobject import SQLObjectNotFound, LIKE, func, AND
 
 
@@ -46,6 +47,13 @@ def search(model, name, limit=100, tg_errors=None):
             AND(LIKE(func.LOWER(model.q.name), name_str), model.q.approved != None),
             orderBy=model.q.name)[:limit]
     return result
+
+def is_production():
+    if config.get("server.environment", "development") == "development":
+        return False
+    else:
+        return True
+
 
 def redirect_previous():
     forward_url= cherrypy.request.headers.get("Referer", "/")

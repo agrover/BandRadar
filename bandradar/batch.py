@@ -7,9 +7,7 @@ import datetime
 from imports import cdbaby, amazon, lastfm
 import time
 import geo
-
-unittest = False
-#unittest = True
+import util
 
 log = logging.getLogger("bandradar.batch")
 
@@ -177,11 +175,8 @@ def email(msg_to, msg_from, subject, body):
     from email.MIMEText import MIMEText
     from email.Utils import make_msgid
 
-    if unittest:
+    if not util.is_production():
         msg_to = "andy@groveronline.com"
-        log.info("Subject: " + subject)
-        log.info("Body: " + body)
-        return
 
     msg = MIMEText(body.encode('utf8'), 'plain', 'utf8')
     msg['To'] = msg_to
@@ -292,6 +287,3 @@ def cleanup_db():
             pass
         old_visit.destroySelf()
 
-if __name__ == "__main__":
-    unittest = True
-    task()
