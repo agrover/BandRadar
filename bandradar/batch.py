@@ -12,6 +12,8 @@ import util
 log = logging.getLogger("bandradar.batch")
 
 def hourly_task():
+    hub.threadingLocal = threading_local()
+    hub.begin()
     # notify admins of pending events added by users
     events_pending = Event.select(Event.q.approved == None)
     pending_count = events_pending.count()
@@ -23,6 +25,7 @@ def hourly_task():
             email(admin.email_address, "BandRadar <events@bandradar.com>",
                 "%d events in queue" % pending_count,
                 "There are events in the pending queue.")
+    hub.commit()
 
 def nightly_task():
     log.info("batch started")
