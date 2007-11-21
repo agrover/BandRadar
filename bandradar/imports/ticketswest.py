@@ -29,6 +29,8 @@ def events(venues=venue_list):
             if match:
                 name = name[:match.start()]
             event['artists'] = name.split("*")[0].split(",")
+            # eliminate too-short entries
+            event['artists'] = [a for a in event['artists'] if len(a)]
             event['artists'] = [a.strip() for a in event['artists']]
             event['name'] = ", ".join(event['artists'])
             date_td = tr("td", attrs={"class":"borderTopRight"})[0]
