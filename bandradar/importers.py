@@ -234,6 +234,8 @@ class ImporterController(controllers.Controller, identity.SecureResource):
                 a.addEvent(e)
         if new_event and not flag_for_review:
             e.approved = datetime.now()
+        else if flag_for_review:
+            e.approved = None
         return (new_event, flag_for_review)
 
     @expose(template=".templates.importreview")
