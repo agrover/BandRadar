@@ -21,7 +21,7 @@ def parse_page(num):
     for tr in start_tr.findNextSiblings():
         tds = tr.findAll("td")
         try:
-            date = datetime.date(*time.strptime(tds[1].string, "%m/%d/%y")[:3])
+            date = datetime.date(*time.strptime(tds[1].string.strip(), "%m/%d/%y")[:3])
             artist = tds[3].a.string
             venue = tds[5].a.string
 
