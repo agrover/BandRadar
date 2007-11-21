@@ -6,8 +6,6 @@ from sqlobject.events import listen, RowUpdateSignal
 from turbogears.database import PackageHub
 from turbogears import identity
 
-import pickle
-
 hub = PackageHub("bandradar")
 __connection__ = hub
 
