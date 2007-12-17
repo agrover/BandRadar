@@ -208,6 +208,8 @@ def build_similars(count=3600):
     count = min(artists.count(), count)
     for artist in artists[:count]:
         artist_info = lastfm.artist_info(artist.name)
+        artist.img_url = artist_info["img_url"]
+        artist.genre = " / ".join(artist_info["tags"])
         sims_objs = []
         sims_names = artist_info["similars"]
         for artist_name in sims_names:
