@@ -1,21 +1,33 @@
-import scrobxlib
 from BeautifulSoup import BeautifulSoup as bs
+from BeautifulSoup import BeautifulStoneSoup as bss
 from datetime import date
 import urllib
 import re
 
+base_url = "http://ws.audioscrobbler.com/1.0/artist/"
 lastfm_event_url = "http://www.last.fm/events/?m=Portland&view=c&ofl=Portland%2C+US&&view=a&page="
 
 def user_top_artists(user_name, limit=10):
     return [artist['name'] for artist in scrobxlib.topArtists(user_name)[:limit]]
 
-def similar_artists(artist_name, limit=3):
+def similar_artists(artist_name, count=3):
+    return artist_info(artist_name, count)["similars"]
+
+def artist_info(artist_name, count=3):
+    # get img_url and similars
     artist_name = urllib.quote_plus(artist_name.encode('utf8'))
-    try:
-        similar_artists = scrobxlib.similar(artist_name)[:limit]
-    except:
-        return list()
-    return [artist['name'] for artist in similar_artists]
+    usock = urllib.urlopen(base_url + artist_name + "/similar.xml")
+    soup = bss(usock.read(), convertEntities=bs.ALL_ENTITIES)
+    img_url = soup.similarartists["picture"]
+    similars = [x.find("name").string for x in soup.findAll("artist")[:count]]
+
+    # get tags
+    usock = urllib.urlopen(base_url + artist_name + "/toptags.xml")
+    soup = bss(usock.read(), convertEntities=bs.ALL_ENTITIES)
+    tags = [x.find("name").string for x in soup.findAll("tag")[:count]]
+    tags = [x for x in tags if x != "seen live"]
+
+    return dict(img_url=img_url, similars=similars, tags=tags)
 
 def events():
     usock = urllib.urlopen(lastfm_event_url + "1")
