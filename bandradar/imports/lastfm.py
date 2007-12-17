@@ -18,6 +18,8 @@ def artist_info(artist_name, count=3):
     artist_name = urllib.quote_plus(artist_name.encode('utf8'))
     usock = urllib.urlopen(base_url + artist_name + "/similar.xml")
     soup = bss(usock.read(), convertEntities=bs.ALL_ENTITIES)
+    if str(soup).startswith("No artist"):
+        return dict(img_url=None, similars=[], tags=[])
     img_url = soup.similarartists["picture"]
     similars = [x.find("name").string for x in soup.findAll("artist")[:count]]
 
