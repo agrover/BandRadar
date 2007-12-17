@@ -198,13 +198,18 @@ def email(msg_to, msg_from, subject, body):
 
 def build_similars(count=3600):
     admin = UserAcct.get(1)
+    refresh_days = 30*6 # ~6 months
+    refresh_date = datetime.date.today() - datetime.timedelta(refresh_days)
     # Do 3600 artists at a time, only hitting last.fm for an hour...
     artists = Artist.select(
-        AND(Artist.q.approved != None, Artist.q.sims_updated == None))
+        AND(Artist.q.approved != None, 
+        OR(Artist.q.sims_updated == None,
+           Artist.q.sims_updated < refresh_date)))
     count = min(artists.count(), count)
     for artist in artists[:count]:
+        artist_info = lastfm.artist_info(artist.name)
         sims_objs = []
-        sims_names = lastfm.similar_artists(artist.name)
+        sims_names = artist_info["similars"]
         for artist_name in sims_names:
             try:
                 sim_artist = Artist.byNameI(artist_name)
