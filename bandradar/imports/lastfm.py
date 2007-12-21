@@ -15,6 +15,8 @@ def similar_artists(artist_name, count=3):
 
 def artist_info(artist_name, count=3):
     # get img_url and similars
+    if artist_name.find("/") != -1: # can't handle / in name, punt
+        return dict(img_url=None, similars=[], tags=[])
     artist_name = urllib.quote_plus(artist_name.encode('utf8'))
     usock = urllib.urlopen(base_url + artist_name + "/similar.xml")
     soup = bss(usock.read(), convertEntities=bs.ALL_ENTITIES)
