@@ -57,7 +57,7 @@ def nightly_task():
         hub.rollback()
         for admin in Group.by_group_name("admin").users:
             email(admin.email_address, "BandRadar <events@bandradar.com>",
-                "batch error", "Batch failed, ping Andy!\n\n" + traceback.format_exc())
+                "batch error", "Batch failed, Andy is on it!\n\n" + traceback.format_exc())
 
     log.info("batch finished")
     hub.end()
@@ -209,7 +209,7 @@ def build_similars(count=3600):
     for artist in artists[:count]:
         artist_info = lastfm.artist_info(artist.name)
         artist.img_url = artist_info["img_url"]
-        artist.genre = " / ".join(artist_info["tags"])
+        artist.genre = " / ".join(artist_info["tags"])[:100]
         sims_objs = []
         sims_names = artist_info["similars"]
         for artist_name in sims_names:
