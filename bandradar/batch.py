@@ -54,10 +54,10 @@ def nightly_task():
         hub.commit()
     except Exception, inst:
         import traceback
+        hub.rollback()
         for admin in Group.by_group_name("admin").users:
             email(admin.email_address, "BandRadar <events@bandradar.com>",
                 "batch error", "Batch failed, ping Andy!\n\n" + traceback.format_exc())
-        hub.rollback()
 
     log.info("batch finished")
     hub.end()
