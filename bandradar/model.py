@@ -238,7 +238,7 @@ class Artist(Journalled, BRMixin):
     sims_updated = DateTimeCol(default=None)
     recordings_updated = DateTimeCol(default=None)
     is_dj = BoolCol(default=False)
-    genre = UnicodeCol(length=60, default=None)
+    genre = UnicodeCol(length=100, default=None)
     img_url = UnicodeCol(length=256, default=None)
     events = SQLRelatedJoin('Event')
     users = SQLRelatedJoin('UserAcct')
