@@ -11,6 +11,8 @@ import util
 
 log = logging.getLogger("bandradar.batch")
 
+queries_per_run = 1000
+
 def hourly_task():
     hub.threadingLocal = threading_local()
     hub.begin()
@@ -196,11 +198,10 @@ def email(msg_to, msg_from, subject, body):
         log.error("smtp error %s" % repr(smtp))
     s.close()
 
-def build_similars(count=3600):
+def build_similars(count=queries_per_run):
     admin = UserAcct.get(1)
     refresh_days = 30*6 # ~6 months
     refresh_date = datetime.date.today() - datetime.timedelta(refresh_days)
-    # Do 3600 artists at a time, only hitting last.fm for an hour...
     artists = Artist.select(
         AND(Artist.q.approved != None, 
         OR(Artist.q.sims_updated == None,
@@ -243,7 +244,7 @@ def build_geocodes():
                 pass
     return venues.count()
 
-def build_recordings(count=1000):
+def build_recordings(count=queries_per_run):
     refresh_days = 30*6 # ~6 months
     refresh_date = datetime.date.today() - datetime.timedelta(refresh_days)
     artists = Artist.select(
