@@ -24,7 +24,9 @@ def artist_info(artist_name, count=3):
         soup = bss(usock.read(), convertEntities=bs.ALL_ENTITIES)
         if str(soup).startswith("No artist"):
             return info
-        info['img_url'] = soup.similarartists["picture"]
+        # lastfm includes a "noimage" link if no img found. don't want!
+        if soup.similarartists["picture"].find("noimage") == -1:
+            info['img_url'] = soup.similarartists["picture"]
         info['similars'] = [x.find("name").string for x in soup.findAll("artist")[:count]]
 
         # get tags
