@@ -33,7 +33,7 @@ def artist_info(artist_name, count=3):
         usock = urllib.urlopen(base_url + artist_name + "/toptags.xml")
         soup = bss(usock.read(), convertEntities=bs.ALL_ENTITIES)
         tags = [x.find("name").string for x in soup.findAll("tag")[:count]]
-        info['tags'] = [x for x in tags if x != "seen live"]
+        info['tags'] = [x for x in tags if x.lower().find("seen") == -1]
     finally:
         return info
 

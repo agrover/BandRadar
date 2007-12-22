@@ -210,7 +210,8 @@ def build_similars(count=queries_per_run):
     for artist in artists[:count]:
         artist_info = lastfm.artist_info(artist.name)
         artist.img_url = artist_info["img_url"]
-        artist.genre = " / ".join(artist_info["tags"])[:100]
+        if artist_info["tags"]:
+            artist.tags = " / ".join(artist_info["tags"])[:100]
         sims_objs = []
         sims_names = artist_info["similars"]
         for artist_name in sims_names:

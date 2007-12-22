@@ -238,7 +238,7 @@ class Artist(Journalled, BRMixin):
     sims_updated = DateTimeCol(default=None)
     recordings_updated = DateTimeCol(default=None)
     is_dj = BoolCol(default=False)
-    genre = UnicodeCol(length=100, default=None)
+    tags = UnicodeCol(length=100, default=None)
     img_url = UnicodeCol(length=256, default=None)
     events = SQLRelatedJoin('Event')
     users = SQLRelatedJoin('UserAcct')
@@ -368,6 +368,9 @@ class Artist(Journalled, BRMixin):
             sim.destroySelf()
         for artist in to_add:
             sim = SimilarArtist(artist=self, similar_artist=artist)
+
+    def _get_tags(self):
+        return self._SO_get_tags().lower()
 
     def destroySelf(self):
         # remove links to other artists
