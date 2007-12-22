@@ -14,24 +14,26 @@ def similar_artists(artist_name, count=3):
     return artist_info(artist_name, count)["similars"]
 
 def artist_info(artist_name, count=3):
-    # get img_url and similars
+    info = dict(img_url=None, similars=[], tags=[])
     if artist_name.find("/") != -1: # can't handle / in name, punt
-        return dict(img_url=None, similars=[], tags=[])
+        return info
     artist_name = urllib.quote_plus(artist_name.encode('utf8'))
-    usock = urllib.urlopen(base_url + artist_name + "/similar.xml")
-    soup = bss(usock.read(), convertEntities=bs.ALL_ENTITIES)
-    if str(soup).startswith("No artist"):
-        return dict(img_url=None, similars=[], tags=[])
-    img_url = soup.similarartists["picture"]
-    similars = [x.find("name").string for x in soup.findAll("artist")[:count]]
+    try:
+        # get img_url and similars
+        usock = urllib.urlopen(base_url + artist_name + "/similar.xml")
+        soup = bss(usock.read(), convertEntities=bs.ALL_ENTITIES)
+        if str(soup).startswith("No artist"):
+            return info
+        info['img_url'] = soup.similarartists["picture"]
+        info['similars'] = [x.find("name").string for x in soup.findAll("artist")[:count]]
 
-    # get tags
-    usock = urllib.urlopen(base_url + artist_name + "/toptags.xml")
-    soup = bss(usock.read(), convertEntities=bs.ALL_ENTITIES)
-    tags = [x.find("name").string for x in soup.findAll("tag")[:count]]
-    tags = [x for x in tags if x != "seen live"]
-
-    return dict(img_url=img_url, similars=similars, tags=tags)
+        # get tags
+        usock = urllib.urlopen(base_url + artist_name + "/toptags.xml")
+        soup = bss(usock.read(), convertEntities=bs.ALL_ENTITIES)
+        tags = [x.find("name").string for x in soup.findAll("tag")[:count]]
+        info['tags'] = [x for x in tags if x != "seen live"]
+    finally:
+        return info
 
 def events():
     usock = urllib.urlopen(lastfm_event_url + "1")
