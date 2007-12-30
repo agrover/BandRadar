@@ -7,14 +7,8 @@ import re
 base_url = "http://ws.audioscrobbler.com/1.0/artist/"
 lastfm_event_url = "http://www.last.fm/events/?m=Portland&view=c&ofl=Portland%2C+US&&view=a&page="
 
-def user_top_artists(user_name, limit=10):
-    return [artist['name'] for artist in scrobxlib.topArtists(user_name)[:limit]]
-
-def similar_artists(artist_name, count=3):
-    return artist_info(artist_name, count)["similars"]
-
 def artist_info(artist_name, count=3):
-    info = dict(img_url=None, similars=[], tags=[])
+    info = dict(img_url=None, similars=[], tags=None)
     if artist_name.find("/") != -1: # can't handle / in name, punt
         return info
     artist_name = urllib.quote_plus(artist_name.encode('utf8'))
@@ -27,13 +21,15 @@ def artist_info(artist_name, count=3):
         # lastfm includes a "noimage" link if no img found. don't want!
         if soup.similarartists["picture"].find("noimage") == -1:
             info['img_url'] = soup.similarartists["picture"]
+        
         info['similars'] = [x.find("name").string for x in soup.findAll("artist")[:count]]
 
         # get tags
         usock = urllib.urlopen(base_url + artist_name + "/toptags.xml")
         soup = bss(usock.read(), convertEntities=bs.ALL_ENTITIES)
         tags = [x.find("name").string for x in soup.findAll("tag")[:count]]
-        info['tags'] = [x for x in tags if x.lower().find("seen") == -1]
+        tags = [x for x in tags if x.lower().find("seen") == -1]
+        info['tags'] = " / ".join(tags)[:100]
     finally:
         return info
 
