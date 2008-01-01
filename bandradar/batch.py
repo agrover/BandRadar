@@ -48,9 +48,8 @@ def nightly_task():
     current = BatchRecord(first_handled=from_when, last_handled=last_handled)
 
     try:
-        current.sims_updated = build_similars()
-        current.geocodes_updated = build_geocodes()
-        current.recordings_updated = build_recordings()
+        current.sims_updated = update_artists(queries_per_run)
+        current.geocodes_updated = update_venues()
         cleanup_db()
         current.email_sent, current.artist_pings, current.venue_pings = \
             send_email(from_when, last_handled)
@@ -201,8 +200,45 @@ def email(msg_to, msg_from, subject, body):
         log.error("smtp error %s" % repr(smtp))
     s.close()
 
-def build_similars(count=queries_per_run):
-    admin = UserAcct.get(1)
+def lastfm_artist_update(artist):
+    artist_info = lastfm.artist_info(artist.name)
+    artist.img_url = artist_info["img_url"]
+    artist.tags = artist_info['tags']
+    sims_objs = []
+    sims_names = artist_info["similars"]
+    for artist_name in sims_names:
+        try:
+            sim_artist = Artist.byNameI(artist_name)
+        except SQLObjectNotFound:
+            sim_artist = Artist(name=artist_name, added_by=UserAcct.get(1))
+            # Artists added this way are *not* approved. This keeps them from
+            # also having sims generated (when they could be non-local bands
+            # that we really don't care much about.)
+            # If they have events approved, then of course they are, too.
+        sims_objs.append(sim_artist)
+    artist.similars = sims_objs
+
+def mbz_artist_update(artist):
+    artist_info = mbz.artist_info(artist.name)
+    artist.members = artist_info['members']
+    artist.wikipedia = artist_info['wikipedia']
+    artist.homepage = artist_info['homepage']
+
+def recording_artist_update(artist):
+    # remove old entries
+    for record in Recording.selectBy(by=artist):
+        record.destroySelf()
+
+    # add new entries (if any)
+    for recording in cdbaby.recordings(artist.name):
+        Recording(name=recording['name'], by=artist, url=recording['url'],
+            img_url=recording['img_url'], source=Source.byName("cdbaby"))
+    for recording in amazon.recordings(artist.name):
+        Recording(name=recording['name'], by=artist, url=recording['url'],
+            img_url=recording['img_url'], source=Source.byName("amazon"))
+
+
+def update_artists(count=queries_per_run):
     refresh_days = 30*6 # ~6 months
     refresh_date = datetime.date.today() - datetime.timedelta(refresh_days)
     artists = Artist.select(
@@ -210,29 +246,16 @@ def build_similars(count=queries_per_run):
         OR(Artist.q.sims_updated == None,
            Artist.q.sims_updated < refresh_date)))
     count = min(artists.count(), count)
+
     for artist in artists[:count]:
-        artist_info = lastfm.artist_info(artist.name)
-        artist.img_url = artist_info["img_url"]
-        if artist_info["tags"]:
-            artist.tags = " / ".join(artist_info["tags"])[:100]
-        sims_objs = []
-        sims_names = artist_info["similars"]
-        for artist_name in sims_names:
-            try:
-                sim_artist = Artist.byNameI(artist_name)
-            except SQLObjectNotFound:
-                sim_artist = Artist(name=artist_name, added_by=admin)
-                # Artists added this way are *not* approved. This keeps them from
-                # also having sims generated (when they could be non-local bands
-                # that we really don't care much about.)
-                # If they have events approved, then of course they are, too.
-            sims_objs.append(sim_artist)
-        artist.similars = sims_objs
+        lastfm_artist_update(artist)
+        mbz_artist_update(artist)
+        recording_artist_update(artist)
         artist.sims_updated = datetime.datetime.now()
         time.sleep(1)
     return count
 
-def build_geocodes():
+def update_venues():
     venues = Venue.selectBy(geocode_lat=None)
     for venue in venues:
         if venue.zip_code:
@@ -247,33 +270,6 @@ def build_geocodes():
             except IOError:
                 pass
     return venues.count()
-
-def build_recordings(count=queries_per_run):
-    refresh_days = 30*6 # ~6 months
-    refresh_date = datetime.date.today() - datetime.timedelta(refresh_days)
-    artists = Artist.select(
-        AND(Artist.q.approved != None, 
-        OR(Artist.q.recordings_updated == None,
-           Artist.q.recordings_updated < refresh_date)))
-    count = min(artists.count(), count)
-    amazon_src = Source.byName("amazon")
-    cdbaby_src = Source.byName("cdbaby")
-    for artist in artists[:count]:
-        # remove old entries
-        for record in Recording.selectBy(by=artist):
-            record.destroySelf()
-
-        # add new entries (if any)
-        for recording in cdbaby.recordings(artist.name):
-            Recording(name=recording['name'], by=artist, url=recording['url'],
-                img_url=recording['img_url'], source=cdbaby_src)
-        for recording in amazon.recordings(artist.name):
-            Recording(name=recording['name'], by=artist, url=recording['url'],
-                img_url=recording['img_url'], source=amazon_src)
-
-        artist.recordings_updated = datetime.datetime.now()
-        time.sleep(1)
-    return count
 
 def _foo():
     """test, do not use"""
