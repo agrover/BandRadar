@@ -8,7 +8,6 @@ from model import Event, Venue, Artist, Source, ArtistNameFixup, VenueNameFixup,
 from sqlobject import SQLObjectNotFound
 from datetime import date, datetime
 from bandradar.widgets import artist_list
-from bandradar.imports import MBL
 from bandradar.imports import WWBL
 from bandradar.imports import pollstar
 from bandradar.imports import br_upcoming as br
@@ -16,15 +15,10 @@ from bandradar.imports import lastfm
 from bandradar.imports import ticketswest
 import util
 
-class Merc(w.WidgetsList):
-    url = w.TextField(label="URL", attrs=dict(size=60),
-        validator=v.All(v.NotEmpty, v.URL))
-
 class WWeek(w.WidgetsList):
     thedate = w.CalendarDatePicker(label="Date")
     do_week = w.CheckBox(label="Import whole week")
 
-merc_form = w.TableForm(fields=Merc(), name="merc", submit_text="Go")
 wweek_form = w.TableForm(fields=WWeek(), name="wweek", submit_text="Go")
 
 venue_fixup_dict = util.PersistentDict(VenueNameFixup)
@@ -38,7 +32,7 @@ class ImporterController(controllers.Controller, identity.SecureResource):
     def webimport(self, tg_errors=None):
         if tg_errors:
             turbogears.flash("Entry error")
-        return dict(merc_form=merc_form, wweek_form=wweek_form)
+        return dict(wweek_form=wweek_form)
 
     @expose()
     @turbogears.validate(form=wweek_form)
