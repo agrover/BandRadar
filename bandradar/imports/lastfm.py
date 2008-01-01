@@ -20,7 +20,7 @@ def artist_info(artist_name, count=3):
             return info
         # lastfm includes a "noimage" link if no img found. don't want!
         if soup.similarartists["picture"].find("noimage") == -1:
-            info['img_url'] = soup.similarartists["picture"]
+            info['img_url'] = urllib.unquote(soup.similarartists["picture"])
         
         info['similars'] = [x.find("name").string for x in soup.findAll("artist")[:count]]
 
@@ -29,7 +29,8 @@ def artist_info(artist_name, count=3):
         soup = bss(usock.read(), convertEntities=bs.ALL_ENTITIES)
         tags = [x.find("name").string for x in soup.findAll("tag")[:count]]
         tags = [x for x in tags if x.lower().find("seen") == -1]
-        info['tags'] = " / ".join(tags)[:100]
+        if len(tags):
+            info['tags'] = " / ".join(tags)[:100]
     finally:
         return info
 

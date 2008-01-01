@@ -3,6 +3,7 @@
 from musicbrainz2 import webservice as ws
 from musicbrainz2 import utils as mbutils
 from musicbrainz2 import model as m
+import urllib
 
 def artist_info(artist_name):
     info = dict(members=None, wikipedia=None, homepage=None)
@@ -19,10 +20,10 @@ def artist_info(artist_name):
     artist = q.getArtistById(uuid, inc)
     urls = artist.getRelationTargets(m.Relation.TO_URL, m.NS_REL_1+'Wikipedia')
     if len(urls):
-        info['wikipedia'] = urls[0]
+        info['wikipedia'] = urllib.unquote(urls[0])
     urls = artist.getRelationTargets(m.Relation.TO_URL, m.NS_REL_1+'OfficialHomepage')
     if len(urls):
-        info['homepage'] = urls[0]
+        info['homepage'] = urllib.unquote(urls[0])
     if artist.type == m.Artist.TYPE_GROUP:
         members = artist.getRelations(m.Relation.TO_ARTIST, m.NS_REL_1+'MemberOfBand')
         addl_uri = m.NS_REL_1+'Additional'
