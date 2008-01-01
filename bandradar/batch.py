@@ -4,14 +4,17 @@ from sqlobject.util.threadinglocal import local as threading_local
 from model import (hub, BatchRecord, UserAcct, Event, Venue, Group, Recording,
                   Source, Artist, SimilarArtist, AND, OR, SQLObjectNotFound)
 import datetime
-from imports import cdbaby, amazon, lastfm
+from imports import cdbaby, amazon, lastfm, mbz
 import time
 import geo
 import util
 
 log = logging.getLogger("bandradar.batch")
 
-queries_per_run = 1000
+if util.is_production():
+    queries_per_run = 1000
+else:
+    queries_per_run = 10
 
 def hourly_task():
     hub.threadingLocal = threading_local()

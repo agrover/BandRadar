@@ -35,7 +35,10 @@ def add_root_vars(root_dict):
 
 def br_startup():
     scheduler.add_interval_task(batch.hourly_task, 60*60)
-    scheduler.add_weekday_task(batch.nightly_task, range(1,8), (3,0))
+    if util.is_production():
+        scheduler.add_weekday_task(batch.nightly_task, range(1,8), (3,0))
+    else:
+        scheduler.add_interval_task(batch.nightly_task, 60*5)        
     saved_visit.start_extension()
     root_variable_providers.append(add_root_vars)
 
