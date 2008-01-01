@@ -481,9 +481,8 @@ class BatchRecord(SQLObject):
     email_sent = IntCol(default=0)
     artist_pings = IntCol(default=0)
     venue_pings = IntCol(default=0)
-    sims_updated = IntCol(default=0)
-    recordings_updated = IntCol(default=0)
-    geocodes_updated = IntCol(default=0)
+    artists_updated = IntCol(default=0)
+    venues_updated = IntCol(default=0)
 
 #
 # Comments on the site

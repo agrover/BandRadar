@@ -48,8 +48,8 @@ def nightly_task():
     current = BatchRecord(first_handled=from_when, last_handled=last_handled)
 
     try:
-        current.sims_updated = update_artists(queries_per_run)
-        current.geocodes_updated = update_venues()
+        current.artists_updated = update_artists(queries_per_run)
+        current.venues_updated = update_venues()
         cleanup_db()
         current.email_sent, current.artist_pings, current.venue_pings = \
             send_email(from_when, last_handled)
