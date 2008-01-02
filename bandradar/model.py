@@ -115,7 +115,7 @@ class Journalled(SQLObject):
         return fancy_date(self.created)
 
 def update_listener(instance, kwargs):
-    skip_attrs = ('last_updated', 'approved', 'sims_updated', 'recordings_updated')
+    skip_attrs = ('last_updated', 'approved', 'batch_updated')
     # don't log changes until approved
     if not instance.approved:
         return
@@ -163,6 +163,7 @@ class Venue(Journalled, BRMixin):
     myspace = UnicodeCol(length=50, default=None)
     phone = UnicodeCol(length=32, default=None)
     zip_code = UnicodeCol(length=10, default=None)
+    batch_updated = DateTimeCol(default=None)
     geocode_lat = DecimalCol(size=11, precision=8, default=None)
     geocode_lon = DecimalCol(size=11, precision=8, default=None)
     added_by = ForeignKey('UserAcct', cascade=False)
@@ -233,13 +234,14 @@ class Artist(Journalled, BRMixin):
     name = UnicodeCol(alternateID=True, length=100)
     description = UnicodeCol(default=None)
     url = UnicodeCol(length=256, default=None)
+    wikipedia_url = UnicodeCol(length=256, default=None)
+    img_url = UnicodeCol(length=256, default=None)
     myspace = UnicodeCol(length=50, default=None)
     added_by = ForeignKey('UserAcct', cascade=False)
-    sims_updated = DateTimeCol(default=None)
-    recordings_updated = DateTimeCol(default=None)
+    batch_updated = DateTimeCol(default=None)
     is_dj = BoolCol(default=False)
     tags = UnicodeCol(length=100, default=None)
-    img_url = UnicodeCol(length=256, default=None)
+    members = UnicodeCol(length=100, default=None)
     events = SQLRelatedJoin('Event')
     users = SQLRelatedJoin('UserAcct')
     recordings = SQLMultipleJoin("Recording", joinColumn="by__id")
@@ -370,7 +372,10 @@ class Artist(Journalled, BRMixin):
             sim = SimilarArtist(artist=self, similar_artist=artist)
 
     def _get_tags(self):
-        return self._SO_get_tags().lower()
+        tags = self._SO_get_tags()
+        if tags:
+            tags = tags.lower()
+        return tags
 
     def destroySelf(self):
         # remove links to other artists
@@ -379,7 +384,7 @@ class Artist(Journalled, BRMixin):
         # remove links FROM other artist
         for sim in SimilarArtist.selectBy(similar_artist=self):
             # re-gen sim-links during batch, since now we're short
-            sim.artist.sims_updated = None
+            sim.artist.batch_updated = None
             sim.destroySelf()
         super(Artist, self).destroySelf()
 

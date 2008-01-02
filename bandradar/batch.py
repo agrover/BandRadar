@@ -220,9 +220,14 @@ def lastfm_artist_update(artist):
 
 def mbz_artist_update(artist):
     artist_info = mbz.artist_info(artist.name)
+    while artist_info['members'] and len(artist_info['members']) > 100:
+        artist_info['members'] = artist_info['members'].rsplit(",", 1)[1]
+        if artist_info['members'].find(",") == -1:
+            artist_info['members'] = artist_info['members'][:100]
+            break
     artist.members = artist_info['members']
-    artist.wikipedia = artist_info['wikipedia']
-    artist.homepage = artist_info['homepage']
+    artist.wikipedia_url = artist_info['wikipedia']
+    artist.url = artist_info['homepage']
 
 def recording_artist_update(artist):
     # remove old entries
@@ -243,21 +248,30 @@ def update_artists(count=queries_per_run):
     refresh_date = datetime.date.today() - datetime.timedelta(refresh_days)
     artists = Artist.select(
         AND(Artist.q.approved != None, 
-        OR(Artist.q.sims_updated == None,
-           Artist.q.sims_updated < refresh_date)))
+        OR(Artist.q.batch_updated == None,
+           Artist.q.batch_updated < refresh_date)))
     count = min(artists.count(), count)
 
     for artist in artists[:count]:
         lastfm_artist_update(artist)
         mbz_artist_update(artist)
         recording_artist_update(artist)
-        artist.sims_updated = datetime.datetime.now()
+        artist.batch_updated = datetime.datetime.now()
         time.sleep(1)
     return count
 
 def update_venues():
-    venues = Venue.selectBy(geocode_lat=None)
-    for venue in venues:
+    refresh_days = 30 # ~1 month
+    refresh_date = datetime.date.today() - datetime.timedelta(refresh_days)
+    venues = Venue.select(
+        AND(Venue.q.approved != None, 
+        OR(Venue.q.batch_updated == None,
+           Venue.q.batch_updated < refresh_date)))
+    count = venues.count()
+    if not util.is_production():
+        count = min(count, 10)
+
+    for venue in venues[:count]:
         if venue.zip_code:
             area = ", " + venue.zip_code
         else:
@@ -269,7 +283,9 @@ def update_venues():
                 venue.geocode_lon = lon
             except IOError:
                 pass
-    return venues.count()
+        venue.batch_updated = datetime.datetime.now()
+
+    return count
 
 def _foo():
     """test, do not use"""

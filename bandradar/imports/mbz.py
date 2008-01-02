@@ -29,6 +29,8 @@ def artist_info(artist_name):
         addl_uri = m.NS_REL_1+'Additional'
         coreMembers = [r for r in members if addl_uri not in r.attributes]
         info['members'] = ", ".join([x.target.name for x in coreMembers if not x.endDate])
+        if info['members'] == "":
+            info['members'] = None
     return info
 
 if __name__ == "__main__":
