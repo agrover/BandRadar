@@ -9,9 +9,9 @@
 <body>
    <div class="content">
 
-    <h3>Import WWeek?</h3>
+    <h3>Import Mercury?</h3>
 
-    ${wweek_form(action="/importers/importwweek")}
+    ${mercury_form(action="/importers/importmercury")}
 
     <h3>Import Pollstar?</h3>
 

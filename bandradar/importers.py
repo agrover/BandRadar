@@ -8,18 +8,18 @@ from model import Event, Venue, Artist, Source, ArtistNameFixup, VenueNameFixup,
 from sqlobject import SQLObjectNotFound
 from datetime import date, datetime
 from bandradar.widgets import artist_list
-from bandradar.imports import WWBL
+from bandradar.imports import mercury
 from bandradar.imports import pollstar
 from bandradar.imports import br_upcoming as br
 from bandradar.imports import lastfm
 from bandradar.imports import ticketswest
 import util
 
-class WWeek(w.WidgetsList):
+class Mercury(w.WidgetsList):
     thedate = w.CalendarDatePicker(label="Date")
     do_week = w.CheckBox(label="Import whole week")
 
-wweek_form = w.TableForm(fields=WWeek(), name="wweek", submit_text="Go")
+mercury_form = w.TableForm(fields=Mercury(), name="mercury", submit_text="Go")
 
 venue_fixup_dict = util.PersistentDict(VenueNameFixup)
 artist_fixup_dict = util.PersistentDict(ArtistNameFixup)
@@ -32,17 +32,17 @@ class ImporterController(controllers.Controller, identity.SecureResource):
     def webimport(self, tg_errors=None):
         if tg_errors:
             turbogears.flash("Entry error")
-        return dict(wweek_form=wweek_form)
+        return dict(mercury_form=mercury_form)
 
     @expose()
-    @turbogears.validate(form=wweek_form)
+    @turbogears.validate(form=mercury_form)
     @turbogears.error_handler(webimport)
-    def importwweek(self, thedate, do_week=False):
+    def importmercury(self, thedate, do_week=False):
         if not do_week:
-            gen = WWBL.day_events(thedate)
+            gen = mercury.day_events(thedate)
         else:
-            gen = WWBL.week_events(thedate)
-        self.generic_import("WWeek", gen)
+            gen = mercury.week_events(thedate)
+        self.generic_import("Mercury", gen)
 
     def generic_import(self, name, gen):
         not_added = 0
@@ -235,11 +235,11 @@ class ImporterController(controllers.Controller, identity.SecureResource):
     @expose(template=".templates.importreview")
     def review(self):
         try_to_show = 100
-        result = Event.select(Event.q.approved == None, orderBy=(Event.q.cost, Event.q.name))
+        result = Event.select(Event.q.approved == None, orderBy=(Event.q.name,))
         total = result.count()
         shown = min(total, try_to_show)
         events = result[:shown]
-        return dict(events=events, shown=shown, total=total)
+        return dict(events=events, shown=shown, total=total, importer=mercury)
 
     @expose()
     def reviewsubmit(self, submit, **kw):

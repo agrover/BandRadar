@@ -15,11 +15,10 @@
         <input type="submit" name="submit" value="Delete Checked" />
         <?python e_counter = 0 ?>
         <table>
-        <?python from bandradar.imports import WWBL ?>
         <tr py:for="e in events">
         
             <td>
-                <a href="${WWBL.date_to_url(e.date)}">Link</a>
+                <a href="${importer.date_to_url(e.date)}">Link</a>
             </td>
             <td>
                 <input py:attrs="type='checkbox', name='accept%s' % e.id, checked='true'" />
