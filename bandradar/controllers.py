@@ -21,6 +21,7 @@ from widgets import global_search_form
 import batch
 import saved_visit
 import util
+import errorlogger
 
 import datetime
 
@@ -101,7 +102,7 @@ br_datagrid = w.PaginateDataGrid(fields=[
 
 # ---------- Controller ----------
 
-class Root(controllers.RootController):
+class Root(controllers.RootController, errorlogger.ErrorCatcher):
 
     artists = ArtistController()
     venues = VenueController()

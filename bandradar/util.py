@@ -170,7 +170,7 @@ def email(msg_to, msg_from, subject, body):
     from email.MIMEText import MIMEText
     from email.Utils import make_msgid, formatdate
 
-    if not util.is_production():
+    if not is_production():
         msg_to = "andy@groveronline.com"
 
     msg = MIMEText(body.encode('utf8'), 'plain', 'utf8')
