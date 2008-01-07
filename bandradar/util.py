@@ -164,3 +164,28 @@ class PersistentDict(dict):
             except SQLObjectNotFound:
                 r = self.model(name=name, value=value)
         super(PersistentDict, self).update(other_dict)
+
+def email(msg_to, msg_from, subject, body):
+    import smtplib
+    from email.MIMEText import MIMEText
+    from email.Utils import make_msgid, formatdate
+
+    if not util.is_production():
+        msg_to = "andy@groveronline.com"
+
+    msg = MIMEText(body.encode('utf8'), 'plain', 'utf8')
+    msg['To'] = msg_to
+    msg['From'] = msg_from
+    msg['Subject'] = subject
+    msg['Date'] = formatdate(localtime=True)
+    msg['Message-ID'] = make_msgid()
+
+    s = smtplib.SMTP()
+    s.connect()
+    try:
+        s.sendmail(msg_from, [msg_to], msg.as_string())
+    except smtplib.SMTPException, smtp:
+        # todo: record bounces so a human can do something
+        log.error("smtp error %s" % repr(smtp))
+    s.close()
+

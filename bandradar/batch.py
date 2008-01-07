@@ -27,7 +27,7 @@ def hourly_task():
         for event in unnotified:
             event.admin_notified = True;
         for admin in Group.by_group_name("admin").users:
-            email(admin.email_address, "BandRadar <events@bandradar.com>",
+            util.email(admin.email_address, "BandRadar <events@bandradar.com>",
                 "%d events in queue" % pending_count,
                 "There are events in the pending queue.")
     hub.commit()
@@ -60,7 +60,7 @@ def nightly_task():
         import traceback
         hub.rollback()
         for admin in Group.by_group_name("admin").users:
-            email(admin.email_address, "BandRadar <events@bandradar.com>",
+            util.email(admin.email_address, "BandRadar <events@bandradar.com>",
                 "batch error", "Batch failed, Andy is on it!\n\n" + traceback.format_exc())
 
     log.info("batch finished")
@@ -173,32 +173,9 @@ def send_email(start, finish):
                     'templates/new_event_email.txt')
         body = body % {'text': text, 'user_url': user_url}
 
-        email(msg_to, msg_from, "BandRadar upcoming events", body)
+        util.email(msg_to, msg_from, "BandRadar upcoming events", body)
 
     return (len(users_to_email), len(artist_email), len(venue_email))
-
-def email(msg_to, msg_from, subject, body):
-    import smtplib
-    from email.MIMEText import MIMEText
-    from email.Utils import make_msgid
-
-    if not util.is_production():
-        msg_to = "andy@groveronline.com"
-
-    msg = MIMEText(body.encode('utf8'), 'plain', 'utf8')
-    msg['To'] = msg_to
-    msg['From'] = msg_from
-    msg['Subject'] = subject
-    msg['Message-ID'] = make_msgid()
-
-    s = smtplib.SMTP()
-    s.connect()
-    try:
-        s.sendmail(msg_from, [msg_to], msg.as_string())
-    except smtplib.SMTPException, smtp:
-        # todo: record bounces so a human can do something
-        log.error("smtp error %s" % repr(smtp))
-    s.close()
 
 def lastfm_artist_update(artist):
     artist_info = lastfm.artist_info(artist.name)
