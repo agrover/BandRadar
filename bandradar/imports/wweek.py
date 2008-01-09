@@ -35,7 +35,7 @@ def day_events(date):
     anchors = soup('a', {'name':re.compile("\d+")})
     for anchor in anchors:
         small = anchor.findNextSibling("small")
-        event = dict(date=date)
+        event = dict(date=date, source="wweek")
         venue_stuff = small.contents[1].strip("| ")
         address, phone = venue_stuff.rsplit(",", 1)
         event['venue'] = dict(name=small.b.string, address=address, phone=phone)
@@ -46,7 +46,7 @@ def day_events(date):
 
 def week_events():
     # start last Wednesday
-    start_date = datetime.date.today()+dr.relativedelta(weekday=dr.WE(-1))
+    start_date = datetime.date.today()+drd.relativedelta(weekday=drd.WE(-1))
     for i in range(7):
         for event in day_events(start_date + datetime.timedelta(i)):
             yield event
