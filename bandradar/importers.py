@@ -9,6 +9,7 @@ from sqlobject import SQLObjectNotFound
 from datetime import date, datetime
 from bandradar.widgets import artist_list
 from bandradar.imports import mercury
+from bandradar.imports import wweek
 from bandradar.imports import pollstar
 from bandradar.imports import br_upcoming as br
 from bandradar.imports import lastfm
@@ -18,7 +19,6 @@ import util
 class Mercury(w.WidgetsList):
     thedate = w.CalendarDatePicker(label="Date")
     do_week = w.CheckBox(label="Import whole week")
-
 mercury_form = w.TableForm(fields=Mercury(), name="mercury", submit_text="Go")
 
 venue_fixup_dict = util.PersistentDict(VenueNameFixup)
@@ -43,6 +43,10 @@ class ImporterController(controllers.Controller, identity.SecureResource):
         else:
             gen = mercury.week_events(thedate)
         self.generic_import("Mercury", gen)
+
+    @expose()
+    def importwweek(self):
+        self.generic_import("WWeek", wweek.week_events())
 
     def generic_import(self, name, gen):
         not_added = 0

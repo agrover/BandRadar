@@ -13,6 +13,15 @@
 
     ${mercury_form(action="/importers/importmercury")}
 
+    <h3>Import Willamette Week?</h3>
+    <p>Before importing, please verify
+    <a href="http://localcut.wweek.com/calendar/wednesday/">this page</a>
+    is current for today!</p> 
+
+   <li> <form action="/importers/importwweek" method="post" class="tableform" name="wweek">        
+        <input type="submit" class="submitbutton" value="Go" />
+    </form></li>
+
     <h3>Import Pollstar?</h3>
 
    <li> <form action="/importers/importpollstar" method="post" class="tableform" name="pollstar">        
