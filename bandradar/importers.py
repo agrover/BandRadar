@@ -178,7 +178,7 @@ class ImporterController(controllers.Controller, identity.SecureResource):
         except SQLObjectNotFound:
             v = Venue(name=venue_name, added_by=identity.current.user)
             flag_for_review = True
-        if getattr(event['venue'], 'phone', None):
+        if event['venue'].has_key('phone'):
             phone = event['venue']['phone']
             if not length(phone) >= 8:
                 phone = "503-" + phone
