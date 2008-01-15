@@ -89,11 +89,19 @@ def desc_format(in_text):
 def escape(text):
     return cgi.escape(text)
 
-def unescape(text):
-    p = htmllib.HTMLParser(None)
-    p.save_bgn()
-    p.feed(text)
-    return p.save_end()
+def unescape(thing):
+    """unescape strings, as well as dicts and lists of strings"""
+    if isinstance(thing, dict):
+        for name, value in thing.iteritems():
+            thing[name] = unescape(value);
+    elif isinstance(thing, list):
+        thing = [unescape(t) for t in thing]
+    elif isinstance(thing, basestring):
+        p = htmllib.HTMLParser(None)
+        p.save_bgn()
+        p.feed(thing)
+        thing = p.save_end()
+    return thing
 
 def so_to_dict(sqlobj):
     return database.so_to_dict(sqlobj)
