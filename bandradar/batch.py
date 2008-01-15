@@ -232,11 +232,18 @@ def update_artists(count=queries_per_run):
     count = min(artists.count(), count)
 
     for artist in artists[:count]:
-        lastfm_artist_update(artist)
-        mbz_artist_update(artist)
-        recording_artist_update(artist)
-        artist.batch_updated = datetime.datetime.now()
-        time.sleep(1)
+        try:
+            lastfm_artist_update(artist)
+            mbz_artist_update(artist)
+            recording_artist_update(artist)
+            artist.batch_updated = datetime.datetime.now()
+            time.sleep(1)
+        except:
+            import traceback
+            util.email("andy@bandradar.com", "BandRadar <events@bandradar.com>",
+                "artist error: %s" % artist.name,
+                "Batch failed, Andy is on it!\n\n" + traceback.format_exc())
+            raise
     return count
 
 def update_venues():
