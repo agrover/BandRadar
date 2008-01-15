@@ -7,6 +7,7 @@
 </head>
 
 <body>
+    <span style="color:gray;font-size:x-small;" py:if="artist.url"> <img src="${artist.img_url}" /> (Source: last.fm)</span>
     <p class="name"><h4>${artist.name}</h4>&nbsp;&nbsp;
     <span py:if="is_tracked">${tg_ButtonWidget(action="/artists/%s/untrack?viewing=yes" % artist.id, label="Untrack")}</span>
     <span py:if="not is_tracked">${tg_ButtonWidget(action="/artists/%s/track?viewing=yes" % artist.id, label="Track")}</span>
@@ -22,17 +23,21 @@
 
     <div id="blurb">
         <p id="description" py:if="description">${XML(description)}</p>
-    </div>    
+    </div>
     <p py:if="artist.url"><h5>Website: </h5><a href="${artist.url}">${artist.url}</a></p>
     <p py:if="artist.myspace"><h5>MySpace:</h5>
         <a href="http://myspace.com/${artist.myspace}">
             http://myspace.com/${artist.myspace}</a>
     </p>
+    <p py:if="artist.wikipedia_url"><h5>Wikipedia: </h5>
+        <a href="${artist.wikipedia_url}">${artist.wikipedia_url}</a></p>
+    <p py:if="artist.tags"><h5>Tags: </h5>${artist.tags}</p>
+    <p py:if="artist.members"><h5>Members: </h5>${artist.members}</p>
+    <p><h5>Similar Bands:</h5> ${artist_list(artists=artist.similars)}</p>
 
     <p py:if="not 'admin' in artist.added_by.groups">
     <h5>Added by:</h5><a href="/users/${artist.added_by.user_name}">
         ${artist.added_by.user_name}</a></p>
-    <p><h5>Similar Bands:</h5> ${artist_list(artists=artist.similars)}</p>
     <p><h5>Added:</h5> ${artist.fcreated}</p>
     <p><h5>Changed:</h5> ${artist.fupdated}</p>
     <p py:if="tracked_count"><h5>Users tracking:</h5> ${tracked_count}</p>
