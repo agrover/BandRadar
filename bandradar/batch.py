@@ -16,6 +16,9 @@ if util.is_production():
 else:
     queries_per_run = 10
 
+artist_refresh_days = 30
+venue_refresh_days = 30
+
 def hourly_task():
     hub.threadingLocal = threading_local()
     hub.begin()
@@ -221,8 +224,7 @@ def recording_artist_update(artist):
 
 
 def update_artists(count=queries_per_run):
-    refresh_days = 30*6 # ~6 months
-    refresh_date = datetime.date.today() - datetime.timedelta(refresh_days)
+    refresh_date = datetime.date.today() - datetime.timedelta(artist_refresh_days)
     artists = Artist.select(
         AND(Artist.q.approved != None, 
         OR(Artist.q.batch_updated == None,
@@ -238,8 +240,7 @@ def update_artists(count=queries_per_run):
     return count
 
 def update_venues():
-    refresh_days = 30 # ~1 month
-    refresh_date = datetime.date.today() - datetime.timedelta(refresh_days)
+    refresh_date = datetime.date.today() - datetime.timedelta(venue_refresh_days)
     venues = Venue.select(
         AND(Venue.q.approved != None, 
         OR(Venue.q.batch_updated == None,
