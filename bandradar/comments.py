@@ -39,12 +39,17 @@ class CommentController(controllers.Controller):
 
     @expose(template=".templates.comment")
     def add(self):
-        return dict(comment_form=comment_form)
+        if identity.current.user:
+            return dict(comment_form=comment_form)
+        else:
+            turbogears.flash("Sorry, please register/login to leave a comment (it's fast)")
+            util.redirect("/")
 
     @expose()
     @turbogears.validate(form=comment_form)
     @turbogears.error_handler(add)
+    @identity.require(identity.not_anonymous())
     def save(self, comment):
         c = Comment(comment=comment, comment_by=identity.current.user)
-        turbogears.flash("Comment saved, thanks!")
+        turbogears.flash("Thanks for taking the time to comment!")
         util.redirect("/")

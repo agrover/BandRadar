@@ -10,7 +10,6 @@
 
     <h2>So What Do You Think?</h2>
     <p>Any <b>BandRadar</b> features you'd like to see, bugs you found, or other sorts of feedback.</p>
-    <p> If you're logged in we can even get back to you!</p>
 
     ${comment_form(action="/comments/save")}
 
