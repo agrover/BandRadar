@@ -35,9 +35,9 @@ def fancy_date(past_date):
 
 
 #
-# Pull some methods out to here, need to think of a more desc. name
+# Shared methods of central model classes
 #
-class BRMixin(object):
+class BRCentral(object):
 
     @classmethod
     def clean_dict(self, dirty_dict):
@@ -155,7 +155,7 @@ class UpdateLog(SQLObject):
 #
 # Where events happen.
 #
-class Venue(Journalled, BRMixin):
+class Venue(Journalled, BRCentral):
     name = UnicodeCol(alternateID=True, length=100)
     description = UnicodeCol(default=None)
     address = UnicodeCol(default=None)
@@ -210,6 +210,11 @@ class Venue(Journalled, BRMixin):
         lst.sort(key=itemgetter(1))
         return lst[:count]
 
+    def _set_name(self, name):
+        if len(name) < 2:
+            raise ValueError, "Name is too short, must be >= 2 chars"
+        self._SO_set_name(name)
+
     def _get_future_events(self):
         return self.events.filter(
             AND(Event.q.date >= date.today(), Event.q.approved != None))
@@ -230,7 +235,7 @@ class Venue(Journalled, BRMixin):
 #
 # Data on bands/artists
 #
-class Artist(Journalled, BRMixin):
+class Artist(Journalled, BRCentral):
     name = UnicodeCol(alternateID=True, length=100)
     description = UnicodeCol(default=None)
     url = UnicodeCol(length=256, default=None)
@@ -347,6 +352,11 @@ class Artist(Journalled, BRMixin):
                     return results[0]
             raise SQLObjectNotFound
 
+    def _set_name(self, name):
+        if len(name) < 2:
+            raise ValueError, "Name is too short, must be >= 2 chars"
+        self._SO_set_name(name)
+
     def _get_future_events(self):
         return self.events.filter(Event.q.date >= date.today())
 
@@ -411,7 +421,7 @@ class Recording(SQLObject):
 #
 # The most important class
 #
-class Event(Journalled, BRMixin):
+class Event(Journalled, BRCentral):
     name = UnicodeCol(length=400)
     description = UnicodeCol(default=None)
     time = UnicodeCol(length=40, default=None)
@@ -441,6 +451,11 @@ class Event(Journalled, BRMixin):
         if not "admin" in old.added_by.groups:
             new.added_by = old.added_by
         super(Event, cls).merge(old, new)
+
+    def _set_name(self, name):
+        if len(name) < 2:
+            raise ValueError, "Name is too short, must be >= 2 chars"
+        self._SO_set_name(name)
 
     def _get_attendees(self):
         user_ids = [att.user.id for att in self.attendances]
@@ -541,7 +556,7 @@ class Group(SQLObject):
         return cmp(self.group_name, other.group_name)
 
 
-class UserAcct(SQLObject, BRMixin):
+class UserAcct(SQLObject):
     user_name = UnicodeCol(length=16, alternateID=True,
                            alternateMethodName="by_user_name")
     email_address = UnicodeCol(length=255, alternateID=True,
@@ -564,6 +579,17 @@ class UserAcct(SQLObject, BRMixin):
     venues_added = SQLMultipleJoin("Venue", joinColumn="added__by__id")
     comments = SQLMultipleJoin("Comment", joinColumn="comment__by__id")
     attendances = SQLMultipleJoin("Attendance", joinColumn="user__id")
+
+    @classmethod
+    def clean_dict(self, dirty_dict):
+        clean = {}
+        valid_attributes = self.sqlmeta.columns.keys()
+        for attr, value in dirty_dict.iteritems():
+            if attr in valid_attributes:
+                if isinstance(value, basestring):
+                    value = value.strip()
+                clean[attr] = value
+        return clean
 
     def _get_events(self):
         event_ids = [att.event.id for att in self.attendances]
