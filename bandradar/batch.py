@@ -190,6 +190,9 @@ def lastfm_artist_update(artist):
         try:
             sim_artist = Artist.byNameI(artist_name)
         except SQLObjectNotFound:
+            # keep out too-short names
+            if len(artist_name) < 3:
+                continue
             sim_artist = Artist(name=artist_name, added_by=UserAcct.get(1))
             # Artists added this way are *not* approved. This keeps them from
             # also having sims generated (when they could be non-local bands
@@ -237,13 +240,12 @@ def update_artists(count=queries_per_run):
             mbz_artist_update(artist)
             recording_artist_update(artist)
             artist.batch_updated = datetime.datetime.now()
-            time.sleep(1)
         except:
             import traceback
             util.email("andy@bandradar.com", "BandRadar <events@bandradar.com>",
-                "artist error: %s" % artist.name,
+                "artist error: '%s'" % artist.name,
                 "Batch failed, Andy is on it!\n\n" + traceback.format_exc())
-            raise
+        time.sleep(1)
     return count
 
 def update_venues():

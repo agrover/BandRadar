@@ -353,8 +353,8 @@ class Artist(Journalled, BRCentral):
             raise SQLObjectNotFound
 
     def _set_name(self, name):
-        if len(name) < 2:
-            raise ValueError, "Name is too short, must be >= 2 chars"
+        if not len(name):
+            raise ValueError, "Name is zero-length"
         self._SO_set_name(name)
 
     def _get_future_events(self):
@@ -453,8 +453,8 @@ class Event(Journalled, BRCentral):
         super(Event, cls).merge(old, new)
 
     def _set_name(self, name):
-        if len(name) < 2:
-            raise ValueError, "Name is too short, must be >= 2 chars"
+        if not len(name):
+            raise ValueError, "Name is zero-length"
         self._SO_set_name(name)
 
     def _get_attendees(self):
