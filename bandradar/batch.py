@@ -163,9 +163,10 @@ def send_email(start, finish):
             venue_text += venue_name + "\n" + ("-"*len(venue_name)) + "\n"
             for name, date in event_list:
                 venue_text += u"%s: %s\n" % (date, name)
+            venue_text += "\n"
         if venue_text:
             hdr_txt = "Upcoming shows at the venues you are tracking:\n\n"
-            venue_text = hdr_txt + venue_text + "\n"
+            venue_text = hdr_txt + venue_text
 
         text = event_text + artist_text + venue_text
 
