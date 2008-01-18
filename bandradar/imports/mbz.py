@@ -9,7 +9,7 @@ def artist_info(artist_name):
     info = dict(members=None, wikipedia=None, homepage=None)
     # short names are bad
     if len(artist_name) < 3:
-        return
+        return info
     q = ws.Query()
     filt = ws.ArtistFilter(artist_name, limit=10)
     results = q.getArtists(filt)
