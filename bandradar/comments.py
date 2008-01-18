@@ -11,7 +11,8 @@ from model import Comment
 import util
 
 class CommentForm(w.WidgetsList):
-    comment = w.TextArea(label="Comments?", rows=4, validator=v.NotEmpty(strip=True))
+    comment = w.TextArea(label="Comments?", rows=4,
+        validator=v.All(v.NotEmpty(strip=True),v.UnicodeString()))
 
 comment_form = w.TableForm(fields=CommentForm(), name="comment", submit_text="Send")
 
