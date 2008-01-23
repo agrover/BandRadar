@@ -178,9 +178,8 @@ class EventController(controllers.Controller, util.RestAdapter):
         artist_name_list = [artist.strip() for artist in artists.split('\n')]
         # elim blank items in list
         artist_name_list = [artist for artist in artist_name_list if artist]
-        name = kw.get('name', None)
-        if not name:
-            name = ", ".join(artist_name_list)
+        if not kw.get('name'):
+            kw['name'] = ", ".join(artist_name_list)
 
         # updating
         if id:
@@ -192,13 +191,12 @@ class EventController(controllers.Controller, util.RestAdapter):
                 redirect("/")
         # inserting
         else:
-            e = Event(name=name, date=kw['date'], time=kw['time'], venue=v,
+            e = Event(name=kw['name'], date=kw['date'], time=kw['time'], venue=v,
                 added_by=identity.current.user)
             flash_msg = "added, will be reviewed and posted within 24 hrs"
 
         del kw['venue']
         e.set(**e.clean_dict(kw))
-        e.name = name
         old_venue = e.venue
         e.venue = v
         old_venue.destroy_if_unused()
