@@ -237,7 +237,9 @@ class UserController(controllers.Controller, util.RestAdapter):
     @expose()
     @turbogears.validate(form=lost_passwd_form)
     @turbogears.error_handler(lost_passwd)    
-    def lost_passwd_send(self, email):
+    def lost_passwd_send(self, email=None):
+        if not email:
+            util.redirect("/")
         try:
             u = UserAcct.by_email_address(email)
             import smtplib
