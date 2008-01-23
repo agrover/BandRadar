@@ -1,7 +1,7 @@
 import cherrypy
 
 import turbogears
-from turbogears import controllers, expose, redirect
+from turbogears import controllers, expose
 from turbogears import identity
 from turbogears import widgets as w
 from turbogears import validators as v
@@ -116,7 +116,7 @@ class UserController(controllers.Controller, util.RestAdapter):
     def login(self, *args, **kw):
 
         if not identity.current.anonymous and identity.was_login_attempted():
-            redirect(kw['forward_url'])
+            util.redirect(kw['forward_url'])
 
         forward_url = None
         previous_url = cherrypy.request.path
@@ -152,7 +152,7 @@ class UserController(controllers.Controller, util.RestAdapter):
         saved_visit.forget()
         identity.current.logout()
         turbogears.flash("Logged out")
-        redirect("/")
+        util.redirect("/")
 
     @expose(template=".templates.user.list")
     @identity.require(identity.in_group("admin"))
@@ -173,7 +173,7 @@ class UserController(controllers.Controller, util.RestAdapter):
                 viewing_self = True
         except SQLObjectNotFound:
             turbogears.flash("User not found")
-            redirect(turbogears.url("/"))
+            util.redirect("/")
 
         return dict(user=u, artists=artists, venues=venues,
             attendances=attendances, viewing_self=viewing_self,
@@ -190,7 +190,7 @@ class UserController(controllers.Controller, util.RestAdapter):
                 viewing_self = True
         except SQLObjectNotFound:
             turbogears.flash("User not found")
-            redirect(turbogears.url("/"))
+            util.redirect("/")
 
         return dict(user=u, artists=artists, viewing_self=viewing_self,
             artist_list=artist_list)
@@ -205,7 +205,7 @@ class UserController(controllers.Controller, util.RestAdapter):
             u = UserAcct.by_user_name(user_name)
         except SQLObjectNotFound:
             turbogears.flash("Invalid username")
-            redirect(turbogears.url("/"))
+            util.redirect("/")
         return dict(user_name=user_name, user_form=user_form,
             form_vals=u)
 
@@ -228,13 +228,13 @@ class UserController(controllers.Controller, util.RestAdapter):
             turbogears.flash("Saved")
         except SQLObjectNotFound:
             turbogears.flash("Error saving changes")
-        redirect(turbogears.url("/users/%s" % u.user_name))
+        util.redirect("/users/%s" % u.user_name)
 
     @expose(template=".templates.user.lost_passwd")
     def lost_passwd(self):
         return dict(lost_passwd_form=lost_passwd_form);
 
-    @expose(template=".templates.output")
+    @expose()
     @turbogears.validate(form=lost_passwd_form)
     @turbogears.error_handler(lost_passwd)    
     def lost_passwd_send(self, email):
@@ -260,8 +260,9 @@ class UserController(controllers.Controller, util.RestAdapter):
             s.sendmail(msg_from, [msg_to], msg.as_string())
             s.close()
 
-            return dict(output="Email sent to %s." % email)
+            turbogears.flash("Email sent to %s." % email)
         except SQLObjectNotFound:
-            return dict(output="Email unknown - no email sent.")
+            turbogears.flash("Email unknown - no email sent.")
+        util.redirect("/")
 
     #delete. display confirmation
