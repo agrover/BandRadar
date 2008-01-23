@@ -180,7 +180,7 @@ class ImporterController(controllers.Controller, identity.SecureResource):
             flag_for_review = True
         if event['venue'].has_key('phone'):
             phone = event['venue']['phone']
-            if not length(phone) >= 8:
+            if not len(phone) >= 8:
                 phone = "503-" + phone
             p = v.PhoneNumber()
             try:
