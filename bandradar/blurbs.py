@@ -16,7 +16,7 @@ class BlurbForm(w.WidgetsList):
     id = w.HiddenField(validator=v.Int)
     text = w.TextArea(label="Blurb", rows=4,
         validator=v.All(v.NotEmpty(strip=True),v.UnicodeString()))
-    expiry = BRCalendarDatePicker(help_text="Can be blank", not_empty=False)
+    expiry = BRCalendarDatePicker(not_empty=False)
     preview = w.SubmitButton(label="", attrs=dict(value="Preview"))
 
 blurb_form = w.TableForm(fields=BlurbForm(), name="blurb", submit_text="Save")
@@ -53,7 +53,7 @@ datagrid = w.PaginateDataGrid(fields=(
 class BlurbController(controllers.Controller, identity.SecureResource):
     require = identity.in_group("admin")
 
-    @expose(template=".templates.datagrid")
+    @expose(template=".templates.blurb.list")
     @paginate("data", default_order="created")
     def list(self):
         results = Blurb.select().reversed()
@@ -84,7 +84,7 @@ class BlurbController(controllers.Controller, identity.SecureResource):
                 flash("Update Error")
         else:
             if kw.get("preview"):
-                kw['preview'] = publish_parts(kw['text'], writer_name="html")["html_body"]
+                kw['show_text'] = publish_parts(kw['text'], writer_name="html")["html_body"]
                 return self.edit(**kw)
             else:
                 b = Blurb(added_by=identity.current.user, **util.clean_dict(Blurb, kw))

@@ -8,7 +8,7 @@
 <body>
     Blurbs are formatted using <a href="http://docutils.sourceforge.net/docs/user/rst/quickref.html">
     reStructuredText formatting</a>.<br/>
-    ${XML(form_vals.get('preview', ''))}
+    ${XML(form_vals.get('show_text', ''))}
 
     <h2 py:if="'id' in form_vals">Edit a blurb</h2>
     <h2 py:if="'id' not in form_vals">Add a blurb</h2>
