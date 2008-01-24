@@ -106,6 +106,20 @@ def unescape(thing):
 def so_to_dict(sqlobj):
     return database.so_to_dict(sqlobj)
 
+def clean_dict(cls, dirty_dict):
+    """ensure the dict only has keys that are columns in the given sqlobject class"""
+    clean = dict()
+    valid_attributes = cls.sqlmeta.columns.keys()
+    for attr, value in dirty_dict.iteritems():
+        if attr in valid_attributes:
+            if isinstance(value, basestring):
+                value = value.strip()
+            if attr == "myspace" and value:
+                value = value.split("/")[-1]
+            clean[attr] = value
+    return clean
+
+
 class UniqueName(formencode.FancyValidator):
 
     def __init__(self, sqlmodel, **kwargs):

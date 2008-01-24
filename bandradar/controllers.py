@@ -16,6 +16,7 @@ from events import EventController
 from users import UserController
 from importers import ImporterController
 from comments import CommentController
+from blurbs import BlurbController
 from model import Event, UpdateLog, UserAcct, BatchRecord, Group, Artist, Venue, hub
 from widgets import global_search_form
 import batch
@@ -110,6 +111,7 @@ class Root(controllers.RootController, errorlogger.ErrorCatcher):
     users = UserController()
     importers = ImporterController()
     comments = CommentController()
+    blurbs = BlurbController()
 
     @expose(allow_json=True)
     def dynmultisearch(self, name):

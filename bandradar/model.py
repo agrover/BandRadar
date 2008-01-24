@@ -6,13 +6,15 @@ from sqlobject.events import listen, RowUpdateSignal
 from turbogears.database import PackageHub
 from turbogears import identity
 
+import util
+
 hub = PackageHub("bandradar")
 __connection__ = hub
 
 soClasses = ('UserAcct', 'Group', 'Permission', 'Venue', 'Artist',
              'SimilarArtist', 'Event', 'BatchRecord', 'Attendance',
              'Comment', 'UpdateLog', 'Source', 'Recording',
-             'ArtistNameFixup', 'VenueNameFixup')
+             'ArtistNameFixup', 'VenueNameFixup', 'Blurb')
 
 def fancy_date(past_date):
     """Take a date in the past and return it pretty-printed, with elapsed time.
@@ -40,17 +42,8 @@ def fancy_date(past_date):
 class BRCentral(object):
 
     @classmethod
-    def clean_dict(self, dirty_dict):
-        clean = {}
-        valid_attributes = self.sqlmeta.columns.keys()
-        for attr, value in dirty_dict.iteritems():
-            if attr in valid_attributes:
-                if isinstance(value, basestring):
-                    value = value.strip()
-                if attr == "myspace" and value:
-                    value = value.split("/")[-1]
-                clean[attr] = value
-        return clean
+    def clean_dict(cls, dirty_dict):
+        return util.clean_dict(cls, dirty_dict)
 
     @classmethod
     def byNameI(self, name):
@@ -581,15 +574,8 @@ class UserAcct(SQLObject):
     attendances = SQLMultipleJoin("Attendance", joinColumn="user__id")
 
     @classmethod
-    def clean_dict(self, dirty_dict):
-        clean = {}
-        valid_attributes = self.sqlmeta.columns.keys()
-        for attr, value in dirty_dict.iteritems():
-            if attr in valid_attributes:
-                if isinstance(value, basestring):
-                    value = value.strip()
-                clean[attr] = value
-        return clean
+    def clean_dict(cls, dirty_dict):
+        return util.clean_dict(cls, dirty_dict)
 
     def _get_events(self):
         event_ids = [att.event.id for att in self.attendances]
@@ -632,3 +618,10 @@ class ArtistNameFixup(FixupTable):
 
 class VenueNameFixup(FixupTable):
     pass
+
+class Blurb(SQLObject):
+    created = DateTimeCol(default=datetime.now)
+    expiry = DateTimeCol(default=None)
+    text = UnicodeCol()
+    added_by = ForeignKey('UserAcct', cascade=False)
+

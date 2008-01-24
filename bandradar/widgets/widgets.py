@@ -160,5 +160,5 @@ class TopVenuesWidget(w.Widget):
             """)
         return [dict(name=a, id=b, count=c) for a, b, c in top_venues]
     
-top_venues = TopVenuesWidget()    
-    
+top_venues = TopVenuesWidget()
+
