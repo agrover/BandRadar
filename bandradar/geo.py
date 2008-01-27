@@ -1,5 +1,6 @@
 from imports import google
 from decimal import Decimal
+from gps import EarthDistance, METERS_TO_MILES
 
 #from Google Answers
 #Distance between one degree of longitude at a given latitude:
@@ -21,22 +22,18 @@ def radius_to_ll_bounds(lat, lon, radius):
     return l
 
 def is_within_radius(ctr_lat, ctr_lon, radius, lat, lon):
-    hi_lat, lo_lat, hi_lon, lo_lon = radius_to_ll_bounds(ctr_lat, ctr_lon, radius)
-    if not hi_lat >= lat >= lo_lat:
-        return False
-    if not hi_lon >= lon >= lo_lon:
-        return False
-    return True
+    """is a point withing a given radius in miles from another point"""
+    return distance(ctr_lat, ctr_lon, lat, lon) <= radius
 
-def distance (a_lat, a_lon, b_lat, b_lon):
+def distance(a_lat, a_lon, b_lat, b_lon):
     """return distance between two coords in miles"""
-    lat_delta = abs(a_lat-b_lat)
-    lon_delta = abs(a_lon-b_lon)
-    y_miles = lat_delta * Decimal("69.1691") 
-    x_miles = lon_delta * Decimal("48.9097") # pdx only
-    # good 'ol pythagorean theorem
-    tmp = (y_miles*y_miles) + (x_miles*x_miles)
-    return tmp.sqrt().quantize(Decimal("0.01"))
+    a_lat = float(a_lat)
+    a_lon = float(a_lon)
+    b_lat = float(b_lat)
+    b_lon = float(b_lon)
+    meters = EarthDistance((a_lat, a_lon), (b_lat, b_lon))
+    miles = meters * METERS_TO_MILES
+    return Decimal(str(miles)).quantize(Decimal("0.01"))
 
 def get_geocode(location):
     return google.get_geocode(location)
