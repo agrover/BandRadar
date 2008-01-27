@@ -47,12 +47,8 @@ class BRCentral(object):
 
     @classmethod
     def byNameI(self, name):
-        try:
-            name_col = self.q.name
-        except AttributeError:
-            name_col = self.q.user_name
         name = name.lower().strip()
-        results = self.select(func.LOWER(name_col) == name)
+        results = self.select(func.LOWER(self.q.name) == name)
         if results.count():
             return results[0]
         raise SQLObjectNotFound
@@ -576,6 +572,14 @@ class UserAcct(SQLObject):
     @classmethod
     def clean_dict(cls, dirty_dict):
         return util.clean_dict(cls, dirty_dict)
+
+    @classmethod
+    def byNameI(self, name):
+        name = name.lower().strip()
+        results = self.select(func.LOWER(self.q.user_name) == name)
+        if results.count():
+            return results[0]
+        raise SQLObjectNotFound
 
     def _get_events(self):
         event_ids = [att.event.id for att in self.attendances]
