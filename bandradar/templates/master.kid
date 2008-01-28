@@ -58,6 +58,7 @@
             <li><a href="/importers/review">Review Events</a></li>
             <li><a href="/importers/reviewdupes">Possible dupes</a></li>
             <li><a href="/comments/list">Comments</a></li>
+            <li><a href="/blurbs/list">Blurbs</a></li>
             <li><a href="/list_update_log">Updates</a></li>
             <li><a href="/list_batch">Batches</a></li>
           </span></li>

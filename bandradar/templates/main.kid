@@ -7,17 +7,15 @@
 </head>
 
 <body>
+
+  <div id="blurb">${XML(blurb)}</div>
   
   <div id="tonight">
     <ul>
       <li py:for="event_id,event_name,venue_name in events">
   	  <a href="/events/${event_id}"><b>${venue_name}</b>:  ${event_name}</a></li>
     </ul>
-  </div>	 
- 
-
-  
-
+  </div> 
 
 </body>
 </html>

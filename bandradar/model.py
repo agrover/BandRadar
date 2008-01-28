@@ -1,10 +1,11 @@
-from datetime import datetime, date, timedelta
-
 from sqlobject import *
 from sqlobject.joins import SORelatedJoin, SOMultipleJoin
 from sqlobject.events import listen, RowUpdateSignal
 from turbogears.database import PackageHub
 from turbogears import identity
+
+from datetime import datetime, date, timedelta
+import random
 
 import util
 
@@ -629,3 +630,9 @@ class Blurb(SQLObject):
     text = UnicodeCol()
     added_by = ForeignKey('UserAcct', cascade=False)
 
+    @classmethod
+    def random(cls):
+        where = OR(cls.q.expiry == None, cls.q.expiry > date.today())
+        blurb_count = cls.select(where, orderBy=cls.q.id).count()
+        index = random.randint(0, blurb_count-1)
+        return cls.select(where, orderBy=cls.q.id)[index]

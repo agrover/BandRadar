@@ -17,7 +17,8 @@ from users import UserController
 from importers import ImporterController
 from comments import CommentController
 from blurbs import BlurbController
-from model import Event, UpdateLog, UserAcct, BatchRecord, Group, Artist, Venue, hub
+from model import (Event, UpdateLog, UserAcct, BatchRecord, Group, Artist,
+    Venue, Blurb, hub)
 from widgets import global_search_form
 import batch
 import saved_visit
@@ -144,7 +145,7 @@ class Root(controllers.RootController, errorlogger.ErrorCatcher):
             order by venue.name
             """)
 
-        return dict(events=events)
+        return dict(events=events, blurb=Blurb.random().text)
 
     @expose(template=".templates.output")
     def test(self):

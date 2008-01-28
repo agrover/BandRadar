@@ -42,7 +42,7 @@ datagrid = w.PaginateDataGrid(fields=(
                 w.DataGrid.Column("created", lambda row: row.created.strftime("%x"),
                     options=dict(sortable=True)),
                 w.DataGrid.Column("By", get_by, options=dict(sortable=True)),
-                w.DataGrid.Column("expiry",
+                w.DataGrid.Column("expires",
                     lambda row: row.expiry.strftime("%x") if row.expiry else "Never",
                     options=dict(sortable=True)),
                 w.DataGrid.Column("text", get_text, options=dict(sortable=True)),
