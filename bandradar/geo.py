@@ -1,6 +1,9 @@
 from imports import google
 from decimal import Decimal
-from gps import EarthDistance, METERS_TO_MILES
+try:
+    from gps import EarthDistance, METERS_TO_MILES
+except ImportError:
+    pass # keep going, no one's using gps stuff yet
 
 #from Google Answers
 #Distance between one degree of longitude at a given latitude:
