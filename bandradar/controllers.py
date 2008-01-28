@@ -28,6 +28,7 @@ import errorlogger
 import datetime
 
 from xml.etree import ElementTree
+from docutils.core import publish_parts
 
 log = logging.getLogger("bandradar.controllers")
 
@@ -145,7 +146,9 @@ class Root(controllers.RootController, errorlogger.ErrorCatcher):
             order by venue.name
             """)
 
-        return dict(events=events, blurb=Blurb.random().text)
+        blurb_text = publish_parts(Blurb.random().text, writer_name="html")["html_body"]
+
+        return dict(events=events, blurb=blurb_text)
 
     @expose(template=".templates.output")
     def test(self):
