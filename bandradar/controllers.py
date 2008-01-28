@@ -146,7 +146,7 @@ class Root(controllers.RootController, errorlogger.ErrorCatcher):
             order by venue.name
             """)
 
-        blurb_text = publish_parts(Blurb.random().text, writer_name="html")["html_body"]
+        blurb_text = publish_parts(Blurb.random(), writer_name="html")["html_body"]
 
         return dict(events=events, blurb=blurb_text)
 

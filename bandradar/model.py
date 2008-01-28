@@ -632,7 +632,12 @@ class Blurb(SQLObject):
 
     @classmethod
     def random(cls):
+        """return a random string (rST format) from all the blurbs"""
         where = OR(cls.q.expiry == None, cls.q.expiry > date.today())
         blurb_count = cls.select(where, orderBy=cls.q.id).count()
-        index = random.randint(0, blurb_count-1)
-        return cls.select(where, orderBy=cls.q.id)[index]
+        if blurb_count:
+            index = random.randint(0, blurb_count-1)
+            return cls.select(where, orderBy=cls.q.id)[index].text
+        else:
+            return ""
+
