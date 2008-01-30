@@ -20,7 +20,6 @@ def day_events(date):
     soup = bs(usock.read(), convertEntities=bs.ALL_ENTITIES)
     events = soup.findAll("div", "event_group ")
     events.extend(soup.findAll("div", "event_group staffpick_music"))
-    log.info("ASG called day_events %s" % date_to_url(date))
     for event_div in events:
         event = dict(source="mercury")
         event['date'] = date
@@ -29,6 +28,8 @@ def day_events(date):
         for li in event_div.find("ul", "event_musicians").findAll("li"):
             artist_name = "".join([x.string for x in li.contents if x.string]).strip()
             event['artists'].append(artist_name)
+        if not len(event['artists']):
+            continue
         if event_div.h5:
             event['name'] = event_div.h5.string.strip(":")
         else:
