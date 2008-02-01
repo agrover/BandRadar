@@ -8,6 +8,7 @@ from model import Venue, Event, hub
 from sqlobject import SQLObjectNotFound, LIKE, func, AND
 from sqlobject.main import SQLObjectIntegrityError
 from datetime import date, datetime
+import urllib
 import util
 from widgets import BRAutoCompleteField, googlemap
 from importers import venue_fixup_dict
@@ -65,10 +66,17 @@ class VenueController(controllers.Controller, util.RestAdapter):
     def show(self, id, list_all=0):
         try:
             v = Venue.get(id)
-            is_tracked = identity.current.user and v in identity.current.user.venues
         except SQLObjectNotFound:
             turbogears.flash("Venue ID not found")
             redirect(turbogears.url("/venues/list"))
+        except ValueError:
+            try:
+                v = Venue.byNameI(urllib.unquote_plus(id))
+            except SQLObjectNotFound:
+                turbogears.flash("Venue ID not found")
+                redirect(turbogears.url("/venues/list"))
+            
+        is_tracked = identity.current.user and v in identity.current.user.venues
 
         past_events = v.past_events.orderBy('-date')
         if not list_all:

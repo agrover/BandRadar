@@ -7,6 +7,7 @@ from turbogears import validators as v
 from model import Artist, Event, hub
 from sqlobject import SQLObjectNotFound, LIKE, func, AND
 from datetime import date, datetime, timedelta
+import urllib
 import util
 from importers import artist_fixup_dict
 from widgets import BRAutoCompleteField, artist_list
@@ -89,13 +90,20 @@ class ArtistController(controllers.Controller, util.RestAdapter):
     def show(self, id, list_all=0):
         try:
             a = Artist.get(id)
-            if identity.current.user and a in identity.current.user.artists:
-                is_tracked = True
-            else:
-                is_tracked = False
         except SQLObjectNotFound:
             turbogears.flash("Artist ID not found")
             redirect(turbogears.url("/artists/list"))
+        except ValueError:
+            try:
+                a = Artist.byNameI(urllib.unquote_plus(id))
+            except SQLObjectNotFound:
+                turbogears.flash("Artist ID not found")
+                redirect(turbogears.url("/artists/list"))
+
+        if identity.current.user and a in identity.current.user.artists:
+            is_tracked = True
+        else:
+            is_tracked = False
 
         past_events = a.events.filter(Event.q.date < date.today()).orderBy('-date')
         if not list_all:
