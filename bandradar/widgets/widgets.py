@@ -57,7 +57,7 @@ class ArtistListWidget(w.Widget):
             else:
                 unapp_htmlstr = "%s"
             artist_html_list = []
-            artist_html_list.extend([ app_htmlstr % (urllib.quote_plus(a.name), escape(a.name)) for a in artists if a.approved])
+            artist_html_list.extend([ app_htmlstr % (str(a.id), escape(a.name)) for a in artists if a.approved])
             artist_html_list.extend([ unapp_htmlstr % escape(a.name) for a in artists if not a.approved])
             artisthtml = ", ".join(artist_html_list)
         return artisthtml
@@ -142,7 +142,7 @@ class TopArtistsWidget(w.Widget):
             order by count desc, name
             limit 10
             """)
-        return [dict(name=a, quoted_name=urllib.quote_plus(a), count=c) for a, b, c in top_artists]
+        return [dict(name=a.decode('utf8'), id=b, count=c) for a, b, c in top_artists]
     
 top_artists = TopArtistsWidget()
 
@@ -159,7 +159,7 @@ class TopVenuesWidget(w.Widget):
             order by count desc, name
             limit 10
             """)
-        return [dict(name=a, quoted_name=urllib.quote_plus(a), count=c) for a, b, c in top_venues]
+        return [dict(name=a.decode('utf8'), id=b, count=c) for a, b, c in top_venues]
     
 top_venues = TopVenuesWidget()
 
