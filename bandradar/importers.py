@@ -3,7 +3,7 @@ import turbogears
 from turbogears import controllers, expose, redirect
 from turbogears import identity
 from turbogears import widgets as w
-from turbogears import validators as v
+from turbogears import validators
 from model import Event, Venue, Artist, Source, ArtistNameFixup, VenueNameFixup, hub
 from sqlobject import SQLObjectNotFound
 from datetime import date, datetime
@@ -182,7 +182,7 @@ class ImporterController(controllers.Controller, identity.SecureResource):
             phone = event['venue']['phone']
             if not len(phone) >= 8:
                 phone = "503-" + phone
-            p = v.PhoneNumber()
+            p = validators.PhoneNumber()
             try:
                 event['venue']['phone'] = p.to_python(phone)
             except:
@@ -268,8 +268,7 @@ class ImporterController(controllers.Controller, identity.SecureResource):
                 continue
             e = Event.get(e_id)
             e.approved = now
-            v = e.venue
-            v.approved = now
+            e.venue.approved = now
             for artist in e.artists:
                 artist.approved = now
 
