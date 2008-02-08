@@ -44,7 +44,7 @@ def events():
         for tr in soup("tr", attrs={"class":re.compile("vevent.*")}):
             event_dict = dict(source="lastfm")
             venue = dict()
-            venue['name'] = tr("td", attrs={"class":"location adr"})[0].a.strong.string
+            venue['name'] = tr("td", attrs={"class":"location"})[0].a.strong.string
             day, month, year = tr.attrs[0][1].split("-")[-3:]
             event_dict['date'] = date(int(year), int(month), int(day))
             artists = [tr("td", attrs={"class":"lineup"})[0].a.strong.string]

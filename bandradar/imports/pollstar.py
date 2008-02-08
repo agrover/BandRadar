@@ -44,7 +44,7 @@ def events():
             break
     while True:
         next = content.findNextSibling()
-        if next.string == "&gt;":
+        if next.string in ("&gt;", ">"):
             break
         page_count += 1
         content = next
