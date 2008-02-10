@@ -217,6 +217,7 @@ class ArtistController(controllers.Controller, util.RestAdapter):
             Artist.merge(old, new)
             # add this to fixup dict, so will never have to merge again
             artist_fixup_dict[old.name] = new.name
+            artist_fixup_dict.pop(new.name, None)
             flash("%s merged into %s and learned" % (old.name, new.name))
         except SQLObjectNotFound:
             flash("Could not move")
