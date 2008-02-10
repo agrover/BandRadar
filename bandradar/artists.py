@@ -1,5 +1,4 @@
-import turbogears
-from turbogears import controllers, expose, redirect
+from turbogears import controllers, expose, validate, error_handler, flash
 from turbogears import identity
 from turbogears import widgets as w
 from turbogears import validators as v
@@ -91,14 +90,14 @@ class ArtistController(controllers.Controller, util.RestAdapter):
         try:
             a = Artist.get(id)
         except SQLObjectNotFound:
-            turbogears.flash("Artist ID not found")
-            redirect(turbogears.url("/artists/list"))
+            flash("Artist ID not found")
+            util.redirect("/artists/list")
         except ValueError:
             try:
                 a = Artist.byNameI(urllib.unquote_plus(id))
             except SQLObjectNotFound:
-                turbogears.flash("Artist ID not found")
-                redirect(turbogears.url("/artists/list"))
+                flash("Artist ID not found")
+                util.redirect("/artists/list")
 
         if identity.current.user and a in identity.current.user.artists:
             is_tracked = True
@@ -128,23 +127,23 @@ class ArtistController(controllers.Controller, util.RestAdapter):
 
     @expose()
     @identity.require(identity.not_anonymous())
-    @turbogears.validate(form=artist_form)
-    @turbogears.error_handler(edit)
+    @validate(form=artist_form)
+    @error_handler(edit)
     def save(self, id=0, **kw):
         if id:
             try:
                 a = Artist.get(id)
                 a.set(**a.clean_dict(kw))
-                turbogears.flash("Updated")
+                flash("Updated")
             except SQLObjectNotFound:
-                turbogears.flash("Update Error")
+                flash("Update Error")
         else:
             a = Artist(added_by=identity.current.user, **Artist.clean_dict(kw))
             if not "admin" in identity.current.groups:
                 identity.current.user.addArtist(a)
-            turbogears.flash("Artist added")
+            flash("Artist added")
         a.approved = datetime.now()
-        redirect(turbogears.url("/artists/%s" % a.id))
+        util.redirect("/artists/%s" % a.id)
 
     @expose()
     @identity.require(identity.not_anonymous())
@@ -155,7 +154,7 @@ class ArtistController(controllers.Controller, util.RestAdapter):
             if a not in u.artists:
                 u.addArtist(a)
         except SQLObjectNotFound:
-            turbogears.flash("Artist not found")
+            flash("Artist not found")
             redirect("/")
         if viewing == "no":
             util.redirect_previous()
@@ -171,8 +170,8 @@ class ArtistController(controllers.Controller, util.RestAdapter):
             if a in u.artists:
                 u.removeArtist(a)
         except SQLObjectNotFound:
-            turbogears.flash("Artist not found")
-            redirect("/")
+            flash("Artist not found")
+            util.redirect("/")
         if viewing == "no":
             util.redirect_previous()
         else:
@@ -202,12 +201,12 @@ class ArtistController(controllers.Controller, util.RestAdapter):
             a = Artist.get(id)
             new_artists = a.split_artist()
             if len(new_artists) > 1:
-                turbogears.flash("split into %s" % ", ".join(new_artists.values()))
+                flash("split into %s" % ", ".join(new_artists.values()))
             else:
-                turbogears.flash("Not split")
+                flash("Not split")
         except SQLObjectNotFound:
-            turbogears.flash("not found")
-        redirect(turbogears.url("/artists/%s") % new_artists.keys()[0])
+            flash("not found")
+        util.redirect("/artists/%s" % new_artists.keys()[0])
 
     @expose()
     @identity.require(identity.in_group("admin"))
@@ -218,10 +217,10 @@ class ArtistController(controllers.Controller, util.RestAdapter):
             Artist.merge(old, new)
             # add this to fixup dict, so will never have to merge again
             artist_fixup_dict[old.name] = new.name
-            turbogears.flash("%s merged into %s and learned" % (old.name, new.name))
+            flash("%s merged into %s and learned" % (old.name, new.name))
         except SQLObjectNotFound:
-            turbogears.flash("Could not move")
-        redirect(turbogears.url("/artists/%s") % other_id)
+            flash("Could not move")
+        util.redirect("/artists/%s" % other_id)
 
     @expose()
     @identity.require(identity.in_group("admin"))
@@ -229,7 +228,8 @@ class ArtistController(controllers.Controller, util.RestAdapter):
         try:
             a = Artist.get(id)
             a.destroySelf()
-            turbogears.flash("Deleted")
+            flash("Deleted")
         except SQLObjectNotFound:
-            turbogears.flash("Delete failed")
-        redirect(turbogears.url("/artists/list"))
+            flash("Delete failed")
+        util.redirect("/artists/list")
+

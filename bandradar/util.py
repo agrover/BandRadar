@@ -1,6 +1,6 @@
 import turbogears
 import cherrypy
-import formencode
+from formencode import FancyValidator
 import cgi
 import htmllib
 from turbogears import identity
@@ -120,7 +120,7 @@ def clean_dict(cls, dirty_dict):
     return clean
 
 
-class UniqueName(formencode.FancyValidator):
+class UniqueName(FancyValidator):
 
     def __init__(self, sqlmodel, **kwargs):
         super(UniqueName, self).__init__(**kwargs)

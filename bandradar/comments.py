@@ -1,5 +1,4 @@
-import turbogears
-from turbogears import controllers, expose, redirect
+from turbogears import controllers, expose, flash, validate, error_handler
 from turbogears import identity
 from turbogears import widgets as w
 from turbogears import validators as v
@@ -43,14 +42,14 @@ class CommentController(controllers.Controller):
         if identity.current.user:
             return dict(comment_form=comment_form)
         else:
-            turbogears.flash("Sorry, please register/login to leave a comment (it's fast)")
+            flash("Sorry, please register/login to leave a comment (it's fast)")
             util.redirect("/")
 
     @expose()
-    @turbogears.validate(form=comment_form)
-    @turbogears.error_handler(add)
+    @validate(form=comment_form)
+    @error_handler(add)
     @identity.require(identity.not_anonymous())
     def save(self, comment):
         c = Comment(comment=comment, comment_by=identity.current.user)
-        turbogears.flash("Thanks for taking the time to comment!")
+        flash("Thanks for taking the time to comment!")
         util.redirect("/")

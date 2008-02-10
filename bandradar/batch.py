@@ -1,4 +1,3 @@
-import turbogears
 import logging
 from sqlobject.util.threadinglocal import local as threading_local
 from model import (hub, BatchRecord, UserAcct, Event, Venue, Group, Recording,

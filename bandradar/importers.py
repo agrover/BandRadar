@@ -1,6 +1,4 @@
-import cherrypy
-import turbogears
-from turbogears import controllers, expose, redirect
+from turbogears import controllers, expose, redirect, validate, error_handler
 from turbogears import identity
 from turbogears import widgets as w
 from turbogears import validators
@@ -31,12 +29,12 @@ class ImporterController(controllers.Controller, identity.SecureResource):
     @expose(template=".templates.webimport")
     def webimport(self, tg_errors=None):
         if tg_errors:
-            turbogears.flash("Entry error")
+            flash("Entry error")
         return dict(mercury_form=mercury_form)
 
     @expose()
-    @turbogears.validate(form=mercury_form)
-    @turbogears.error_handler(webimport)
+    @validate(form=mercury_form)
+    @error_handler(webimport)
     def importmercury(self, thedate, do_week=False):
         if not do_week:
             gen = mercury.day_events(thedate)
@@ -60,9 +58,9 @@ class ImporterController(controllers.Controller, identity.SecureResource):
                 review_count += 1
             else:
                 nonreview_count += 1
-        turbogears.flash("%s added %d, %d flagged for review, %d skipped" % \
+        flash("%s added %d, %d flagged for review, %d skipped" % \
             (name, nonreview_count, review_count, not_added))
-        redirect(turbogears.url("/importers/review"))
+        util.redirect("/importers/review")
 
     @expose()
     def importpollstar(self):
@@ -249,11 +247,11 @@ class ImporterController(controllers.Controller, identity.SecureResource):
     def reviewsubmit(self, submit, **kw):
         if submit == "Import Checked":
             self.review_import(**kw)
-            turbogears.flash("Imported")
+            flash("Imported")
         else:
             self.review_delete(**kw)
-            turbogears.flash("Deleted")
-        redirect(turbogears.url("/importers/review"))
+            flash("Deleted")
+        util.redirect("/importers/review")
 
     def review_import(self, **kw):
         e_counter = 0
@@ -298,7 +296,7 @@ class ImporterController(controllers.Controller, identity.SecureResource):
         new_events = Event.select(Event.q.approved == None)
         for event in new_events:
             self.delete_event(event)
-        redirect(turbogears.url("/importers/review"))
+        util.redirect("/importers/review")
 
     def events_likely_dupes(self, events):
         temp_artist_set = set()
@@ -349,4 +347,4 @@ class ImporterController(controllers.Controller, identity.SecureResource):
         for artist in new.artists:
             if not artist.approved:
                 artist.approved = datetime.now()
-        redirect(turbogears.url("/importers/reviewdupes"))
+        utilredirect("/importers/reviewdupes")

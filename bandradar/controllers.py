@@ -1,7 +1,6 @@
 import logging
 import cherrypy
-import turbogears
-from turbogears import controllers, expose, redirect
+from turbogears import controllers, expose, redirect, startup, validate
 from turbogears import identity
 from turbogears import scheduler
 from turbogears import widgets as w
@@ -49,8 +48,8 @@ def br_startup():
 def br_shutdown():
     saved_visit.shutdown_extension()
 
-turbogears.startup.call_on_startup.append(br_startup)
-turbogears.startup.call_on_shutdown.append(br_shutdown)
+startup.call_on_startup.append(br_startup)
+startup.call_on_shutdown.append(br_shutdown)
 
 # ---------- Datagrids ----------
 
@@ -120,7 +119,7 @@ class Root(controllers.RootController, errorlogger.ErrorCatcher):
         return util.dynmultisearch((Venue, Artist), name)
 
     @expose(template=".templates.search_results")
-    @turbogears.validate(form=global_search_form)
+    @validate(form=global_search_form)
     def search(self, search, tg_errors=None):
         venues = util.search(Venue, search['text'], tg_errors)
         artists = util.search(Artist, search['text'], tg_errors)

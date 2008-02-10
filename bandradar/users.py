@@ -1,7 +1,5 @@
 import cherrypy
-
-import turbogears
-from turbogears import controllers, expose
+from turbogears import controllers, expose, validate, error_handler, flash
 from turbogears import identity
 from turbogears import widgets as w
 from turbogears import validators as v
@@ -136,13 +134,13 @@ class UserController(controllers.Controller, util.RestAdapter):
                     newuser_form=newuser_form, form_vals=form_vals)
 
     @expose()
-    @turbogears.validate(form=newuser_form)
-    @turbogears.error_handler(login)
+    @validate(form=newuser_form)
+    @error_handler(login)
     def usercreate(self, user_name, email, zip_code, pass1, pass2,
              forward_url=None, previous_url=None):
         u = UserAcct(user_name=user_name, email_address=email,
             password=pass1)
-        turbogears.flash("Account created!")
+        flash("Account created!")
         identity.current_provider.validate_identity(user_name, pass1,
             identity.current.visit_key)
         util.redirect_previous()
@@ -151,7 +149,7 @@ class UserController(controllers.Controller, util.RestAdapter):
     def logout(self):
         saved_visit.forget()
         identity.current.logout()
-        turbogears.flash("Logged out")
+        flash("Logged out")
         util.redirect("/")
 
     @expose(template=".templates.user.list")
@@ -172,7 +170,7 @@ class UserController(controllers.Controller, util.RestAdapter):
             if identity.current.user and identity.current.user.user_name == user_name:
                 viewing_self = True
         except SQLObjectNotFound:
-            turbogears.flash("User not found")
+            flash("User not found")
             util.redirect("/")
 
         return dict(user=u, artists=artists, venues=venues,
@@ -189,7 +187,7 @@ class UserController(controllers.Controller, util.RestAdapter):
             if identity.current.user and identity.current.user.user_name == user_name:
                 viewing_self = True
         except SQLObjectNotFound:
-            turbogears.flash("User not found")
+            flash("User not found")
             util.redirect("/")
 
         return dict(user=u, artists=artists, viewing_self=viewing_self,
@@ -204,14 +202,14 @@ class UserController(controllers.Controller, util.RestAdapter):
         try:
             u = UserAcct.by_user_name(user_name)
         except SQLObjectNotFound:
-            turbogears.flash("Invalid username")
+            flash("Invalid username")
             util.redirect("/")
         return dict(user_name=user_name, user_form=user_form,
             form_vals=u)
 
     @expose()
-    @turbogears.validate(form=user_form)
-    @turbogears.error_handler(edit)
+    @validate(form=user_form)
+    @error_handler(edit)
     @identity.require(identity.not_anonymous())
     def save(self, user_name, old_pass, pass1, **kw):
         if not (identity.current.user.user_name == user_name
@@ -225,9 +223,9 @@ class UserController(controllers.Controller, util.RestAdapter):
             if (old_pass or "admin" in identity.current.groups) and pass1:
                 # model does hash, not us
                 u.password = pass1
-            turbogears.flash("Saved")
+            flash("Saved")
         except SQLObjectNotFound:
-            turbogears.flash("Error saving changes")
+            flash("Error saving changes")
         util.redirect("/users/%s" % u.user_name)
 
     @expose(template=".templates.user.lost_passwd")
@@ -235,8 +233,8 @@ class UserController(controllers.Controller, util.RestAdapter):
         return dict(lost_passwd_form=lost_passwd_form);
 
     @expose()
-    @turbogears.validate(form=lost_passwd_form)
-    @turbogears.error_handler(lost_passwd)    
+    @validate(form=lost_passwd_form)
+    @error_handler(lost_passwd)    
     def lost_passwd_send(self, email=None):
         if not email:
             util.redirect("/")
@@ -262,9 +260,9 @@ class UserController(controllers.Controller, util.RestAdapter):
             s.sendmail(msg_from, [msg_to], msg.as_string())
             s.close()
 
-            turbogears.flash("Email sent to %s." % email)
+            flash("Email sent to %s." % email)
         except SQLObjectNotFound:
-            turbogears.flash("Email unknown - no email sent.")
+            flash("Email unknown - no email sent.")
         util.redirect("/")
 
     #delete. display confirmation
