@@ -12,6 +12,8 @@ def date_to_url(date):
 
 def parse_event(event):
     event_name = ""
+    p = re.compile(r"\(.*?[ap]m\)")
+    event = p.sub("", event)
     # find name (if present)
     if event.rfind(':') != -1:
         event_name, event = event.split(':', 1)

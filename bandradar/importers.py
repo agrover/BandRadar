@@ -1,4 +1,4 @@
-from turbogears import controllers, expose, redirect, validate, error_handler
+from turbogears import controllers, expose, redirect, validate, error_handler, flash
 from turbogears import identity
 from turbogears import widgets as w
 from turbogears import validators
@@ -228,6 +228,11 @@ class ImporterController(controllers.Controller, identity.SecureResource):
                 flag_for_review = True
             if not e.id in [existing.id for existing in a.events]:
                 a.addEvent(e)
+
+        # flag all events from certain unreliable sources
+        if event["source"] in ("ticketswest", "upcoming", "lastfm"):
+            flag_for_review = True
+
         if new_event and not flag_for_review:
             e.approved = datetime.now()
         elif flag_for_review:
