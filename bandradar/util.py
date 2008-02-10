@@ -175,6 +175,7 @@ class PersistentDict(dict):
         super(PersistentDict, self).__setitem__(name, value)
 
     def __delitem__(self, name):
+        print "delitem called"
         self.model.byName(name).destroySelf()
         super(PersistentDict, self).__delitem__(name)
 
@@ -186,6 +187,29 @@ class PersistentDict(dict):
             except SQLObjectNotFound:
                 r = self.model(name=name, value=value)
         super(PersistentDict, self).update(other_dict)
+
+    def pop (self, item, *default):
+        key = self.has_key(item)
+        if key == False:
+            if len(default) != 1:
+                raise KeyError(item)
+            else:
+                return default[0]
+        val = self[item]
+        del self[item]
+        return val
+
+    # specific to our usage of this class (fixup table)
+    def tidy(self, old_name, new_name):
+        self.pop(new_name, None)
+        for name, value in self.iteritems():
+            if value == old_name:
+                self[name] = new_name
+
+    def find_cycles(self):
+        for name, value in self.iteritems():
+            if self.has_key(value):
+                print name, "->", value, "->", self[value]
 
 def email(msg_to, msg_from, subject, body):
     import smtplib
