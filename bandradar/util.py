@@ -175,7 +175,6 @@ class PersistentDict(dict):
         super(PersistentDict, self).__setitem__(name, value)
 
     def __delitem__(self, name):
-        print "delitem called"
         self.model.byName(name).destroySelf()
         super(PersistentDict, self).__delitem__(name)
 
