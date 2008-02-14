@@ -352,4 +352,4 @@ class ImporterController(controllers.Controller, identity.SecureResource):
         for artist in new.artists:
             if not artist.approved:
                 artist.approved = datetime.now()
-        utilredirect("/importers/reviewdupes")
+        util.redirect("/importers/reviewdupes")
