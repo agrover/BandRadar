@@ -244,12 +244,10 @@ background: #efefef;
 #tonight li {
  float: left;
  width: 280px;
- margin: 0 11px .5em 0px;
- padding:0 .25em .5em .25em;
+ margin: 0 11px 5px 0px;
+ padding: 0 .25em 0.25em;
  list-style: none;
  border: 1px dotted #0cbfd7;
-
-
 }
  
 #tonight h3 {
