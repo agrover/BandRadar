@@ -1,14 +1,25 @@
 body {
-    font: normal small Geneva, Arial, Tahoma, sans-serif;
+    font-size: small;
+    font-weight: normal;
+    /*font-family: Geneva, Arial, Helvetica, sans-serif;*/
+    /*font-family: Tahoma,"Lucida Grande", Arial, sans-serif;*/
+    /*font-family: "Courier New", Courier, monospace;*/
+    /*font-family: Georgia,"Times New Roman",Times,serif;*/
+    font-family: Verdana, Arial, Helvetica, sans-serif;
+       /*font-family: Tahoma,"Lucida Grande", Arial, sans-serif;*/
+    /*font-family: "Lucida Console", Monaco, monospace;*/
+    /*font-family: "Marker Felt", "Comic Sans MS", fantasy;*/
+    /*font-family: "Century Gothic", "Gill Sans", Arial, sans-serif;*/
 	  margin: 0 auto 0 auto;
     padding: 0 0 0 0;
+    
 
     
 }
 
 a { text-decoration: none; }
-a:link { color: #254117; font-weight: normal;}
-a:visited { color: #737373;}
+a:link { color: #10282C; font-weight: normal;}
+a:visited { color: #0cbfd7;}
 a:hover { text-decoration: underline;  }
 li {list-style: none;}
 img {border: none;}     
@@ -21,7 +32,11 @@ h1 {
 h2 {
     font-size: small;
     text-align: left;
-    color: #737373;
+    color: black;
+    text-transform: lowercase;
+    font-weight: bold;
+    border-left: 3px dotted #0cbfd7;
+    padding-left: 5px;
 }
 
 h3 {
@@ -56,9 +71,9 @@ h5 {display: inline;}
 /*Main Containers*/
 
 .content {
- width: 960px;
  margin: 0 auto 0 auto;
- }
+ width: 950px;
+}
  
 .content h3 {
    display: inline;
@@ -69,20 +84,30 @@ h5 {display: inline;}
      width: 175px;
      float: left;
      padding-top: 0px;
-     position: relative;
+     position: relative;   
+}
+
+* html .leftcontent {
+     display: inline;
 }
   
 .centercontent{
       height: auto;
-      width: 550px;
-      float: left;
-    
+      width: 600px;
+      float: left;  
+}
+
+* html .centercontent {
+      display: inline;
 }
 
 .rightcontent {
        float: right;
-       width: 230px;
-     
+       width: 175px;  
+}
+
+* html .rightcontent {
+       display: inline;
 }
 
 .rightcontent h3 {
@@ -105,7 +130,7 @@ h5 {display: inline;}
 }  
 .footer p{
      padding-top: 1em;
-     color: #254117;
+     color: #0cbfd7;
   }
 
 /*Main and Admin Nav Bars*/
@@ -119,7 +144,14 @@ h5 {display: inline;}
    padding: 0px;
    background: #efefef;
    float: left;
-   display: inline;   
+   display: inline; 
+   
+}
+
+ul#navlist {
+   padding: 0;
+   margin: 0;
+  
 }
 
 #navlist li {
@@ -145,9 +177,12 @@ h5 {display: inline;}
    
 
 #banner {
-  padding-bottom: 20px;
+  padding-bottom: 10px;
   margin: 0 auto 0 auto;
   text-align: center;
+  /*background: url(../images/staff.png)repeat-x center;*/
+  background: none;
+
  } 
 
 #help {
@@ -158,9 +193,10 @@ background: #efefef;
 }
 
 .flash {
-   font-weight: bold;
    font-size: medium;
-   text-align: left;
+   color: #0cbfd7;
+   padding: .25em;
+   text-transform: uppercase;
 }
 
 
@@ -170,16 +206,20 @@ background: #efefef;
    font-size: x-small;
    border: solid 1px #254117;
    padding: 2px;
-   background: #eee;
+   background: black;
+   color: #0cbfd7;
    margin-right: 15px;   
+   font-weight: bold;
+   text-transform: uppercase;
 }
 .button:hover { cursor: pointer } 
  
 /*Top Search*/ 
 
 #search {
-   text-align: right;
-   padding: 5px 0 10px 0;
+   float: right;
+   padding: 5px 0 5px 0;
+   display: inline;
 }   
 
 
@@ -188,13 +228,14 @@ background: #efefef;
 #tonight {
    text-align: left;
    font-size: small; 
+   margin-top: 10px;
   
 }
 
 #tonight ul{
  float: right;
- width: 519px;
- margin: 0;
+ width: 600px;
+ margin: 0 0px 0 0px;
  padding: 0px 0px 0 0px;
  list-style: none;
  margin-bottom: 20px;
@@ -202,11 +243,13 @@ background: #efefef;
 
 #tonight li {
  float: left;
- width: 250px;
- margin: 0;
- padding: 0px 7px 0 2px;
+ width: 280px;
+ margin: 0 11px .5em 0px;
+ padding:0 .25em .5em .25em;
  list-style: none;
- border-bottom: #efefef 1px dashed;
+ border: 1px dotted #0cbfd7;
+
+
 }
  
 #tonight h3 {
@@ -214,19 +257,20 @@ background: #efefef;
  text-align: center;
  padding-bottom: 20px;
  }
-
+ 
 
 #sitestats {
  margin-left: 0px;
- margin-top: 20px;
+ margin-top: 0px;
 } 
 
 #bandstats {
   text-align: right;
   position: relative;
   float: right;
-  padding: 1em 2em 2em 2em;
+  padding: 0 0 2em 0;
 } 
+
 
 #bandstats h5, 
 #bandstats p{
@@ -234,10 +278,11 @@ background: #efefef;
  margin: 0;
  }
 
+
 #venuestats {
   text-align: right;
   position: relative;
-  padding: 1em 2em 2em 2em;
+  padding: .5em 0 2em 0;
   float: right;
   margin-top: 5px;
   } 
@@ -256,6 +301,7 @@ padding: 5px 0 ;
 margin-left: 0;
 border-bottom: 1px solid #778;
 font-weight: bold;
+text-align: center;
 }
 
 #listnavlist li
@@ -269,11 +315,14 @@ display: inline;
 {
 padding: 3px 0.5em;
 margin-left: 3px;
-background:  #eee;
+background:  black;
+color: #0cbfd7;
+font-weight: bold;
+text-transform: lowercase;
 }
 
 #listnavlist li a:hover{
-color: #254117;
+color: #0cbfd7;
 background: #eee;
 border-color: #227;
 }
@@ -338,8 +387,15 @@ border-bottom: 1px solid white;
 
 #blurb {
  text-align: left;
- 
- background: #efefef;
+ border-top:3px dotted #0cbfd7;
+ border-bottom: 3px dotted #0cbfd7;
+ padding:.25em;
+ margin-top: .5em;
+ width: 580px;
+}
+
+#blurb img {
+ float: left;
 }
 
 /*Artist Pages*/
@@ -459,7 +515,7 @@ border-bottom: 1px solid white;
 
 #map {
     float: right;
-    border: 2px solid #737373;
+    border: 2px solid black;
     margin: 2em 0 0 0;
 }    
 
@@ -554,10 +610,6 @@ td#future {
 td#performed{
   text-indent: 2.5em;
 }
-
-
-
-
 
 /*Random Things*/
 

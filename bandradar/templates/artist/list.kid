@@ -9,7 +9,7 @@
 <body>
 <!--      <div id="help"><p>BandRadar sends you an email when your tracked bands add shows.</p>
      </div> -->
-     <img src="/static/images/music.png"/><a href="/artists/edit">Add Band or Artist</a>
+     <img src="/static/images/icon.png"/><a href="/artists/edit">ADD BAND or ARTIST</a>
      <p><h5>Bands playing ${listby}<big> (${count})</big></h5></p>     
 
         <ul id="listnavlist">

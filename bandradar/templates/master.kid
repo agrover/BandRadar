@@ -29,12 +29,19 @@
 <body py:match="item.tag=='{http://www.w3.org/1999/xhtml}body'">  
   
   <div class="content">
-   <div id="search">
+     <div id="search">
     ${tg_global_search_form(action="/search")}
     </div>
     
-     <div class ="leftcontent">
-        <div py:if="tg_flash" class="flash" py:content="tg_flash"></div>
+    <div py:if="tg_flash" class="flash" py:content="tg_flash"></div>
+    
+    <div id="banner">
+    	  <a href="/"><img src="/static/images/brbanner.png" alt="BandRadar logo" /></a>
+    </div>    
+ 
+   
+    <div class ="leftcontent">
+
         <div id="navcontainer">
         <ul id="navlist">
           <li id="login"><span py:if="not tg.identity.user">
@@ -49,7 +56,7 @@
           <li><img src="/static/images/music.png"/><a href="/artists/list">  Bands</a></li>                
          <li><img src="/static/images/calendar.png"/><a href="/events/list">  Events</a></li> 
          <li><img src="/static/images/building.png"/><a href="/venues/list">  Venues</a></li>
-         <li><img src="/static/images/lightbulb.png"/><a href="/faq">  faq</a></li>
+         <li><img src="/static/images/lightbulb.png"/><a href="/faq">  FAQ</a></li>
          <li id="nav-logout"><span py:if="tg.identity.user"> <img src="/static/images/key_delete.png"/>
               <a href="/users/logout">  Logout</a>
           </span></li>
@@ -66,27 +73,25 @@
          
          </ul>
         </div>
-     </div> 
-
-     <div class="centercontent">
-        <div id="banner">
-    	  <a href="/"><img src="/static/images/banner.png" alt="BandRadar logo" /></a>
-        </div>     
+     </div>  
+     
+      <div class="centercontent">
+ 
         <div py:replace="[item.text] + item[:]"/> 
        </div>
 
-    <div class="rightcontent">  
+      <div class="rightcontent">  
         <div id="sitestats">
       	   <div id="bandstats">    
-           <h5>Top Tracked Bands</h5>
+           <h5>Top Tracked Bands<img src="/static/images/icon.png" alt="BR"></img></h5>
            ${tg_top_artists()}
            </div>     
            <div id="venuestats">    
-           <h5>Top Tracked Venues</h5>
+           <h5>Top Tracked Venues<img src="/static/images/icon.png" alt="BR"></img></h5>
            ${tg_top_venues()}
            </div>	
         </div>                   
-   </div>  
+   </div> 
 
 
   </div>
@@ -98,7 +103,7 @@
     <a href="http://bandradar.blogspot.com">blog</a> |
     <a href="/contact">contact</a> |
     <a href="/comments/add">comments</a>
-    <p>© Copyright 2007 <a href ="http://buunabet.com">Buunabet,LLC</a>  All rights reserved.</p>
+    <p>© Copyright 2008 <a href ="http://buunabet.com">Buunabet,LLC</a>  All rights reserved.</p>
   </div>
   
 </body> 

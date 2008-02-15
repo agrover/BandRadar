@@ -8,15 +8,14 @@
 </head>
 
 <body>
-     <div class="mapright">
-        ${googlemap(venue=event.venue, width=250, height=200)}
-</div>
+
 <h4>${event.name}
              
      
 </h4>
    <div id="blurb">
         <p id="description" py:if="description">${XML(description)}</p>
+         ${googlemap(venue=event.venue, width=250, height=200)}
   </div>    
             <p><h5>Date:</h5> ${event.date.strftime("%x")}</p>
             <p py:if="event.time"><h5>Time:</h5> ${event.time}</p>

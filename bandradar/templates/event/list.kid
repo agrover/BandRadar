@@ -9,7 +9,7 @@
 <body>
 
    <!-- <div id="help"><p>BandRadar sends you an email when your tracked events are upcoming.</p></div> -->
-   <p><img src="/static/images/date_add.png"/><a href="/events/edit">Add an Event</a></p>  
+   <p><img src="/static/images/icon.png"/><a href="/events/edit">ADD an EVENT</a></p>  
    <h5>Events: ${listby} <big>(${count})</big> </h5>
    
         <ul id="listnavlist">    

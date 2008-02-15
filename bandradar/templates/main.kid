@@ -11,7 +11,7 @@
   <div id="blurb">${XML(blurb)}</div>
   
   <div id="tonight">
-    <ul>
+    <ul class="tonight">
       <li py:for="event_id,event_name,venue_name in events">
   	  <a href="/events/${event_id}"><b>${venue_name}</b>:  ${event_name}</a></li>
     </ul>

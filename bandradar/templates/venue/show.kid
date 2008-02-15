@@ -7,7 +7,7 @@
 </head>
 
 <body>
-           ${googlemap(venue=venue, width=250, height=200)}
+           
            
           <span id="name"><h4>${venue.name}</h4></span>
           &nbsp;
@@ -27,9 +27,10 @@
 
           
       <li></li>       
-            <div id="blurb">            
+            <div id="blurb">   
+                    
             <p id="description" py:if="description">${XML(description)}</p>
-             
+             ${googlemap(venue=venue, width=250, height=200)} 
             </div>           
             <p py:if="venue.address"><h5>Address: </h5><span id="address">${venue.address}</span></p>
             <p py:if="venue.phone"><h5>Phone: </h5><span id="phone">${venue.phone}</span></p>
