@@ -12,7 +12,7 @@ def date_to_url(date):
 
 def parse_event(event):
     event_name = ""
-    p = re.compile(r"\(.*?[ap]m\)")
+    p = re.compile(r"\([\w\s:]*?[ap]m\)")
     event = p.sub("", event)
     # find name (if present)
     if event.rfind(':') != -1:
@@ -20,7 +20,9 @@ def parse_event(event):
     elif event.rfind('w/') != -1:
         event_name, event = event.split('w/', 1)
 
-    artists = [a.strip(' "') for a in event.split(",")]
+    p = re.compile("[,;]")
+    artists = p.split(event)
+    artists = [a.strip(' "\n') for a in artists]
     artists = [a.replace(" & friends", "") for a in artists]
     artists = [a.replace(" & guests", "") for a in artists]
     if artists[0].startswith("DJs"):
@@ -29,6 +31,17 @@ def parse_event(event):
     if not event_name:
         event_name = ", ".join(artists)
     return event_name, artists
+
+def stringify(node):
+    """take a branch and flatten it into a string"""
+    strings = list()
+    for item in node:
+        if isinstance(item, basestring):
+            strings.append(item)
+        else:
+            for x in stringify(item):
+                strings.append(x)
+    return "".join(strings)
 
 def day_events(date):
     usock = urllib.urlopen(date_to_url(date))
@@ -42,7 +55,7 @@ def day_events(date):
         address, phone = venue_stuff.rsplit(",", 1)
         event['venue'] = dict(name=small.b.string, address=address, phone=phone)
         event_name_span = small.findNextSibling("span", "headout_event")
-        event_name = "".join([x for x in event_name_span.contents if isinstance(x, basestring)])
+        event_name = stringify(event_name_span)
         event['name'], event['artists'] = parse_event(event_name)
         yield event
 
@@ -54,7 +67,8 @@ def week_events():
             yield event
 
 if __name__ == "__main__":
-    print len(list(day_events(datetime.date.today()+datetime.timedelta(2))))
+    #print len(list(day_events(datetime.date.today()+datetime.timedelta(2))))
     #print len(list(day_events(datetime.date.today())))
-    #print len(list(day_events(datetime.date(2007, 4, 27))))
+    #print len(list(day_events(datetime.date(2008, 2, 16))))
+    print len(list(week_events()))
 
