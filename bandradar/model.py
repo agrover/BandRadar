@@ -127,9 +127,9 @@ def update_listener(instance, kwargs):
                 attrib_old_value=old_value,
                 attrib_new_value=value
                 )
-            kwargs['last_updated'] = datetime.now()
+            instance.last_updated = datetime.now()
 
-#listen(update_listener, Journalled, RowUpdateSignal)
+listen(update_listener, Journalled, RowUpdateSignal)
 
 #
 # Keep track of all edits to Journalled objects, so in case of vandalism,
