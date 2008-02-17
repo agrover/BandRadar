@@ -9,6 +9,9 @@ import random
 
 import util
 
+import logging
+log = logging.getLogger("bandradar.model")
+
 hub = PackageHub("bandradar")
 __connection__ = hub
 
@@ -174,7 +177,7 @@ class Venue(Journalled, BRCentral):
         pdx_lat, pdx_lon = "45.511810", "-122.675680"
         try:
             # lat is +, lon is -, a bug if otherwise
-            lat, lon = geo.get_geocode(location)
+            lat, lon, zip_code = geo.get_geocode(location)
             if not geo.is_within_radius(pdx_lat, pdx_lon, 15, lat, lon):
                 return list()
             dist = 0.2

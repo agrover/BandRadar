@@ -21,4 +21,11 @@ def get_geocode(address):
         raise IOError
     # return reversed for [lat, lon] instead if [x, y] (which is lon, lat)
     l = list(reversed(soup.response.placemark.point.coordinates.string.split(",")[:2]))
-    return [Decimal(c) for c in l]
+    l = [Decimal(c) for c in l]
+    try:
+        zip_code = int(soup.response.placemark.addressdetails.country.administrativearea.subadministrativearea.locality.postalcode.postalcodenumber.string)
+    except AttributeError:
+        zip_code = None
+    l.append(zip_code)
+    return l
+

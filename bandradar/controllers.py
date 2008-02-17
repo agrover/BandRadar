@@ -1,4 +1,3 @@
-import logging
 import cherrypy
 from turbogears import controllers, expose, redirect, startup, validate
 from turbogears import identity
@@ -29,6 +28,7 @@ import datetime
 from xml.etree import ElementTree
 from docutils.core import publish_parts
 
+import logging
 log = logging.getLogger("bandradar.controllers")
 
 # ---------- Startup ----------
@@ -149,10 +149,11 @@ class Root(controllers.RootController, errorlogger.ErrorCatcher):
 
         return dict(events=events, blurb=blurb_text)
 
-    @expose(template=".templates.output")
-    def test(self):
-        return dict(output="hello")
-        #return dict(output=str(identity.current_provider))
+    @expose(template=".templates.closest")
+    def search_closest(self):
+        search_text = "sw 4th and burnside, portland or"
+        venue_list = Venue.closest(search_text, with_event=True)
+        return dict(venues=venue_list, saddr=search_text, start=search_text)
 
     @expose(template=".templates.about")
     def about(self):

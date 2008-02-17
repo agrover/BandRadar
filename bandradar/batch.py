@@ -265,9 +265,11 @@ def update_venues():
             area = ", Portland, OR"
         if venue.address:
             try:
-                lat, lon = geo.get_geocode(venue.address + area)
+                lat, lon, zip_code = geo.get_geocode(venue.address + area)
                 venue.geocode_lat = lat
                 venue.geocode_lon = lon
+                if not venue.zip_code:
+                    venue.zip_code = zip_code
             except IOError:
                 pass
         venue.batch_updated = datetime.datetime.now()
