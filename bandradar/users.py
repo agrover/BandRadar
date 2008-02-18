@@ -7,7 +7,9 @@ from turbogears import validators as v
 from model import UserAcct, Event, Artist, Attendance, Venue, hub
 from widgets import artist_list
 from sqlobject import SQLObjectNotFound, LIKE, func
-from datetime import date
+from datetime import date, datetime
+import itertools as it
+import icalendar as ical
 import formencode
 import util
 import saved_visit
@@ -264,5 +266,45 @@ class UserController(controllers.Controller, util.RestAdapter):
         except SQLObjectNotFound:
             flash("Email unknown - no email sent.")
         util.redirect("/")
+
+    @expose()
+    def icalendar(self, user_name):
+        try:
+            u = UserAcct.by_user_name(user_name)
+        except SQLObjectNotFound:
+            return "User not found."
+
+        events = set()
+        desc = "Event listed by Bandradar.com because you are tracking this %s.\n\n"
+        events.update(it.izip(u.events, it.repeat(desc % "event")))
+        for artist in u.artists:
+            events.update(it.izip(artist.future_events, it.repeat(desc % "artist")))
+        for venue in u.venues:
+            events.update(it.izip(venue.future_events, it.repeat(desc % "venue")))
+
+        cal = ical.Calendar()
+        cal.add('prodid', '-//bandradar//calendar//')
+        cal.add('version', '1.0')
+        for event, src in events:
+            cal_event = ical.Event()
+            cal_event.add('summary', event.name)
+            if event.description:
+                src += event.description
+            cal_event.add('description', src)
+            location = event.venue.name
+            if event.venue.address:
+                location += " (" + event.venue.address + ")"
+            cal_event.add('location', location)
+            cal_event.add('uid', event.id)
+            cal_event.add('url', "http://bandradar.com/events/%s" % event.id)
+            cal_event.add('dtstart', datetime(event.date.year, event.date.month,
+                event.date.day,21,0,0))
+            cal_event.add('dtend', datetime(event.date.year, event.date.month,
+                event.date.day,23,0,0))
+            cal_event.add('dtstamp', datetime(event.date.year, event.date.month,
+                event.date.day,21,0,0))
+            cal.add_component(cal_event)
+        cherrypy.response.headers['content-type'] = "text/calendar"
+        return cal.as_string()
 
     #delete. display confirmation
