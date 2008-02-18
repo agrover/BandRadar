@@ -133,7 +133,7 @@ class Root(controllers.RootController, errorlogger.ErrorCatcher):
         return dict(venues=venues, artists=artists)
 
     @expose(template=".templates.main")
-    def index(self):
+    def index(self, gclid=None):
         conn = hub.getConnection()
 
         events = conn.queryAll("""
