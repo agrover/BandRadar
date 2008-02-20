@@ -113,6 +113,16 @@
     </table>
     </div>
 
+    <div>
+        Add to
+        <a href="http://www.google.com/calendar/render?cid=http://bandradar.com/users/${user.user_name}/icalendar">
+            <img src="/static/images/gc_button1.gif" alt="GCal link"/>
+        </a>
+        or
+        <a href="http://bandradar.com/users/${user.user_name}/icalendar">
+            <img src="/static/images/ical.gif" alt="iCalendar link"/>
+        </a> webcal-compliant application
+    </div>
 
 </body>
 </html>

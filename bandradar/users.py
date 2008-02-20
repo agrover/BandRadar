@@ -275,7 +275,7 @@ class UserController(controllers.Controller, util.RestAdapter):
             return "User not found."
 
         events = set()
-        desc = "Event listed by Bandradar.com because you are tracking this %s.\n\n"
+        desc = "Event listed by Bandradar.com because you are tracking this %s."
         events.update(it.izip(u.events, it.repeat(desc % "event")))
         for artist in u.artists:
             events.update(it.izip(artist.future_events, it.repeat(desc % "artist")))
@@ -283,13 +283,14 @@ class UserController(controllers.Controller, util.RestAdapter):
             events.update(it.izip(venue.future_events, it.repeat(desc % "venue")))
 
         cal = ical.Calendar()
+        cal.add('x-wr-calname', "BandRadar: calendar for %s" % u.user_name)
         cal.add('prodid', '-//bandradar//calendar//')
         cal.add('version', '1.0')
         for event, src in events:
             cal_event = ical.Event()
             cal_event.add('summary', event.name)
             if event.description:
-                src += event.description
+                src += "\n\n" + event.description
             cal_event.add('description', src)
             location = event.venue.name
             if event.venue.address:
