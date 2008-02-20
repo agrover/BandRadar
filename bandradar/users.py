@@ -283,7 +283,7 @@ class UserController(controllers.Controller, util.RestAdapter):
             events.update(it.izip(venue.future_events, it.repeat(desc % "venue")))
 
         cal = ical.Calendar()
-        cal.add('x-wr-calname', "BandRadar: calendar for %s" % u.user_name)
+        cal.add('x-wr-calname', "BandRadar: events for %s" % u.user_name)
         cal.add('prodid', '-//bandradar//calendar//')
         cal.add('version', '1.0')
         for event, src in events:
