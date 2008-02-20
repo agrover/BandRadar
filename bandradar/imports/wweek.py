@@ -56,6 +56,8 @@ def day_events(date):
         event['venue'] = dict(name=small.b.string, address=address, phone=phone)
         event_name_span = small.findNextSibling("span", "headout_event")
         event_name = stringify(event_name_span)
+        if len(event_name) < 2:
+            continue
         event['name'], event['artists'] = parse_event(event_name)
         yield event
 
