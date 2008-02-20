@@ -23,7 +23,7 @@ def get_geocode(address):
     l = list(reversed(soup.response.placemark.point.coordinates.string.split(",")[:2]))
     l = [Decimal(c) for c in l]
     try:
-        zip_code = int(soup.response.placemark.addressdetails.country.administrativearea.subadministrativearea.locality.postalcode.postalcodenumber.string)
+        zip_code = soup.response.placemark.addressdetails.country.administrativearea.subadministrativearea.locality.postalcode.postalcodenumber.string
     except AttributeError:
         zip_code = None
     l.append(zip_code)
