@@ -22,7 +22,7 @@ def artist_info(artist_name, count=3):
         if soup.similarartists["picture"].find("noimage") == -1:
             info['img_url'] = urllib.unquote(soup.similarartists["picture"])
         
-        info['similars'] = [x.find("name").string for x in soup.findAll("artist")[:count]]
+        info['similars'] = [x.find("name").string.strip() for x in soup.findAll("artist")[:count]]
 
         # get tags
         usock = urllib.urlopen(base_url + artist_name + "/toptags.xml")

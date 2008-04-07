@@ -338,7 +338,7 @@ class Artist(Journalled, BRCentral):
     def byNameI(cls, name):
         try:
             return super(Artist, cls).byNameI(name)
-        except  SQLObjectNotFound:
+        except SQLObjectNotFound:
             for name_var in cls.name_variations(name):
                 results = Artist.select(func.LOWER(Artist.q.name) == name_var)
                 if results.count():
