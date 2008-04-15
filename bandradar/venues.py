@@ -87,7 +87,7 @@ class VenueController(controllers.Controller, util.RestAdapter):
             tracked_count=v.users.count(), is_tracked=is_tracked)
 
     @expose(template=".templates.venue.edit")
-    @identity.require(identity.in_group("admin"))
+    @identity.require(identity.not_anonymous())
     def edit(self, id=0):
         if id:
             try:
@@ -100,7 +100,7 @@ class VenueController(controllers.Controller, util.RestAdapter):
         return dict(venue_form=venue_form, form_vals=v)
 
     @expose()
-    @identity.require(identity.in_group("admin"))
+    @identity.require(identity.not_anonymous())
     @validate(form=venue_form)
     @error_handler(edit)
     def save(self, id=0, **kw):
