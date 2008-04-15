@@ -2,6 +2,7 @@ from turbogears import widgets as w
 from turbogears import validators as v
 import urllib
 from cgi import escape
+from xml.etree import ElementTree as et
 from bandradar.imports import google
 from bandradar.model import hub
 
@@ -41,26 +42,32 @@ class ButtonWidget(w.Widget):
     params = ['label', 'action']
 
 class ArtistListWidget(w.Widget):
-    template = "bandradar.widgets.templates.artistlist"
     params = ['artists', 'emph_new']
 
     emph_new = False
 
-    def get_list(self, artists, emph_new):
+    def display(self, artists, emph_new=False):
         artists = artists.orderBy('name')
+        top = et.Element("span")
+        top.attrib['class'] ="artistlist"
         if not artists.count():
-            artisthtml = "None"
+            top.text = "None"
         else:
-            app_htmlstr = "<a href=\"/artists/%s\">%s</a>"
-            if emph_new:
-                unapp_htmlstr = "<strong>%s</strong>"
-            else:
-                unapp_htmlstr = "%s"
-            artist_html_list = []
-            artist_html_list.extend([ app_htmlstr % (str(a.id), escape(a.name)) for a in artists if a.approved])
-            artist_html_list.extend([ unapp_htmlstr % escape(a.name) for a in artists if not a.approved])
-            artisthtml = ", ".join(artist_html_list)
-        return artisthtml
+            for app_artist in [a for a in artists if a.approved]:
+                sub = et.SubElement(top, "a")
+                sub.attrib['href'] = "/artists/%s" % app_artist.id
+                sub.text = app_artist.name
+                sub.tail = ", "
+            for unapp_artist in [a for a in artists if not a.approved]:
+                if emph_new:
+                    sub = et.SubElement(top, "strong")
+                else:
+                    sub = et.SubElement(top, "span")            
+                sub.text = unapp_artist.name
+                sub.tail = ", "
+            sub.tail = None
+
+        return top
 
 artist_list = ArtistListWidget()
 
