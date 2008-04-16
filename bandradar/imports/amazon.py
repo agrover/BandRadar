@@ -1,6 +1,5 @@
-from BeautifulSoup import BeautifulStoneSoup as bs
 import urllib
-from bandradar import util
+import import_util
 
 baseurl = "http://ecs.amazonaws.com/onca/xml"
 access_key = "0S381N0APYWVHYRS8BR2"
@@ -23,8 +22,7 @@ def recordings(name, count=5):
     req['Artist'] = urllib.quote(name.encode('utf8'))
     params = "&".join([key+"="+value for key, value in req.items()])
     url = baseurl + "?" + params
-    usock = urllib.urlopen(url)
-    soup = bs(usock.read(), convertEntities=bs.ALL_ENTITIES)
+    soup = import_util.url_to_soup(url)
     if soup.itemsearchresponse.items.request.isvalid.string != "True":
         return
     # do something if it took too long?

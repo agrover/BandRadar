@@ -1,9 +1,8 @@
-from BeautifulSoup import BeautifulSoup as bs
-import urllib
 import datetime
 import dateutil.relativedelta as drd
 import time
 import re
+import import_util
 
 def date_to_url(date):
     baseurl = "http://localcut.wweek.com/calendar/"
@@ -32,20 +31,8 @@ def parse_event(event):
         event_name = ", ".join(artists)
     return event_name, artists
 
-def stringify(node):
-    """take a branch and flatten it into a string"""
-    strings = list()
-    for item in node:
-        if isinstance(item, basestring):
-            strings.append(item)
-        else:
-            for x in stringify(item):
-                strings.append(x)
-    return "".join(strings)
-
 def day_events(date):
-    usock = urllib.urlopen(date_to_url(date))
-    soup = bs(usock.read(), convertEntities=bs.ALL_ENTITIES)
+    soup = import_util.url_to_soup(date_to_url(date))
     #find all anchors with e.g. name="42820"
     anchors = soup('a', {'name':re.compile("\d+")})
     for anchor in anchors:
@@ -55,7 +42,7 @@ def day_events(date):
         address, phone = venue_stuff.rsplit(",", 1)
         event['venue'] = dict(name=small.b.string, address=address, phone=phone)
         event_name_span = small.findNextSibling("span", "headout_event")
-        event_name = stringify(event_name_span)
+        event_name = import_util.stringify(event_name_span)
         if len(event_name) < 2:
             continue
         event['name'], event['artists'] = parse_event(event_name)

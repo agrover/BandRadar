@@ -13,6 +13,7 @@ from bandradar.imports import br_upcoming as br
 from bandradar.imports import lastfm
 from bandradar.imports import ticketswest
 import util
+from bandradar.imports import import_util
 
 class Mercury(w.WidgetsList):
     thedate = w.CalendarDatePicker(label="Date")
@@ -93,7 +94,7 @@ class ImporterController(controllers.Controller, identity.SecureResource):
 
     def name_fix(self, name):
         name = " ".join(name.strip().split())
-        name = util.unescape(name)
+        name = import_util.unescape(name)
         name = name.replace('"', "")
         name = name.replace("(Boxxes)", "")
         return name

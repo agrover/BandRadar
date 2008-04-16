@@ -1,8 +1,7 @@
-from BeautifulSoup import BeautifulSoup as bs
-import urllib
 import datetime
 import time
 import re
+import import_util
 
 venue_list = (("Doug Fir", "DFL"), ("Roseland", "ROS"),
                ("Berbati's Pan", "BER"), ("Dante's", "DAN"),
@@ -13,8 +12,7 @@ page_url = "/Venue.aspx?ven="
 
 def events(venues=venue_list):
     for venue_name, code in venues:
-        usock = urllib.urlopen(base_url + page_url + code)
-        soup = bs(usock.read(), convertEntities=bs.ALL_ENTITIES)
+        soup = import_util.url_to_soup(base_url + page_url + code)
         try:
             table = soup("table", attrs={"class":"eventDataGrid"})[0]
         except IndexError:

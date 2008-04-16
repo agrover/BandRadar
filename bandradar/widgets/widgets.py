@@ -1,7 +1,5 @@
 from turbogears import widgets as w
 from turbogears import validators as v
-import urllib
-from cgi import escape
 from xml.etree import ElementTree as et
 from bandradar.imports import google
 from bandradar.model import hub

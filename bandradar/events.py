@@ -6,7 +6,6 @@ from turbogears import validators as v
 from model import Event, Venue, Artist, Attendance, UpdateLog, hub
 from sqlobject import SQLObjectNotFound, LIKE, func, AND
 from datetime import date, datetime, timedelta
-from cgi import escape
 import formencode
 
 from bandradar import util

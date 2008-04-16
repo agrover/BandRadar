@@ -1,8 +1,7 @@
-from BeautifulSoup import BeautifulSoup as bs
-import urllib
 import datetime
 import time
 import re
+import import_util
 
 def get_url_base():
     today = datetime.date.today()
@@ -11,8 +10,7 @@ def get_url_base():
     return url_base % future.strftime("%m-%d-%Y")
 
 def parse_page(num):
-    usock = urllib.urlopen(get_url_base()+str(num))
-    soup = bs(usock.read(), convertEntities=bs.ALL_ENTITIES)
+    soup = import_util.url_to_soup(get_url_base() + str(num))
     body = soup.find('body', dict(bgcolor='#FFFFFF'))
     content = body.find('table', {'class':"content"})
     prev_tr = content.find("tr", height="20", bgcolor="00036E")
@@ -34,8 +32,7 @@ def parse_page(num):
 
 def events():
     events = {}
-    usock = urllib.urlopen(get_url_base())
-    soup = bs(usock.read(), convertEntities=bs.ALL_ENTITIES)
+    soup = import_util.url_to_soup(get_url_base())
     body = soup.find('body', dict(bgcolor='#FFFFFF'))
     contents = body.findAll('b')
     for content in contents:

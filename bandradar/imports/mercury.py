@@ -2,11 +2,10 @@
 # Mercury importer
 #
 
-from BeautifulSoup import BeautifulSoup as bs
-import urllib
 import datetime
 import time
 import re
+import import_util
 import logging
 
 log = logging.getLogger("bandradar.controllers")
@@ -16,8 +15,7 @@ def date_to_url(date):
     return baseurl + date.strftime("%Y-%m-%d")
 
 def day_events(date):
-    usock = urllib.urlopen(date_to_url(date))
-    soup = bs(usock.read(), convertEntities=bs.ALL_ENTITIES)
+    soup = import_util.url_to_soup(date_to_url(date))
     events = soup.findAll("div", "event_group ")
     events.extend(soup.findAll("div", "event_group staffpick_music"))
     for event_div in events:
@@ -31,7 +29,7 @@ def day_events(date):
         if not len(event['artists']):
             continue
         if event_div.h5:
-            event['name'] = event_div.h5.string.strip(":")
+            event['name'] = import_util.stringify(event_div.h5).strip(":")
         else:
             event['name'] = ", ".join(event['artists'])
         if event_div.p.strong:
@@ -44,7 +42,7 @@ def week_events(start_date):
             yield event
 
 if __name__ == "__main__":
-    for event in day_events(datetime.date.today()):
+    for event in day_events(datetime.date.today() - datetime.timedelta(1)):
         print "Venue: " + event['venue']['name']
         print "  " + event.get("name", "no event name")
         for artist in event['artists']:
