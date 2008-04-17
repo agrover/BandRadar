@@ -224,6 +224,10 @@ class ImporterController(controllers.Controller, identity.SecureResource):
         for artist in self.artists_clean(event['artists']):
             try:
                 a = Artist.byNameI(artist)
+                # artist was a similar, but now it's listed as having an event
+                # so approve it
+                if not a.approved:
+                    a.approved = datetime.now()
             except SQLObjectNotFound:
                 a = Artist(name=artist, added_by=identity.current.user)
                 flag_for_review = True
