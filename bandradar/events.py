@@ -192,6 +192,9 @@ class EventController(controllers.Controller, util.RestAdapter):
         else:
             e = Event(name=kw['name'], date=kw['date'], time=kw['time'], venue=v,
                 added_by=identity.current.user)
+                # mark user as going to all added events by default
+                if not "admin" in identity.current.groups:
+                    att = Attendance(user=identity.current.user, event=e, planning_to_go=True)
             flash_msg = "added, will be reviewed and posted within 24 hrs"
 
         del kw['venue']
@@ -232,9 +235,6 @@ class EventController(controllers.Controller, util.RestAdapter):
                 attrib_old_value=old_artists,
                 attrib_new_value=new_artists
                 )
-        # mark user as going to all added events by default
-        if not "admin" in identity.current.groups:
-            att = Attendance(user=identity.current.user, event=e, planning_to_go=True)
         flash("Event %s" % flash_msg)
         util.redirect("/events/%s" % e.id)
 
