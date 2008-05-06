@@ -1,4 +1,4 @@
-from imports import google
+from imports import google, geoip
 from decimal import Decimal
 try:
     from gps import EarthDistance, METERS_TO_MILES
@@ -40,3 +40,9 @@ def distance(a_lat, a_lon, b_lat, b_lon):
 
 def get_geocode(location):
     return google.get_geocode(location)
+
+def ip_to_lat_lon(ip):
+    results = geoip.info(ip)
+    lat = Decimal(results['lat'])
+    lon = Decimal(results['lon'])
+    return (lat, lon)
