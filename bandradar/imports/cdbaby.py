@@ -11,7 +11,6 @@ def recordings(name):
     try:
         soup = import_util.url_to_soup(url)
     except:
-        print "could not open url '%s'" % url
         return
     albumlist = soup.find('ul', "albumlist")
     if not albumlist or not albumlist.previousSibling.string.startswith("Partial"):
