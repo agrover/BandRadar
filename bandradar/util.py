@@ -1,3 +1,4 @@
+import logging
 import turbogears
 import cherrypy
 from formencode import FancyValidator
@@ -6,6 +7,8 @@ from turbogears import database
 from turbogears import config
 from sqlobject import SQLObjectNotFound, LIKE, func, AND
 from bandradar.imports import import_util
+
+log = logging.getLogger("bandradar.util")
 
 def dynsearch(model, name):
     result_cnt = 8
