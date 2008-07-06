@@ -109,8 +109,9 @@ class ImporterController(controllers.Controller, identity.SecureResource):
 
     def artist_name_fix(self, artist_name):
         artist_name = artist_name.replace("with guest", "")
-        artist_name = artist_name.replace("and guests", "")
+        artist_name = artist_name.replace("with guests", "")
         artist_name = artist_name.replace("and guest", "")
+        artist_name = artist_name.replace("and guests", "")
         artist_name = artist_name.replace("plus guests", "")
         artist_name = artist_name.replace("and Friends", "")
         artist_name = artist_name.replace("and friends", "")
@@ -128,9 +129,9 @@ class ImporterController(controllers.Controller, identity.SecureResource):
         return artist_name
 
     def artists_clean(self, artists):
-        artists = [a for a in artists if a != "with guests"]
-        artists = [a for a in artists if a != "and guests"]
         artists = [self.artist_name_fix(a) for a in artists]
+        # prev line may result in blank artist names
+        artists = [a for a in artists if len(a)]
 
         # break all "john foo & susan bar" into separate artists, if "john foo"
         # already exists in the db
