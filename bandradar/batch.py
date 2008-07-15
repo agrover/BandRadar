@@ -2,6 +2,7 @@ import logging
 from sqlobject.util.threadinglocal import local as threading_local
 from model import (hub, BatchRecord, UserAcct, Event, Venue, Group, Recording,
                   Source, Artist, SimilarArtist, AND, OR, SQLObjectNotFound)
+from sqlobject.dberrors import IntegrityError
 import datetime
 from imports import cdbaby, amazon, lastfm, mbz
 import time
@@ -48,6 +49,7 @@ def nightly_task():
 
     last_handled = datetime.datetime.now()
     current = BatchRecord(first_handled=from_when, last_handled=last_handled)
+    hub.commit()
 
     try:
         current.artists_updated = update_artists(queries_per_run)
@@ -89,6 +91,7 @@ def send_email(start, finish):
             and e.venue_id = v.id
             and e.created >= '%s'
             and e.created < '%s'
+            and e.date >= CURRENT_DATE
         """ % (start, finish))
     for user_id, name, date, venue_name in results:
         evt_list = artist_email.get(user_id, list())
@@ -193,7 +196,12 @@ def lastfm_artist_update(artist):
             # keep out too-short names
             if len(artist_name) < 3:
                 continue
-            sim_artist = Artist(name=artist_name, added_by=UserAcct.get(1))
+            try:
+                sim_artist = Artist(name=artist_name, added_by=UserAcct.get(1))
+            except IntegrityError:
+                print "trying to add '%s'" % artist_name
+                hub.rollback()
+                hub.begin()
             # Artists added this way are *not* approved. This keeps them from
             # also having sims generated (when they could be non-local bands
             # that we really don't care much about.)
