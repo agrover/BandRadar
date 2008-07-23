@@ -2,7 +2,7 @@ import logging
 from sqlobject.util.threadinglocal import local as threading_local
 from model import (hub, BatchRecord, UserAcct, Event, Venue, Group, Recording,
                   Source, Artist, SimilarArtist, AND, OR, SQLObjectNotFound)
-from sqlobject.dberrors import IntegrityError
+from sqlobject.main import SQLObjectIntegrityError
 import datetime
 from imports import cdbaby, amazon, lastfm, mbz
 import time
@@ -198,7 +198,7 @@ def lastfm_artist_update(artist):
                 continue
             try:
                 sim_artist = Artist(name=artist_name, added_by=UserAcct.get(1))
-            except IntegrityError:
+            except SQLObjectIntegrityError:
                 print "trying to add '%s'" % artist_name
                 hub.rollback()
                 hub.begin()
