@@ -22,6 +22,7 @@ class VenueForm(w.WidgetsList):
         attrs=dict(size=10, maxlength=10),
         validator=v.PostalCode(strip=True))
     phone = w.TextField(validator=v.PhoneNumber())
+    capacity = w.TextField(validator=v.Int(min=10, max=100000), attrs=dict(size=6, maxlength=6))
     url = w.TextField(label="Website", attrs=dict(size=50),
         validator=v.Any(v.URL, v.Empty))
     myspace = w.TextField(label="MySpace", attrs=dict(maxlength=40),

@@ -34,6 +34,7 @@
             </div>           
             <p py:if="venue.address"><h5>Address: </h5><span id="address">${venue.address}</span></p>
             <p py:if="venue.phone"><h5>Phone: </h5><span id="phone">${venue.phone}</span></p>
+            <p py:if="venue.capacity"><h5>Capacity: </h5><span id="capacity">${venue.capacity}</span></p>
           
             <p py:if="venue.url"><h5>Website: </h5><a href="${venue.url}">${venue.url}</a></p>
             <p py:if="venue.myspace"><h5>MySpace:</h5>

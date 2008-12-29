@@ -156,6 +156,7 @@ class Venue(Journalled, BRCentral):
     myspace = UnicodeCol(length=50, default=None)
     phone = UnicodeCol(length=32, default=None)
     zip_code = UnicodeCol(length=10, default=None)
+    capacity = IntCol(default=None)
     batch_updated = DateTimeCol(default=None)
     geocode_lat = DecimalCol(size=11, precision=8, default=None)
     geocode_lon = DecimalCol(size=11, precision=8, default=None)
