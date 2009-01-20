@@ -2,20 +2,29 @@ from BeautifulSoup import BeautifulSoup as bs
 import urllib
 import cgi
 import htmllib
+import StringIO
+import gzip
 
 def url_to_soup(url):
     usock = urllib.urlopen(url)
-    return bs(usock.read(), convertEntities=bs.ALL_ENTITIES)
+    if usock.headers.get('content-encoding') == 'gzip':
+        compressedstream = StringIO.StringIO(usock.read())
+        gzipper = gzip.GzipFile(fileobj=compressedstream)
+        data = gzipper.read()
+    else:
+        data = usock.read()
+    return bs(data, convertEntities=bs.ALL_ENTITIES)
 
-def stringify(node):
+def stringify(node, children=True):
     """take a beautifulsoup node and flatten it into a string"""
     strings = list()
     for item in node:
         if isinstance(item, basestring):
             strings.append(item)
         else:
-            for x in stringify(item):
-                strings.append(x)
+            if children:
+                for x in stringify(item):
+                    strings.append(x)
     return "".join(strings)
 
 def escape(text):
