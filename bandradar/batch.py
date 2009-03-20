@@ -242,6 +242,7 @@ def update_artists(count=queries_per_run):
            Artist.q.batch_updated < refresh_date)))
     count = min(artists.count(), count)
 
+    email_txt = ""
     for artist in artists[:count]:
         try:
             lastfm_artist_update(artist)
@@ -250,10 +251,14 @@ def update_artists(count=queries_per_run):
             artist.batch_updated = datetime.datetime.now()
         except:
             import traceback
-            util.email("andy@bandradar.com", "BandRadar <events@bandradar.com>",
-                "artist error: '%s'" % artist.name,
-                "Batch failed, Andy is on it!\n\n" + traceback.format_exc())
+            email_txt += "artist error: '%s'\n" % artist.name
+            email_txt += traceback.format_exc()
         time.sleep(1)
+
+    if email_txt:
+        util.email("andy@bandradar.com", "BandRadar <events@bandradar.com>",
+            "artist errors", email_txt)
+
     return count
 
 def update_venues():
